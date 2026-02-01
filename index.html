@@ -3,215 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA LISBOA PRO - VERSÃO FINAL</title>
+    <title>LISBOA PRO - SISTEMA INTEGRAL</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #1b4a9c; --accent: #00b4ff; --success: #00ff9d; --danger: #ff4b2b; --dark: #0a192f; --card: #112240; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 50px; }
-        .header-logo { text-align: center; padding: 20px; background: linear-gradient(180deg, #112240 0%, #0a192f 100%); border-bottom: 4px solid var(--primary); }
-        .main-logo { max-width: 250px; filter: drop-shadow(0 0 12px rgba(27, 74, 156, 0.6)); }
-        .container { padding: 15px; max-width: 850px; margin: auto; }
-        .card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        h3 { margin-top: 0; color: var(--accent); font-size: 1rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 1px solid #1e3a5a; padding-bottom: 8px; }
-        input, select { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
-        button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: var(--dark); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-wpp { background: #25d366; color: white; }
-        .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .stat-box { background: #112240; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--primary); }
-        .stat-box b { display: block; font-size: 1rem; color: var(--success); }
-        .item-lista { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
-        .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
-        .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 30px; }
+        .header-logo { text-align: center; padding: 15px; background: #112240; border-bottom: 3px solid var(--primary); }
+        .main-logo { max-width: 180px; }
+        .container { padding: 15px; max-width: 800px; margin: auto; }
+        
+        /* Menu de 8 Opções em Grid */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .menu-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--primary); cursor: pointer; transition: 0.3s; }
+        .menu-item i { font-size: 1.5rem; color: var(--accent); margin-bottom: 8px; display: block; }
+        .menu-item span { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; }
+        .menu-item:active { transform: scale(0.95); background: var(--primary); }
+
+        .card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); display: none; }
+        .active-section { display: block !important; }
+
+        input, select { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; font-size: 16px; }
+        button { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; }
+        .btn-add { background: var(--success); color: var(--dark); }
+        .btn-blue { background: var(--primary); color: white; }
+        .btn-del { background: var(--danger); color: white; }
+
+        .item-lista { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-top: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .ai-box { background: black; color: #00ff9d; padding: 10px; height: 100px; overflow-y: auto; border-radius: 10px; font-family: monospace; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="header-logo">
-    <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" alt="Oficina Wesley Lisboa" class="main-logo">
+    <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" alt="Oficina Lisboa" class="main-logo">
 </div>
 
-<div class="container">
-    <div id="loginBox" class="card">
-        <h3><i class="fas fa-lock"></i> Login Lisboa Pro</h3>
+<div id="loginBox" class="container">
+    <div class="card active-section" style="text-align: center;">
+        <h3>SISTEMA LISBOA PRO</h3>
         <input id="user" placeholder="Usuário">
         <input id="pass" type="password" placeholder="Senha">
-        <button class="btn-primary" onclick="login()">ENTRAR</button>
+        <button class="btn-blue" onclick="login()">ACESSAR PAINEL</button>
+    </div>
+</div>
+
+<div id="dashboard" class="container" style="display:none">
+    
+    <div class="menu-grid">
+        <div class="menu-item" onclick="show('sec-dash')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></div>
+        <div class="menu-item" onclick="show('sec-serv')"><i class="fas fa-motorcycle"></i><span>Novo Serviço</span></div>
+        <div class="menu-item" onclick="show('sec-estoque')"><i class="fas fa-boxes"></i><span>Estoque</span></div>
+        <div class="menu-item" onclick="show('sec-caixa')"><i class="fas fa-cash-register"></i><span>Caixa Rápido</span></div>
+        <div class="menu-item" onclick="show('sec-precos')"><i class="fas fa-tags"></i><span>Preços</span></div>
+        <div class="menu-item" onclick="show('sec-forn')"><i class="fas fa-truck"></i><span>Fornecedores</span></div>
+        <div class="menu-item" onclick="show('sec-hist')"><i class="fas fa-history"></i><span>Histórico</span></div>
+        <div class="menu-item" onclick="show('sec-ia')"><i class="fas fa-robot"></i><span>IA Lisboa</span></div>
     </div>
 
-    <div id="dashboard" style="display:none">
-        <div class="grid-stats">
-            <div class="stat-box"><small>Entradas</small><b id="entrada">R$ 0</b></div>
-            <div class="stat-box"><small>Saídas</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
-            <div class="stat-box"><small>Lucro</small><b id="lucro" style="color:var(--accent)">R$ 0</b></div>
+    <div id="sec-dash" class="card">
+        <h3>📊 Resumo Financeiro</h3>
+        <div style="display:flex; gap:10px; margin-bottom:10px">
+            <div style="flex:1; background:#0d1f33; padding:10px; border-radius:10px">Ganhos: <b id="d-in" style="color:var(--success)">0</b></div>
+            <div style="flex:1; background:#0d1f33; padding:10px; border-radius:10px">Gastos: <b id="d-out" style="color:var(--danger)">0</b></div>
         </div>
-
-        <div class="card">
-            <h3><i class="fas fa-chart-line"></i> Fluxo e Caixa Rápido</h3>
-            <canvas id="graficoCaixa" height="150"></canvas>
-            <div style="display: flex; gap: 5px; margin-top: 10px;">
-                <input id="vRapido" type="number" placeholder="Valor R$">
-                <button class="btn-success" onclick="lancar('entrada')" style="width:60px">+</button>
-                <button class="btn-danger" onclick="lancar('saida')" style="width:60px">-</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-motorcycle"></i> Novo Serviço / Orçamento</h3>
-            <input id="cNome" placeholder="Nome do Cliente">
-            <input id="cPlaca" placeholder="Placa ou Modelo">
-            <input id="cCel" placeholder="WhatsApp (DDD...)">
-            <input id="cServ" placeholder="O que será feito?">
-            <input id="cVal" type="number" placeholder="Valor R$">
-            <select id="cStatus">
-                <option value="Pendente">🟡 Pendente</option>
-                <option value="Fazendo">🔵 Em Manutenção</option>
-                <option value="Pronto">🟢 Pronto para Entrega</option>
-            </select>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button class="btn-success" onclick="salvarServico()">SALVAR</button>
-                <button class="btn-wpp" onclick="enviarWpp()">ZAP</button>
-            </div>
-            <button class="btn-primary" onclick="gerarPDF()">GERAR RECIBO PDF</button>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-search"></i> Prontuário Digital</h3>
-            <input id="busca" placeholder="Pesquisar placa ou cliente..." onkeyup="render()">
-            <div id="listaHistorico"></div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-tags"></i> Tabela de Preços Fixos</h3>
-            <div style="display: flex; gap: 5px;">
-                <input id="pNome" placeholder="Serviço">
-                <input id="pVal" type="number" placeholder="R$" style="width:80px">
-                <button class="btn-primary" onclick="addItem('precos')" style="width:50px">+</button>
-            </div>
-            <div id="listaPrecos"></div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-boxes"></i> Estoque de Peças</h3>
-            <div style="display: flex; gap: 5px;">
-                <input id="eNome" placeholder="Peça">
-                <input id="eQtd" type="number" placeholder="Qtd" style="width:80px">
-                <button class="btn-success" onclick="addItem('estoque')" style="width:50px">+</button>
-            </div>
-            <div id="listaEstoque"></div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-truck"></i> Fornecedores</h3>
-            <div style="display: flex; gap: 5px;">
-                <input id="fNome" placeholder="Fornecedor">
-                <input id="fContato" placeholder="Contato">
-                <button class="btn-primary" onclick="addItem('fornecedores')" style="width:50px">+</button>
-            </div>
-            <div id="listaFornecedores"></div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-robot"></i> IA Lisboa</h3>
-            <div class="ai-box" id="chat">> Pronta para ajudar...</div>
-            <div style="display: flex; gap: 5px; margin-top:8px;">
-                <input id="msgIA" placeholder="Pergunte algo...">
-                <button class="btn-primary" onclick="ia()" style="width:60px">➤</button>
-            </div>
-        </div>
-
-        <button class="btn-danger" onclick="location.reload()" style="width:100%"><i class="fas fa-power-off"></i> SAIR</button>
+        <canvas id="graficoCanvas" height="150"></canvas>
     </div>
+
+    <div id="sec-serv" class="card">
+        <h3>🔧 Registrar Atendimento</h3>
+        <input id="sNome" placeholder="Nome do Cliente">
+        <input id="sPlaca" placeholder="Placa/Modelo">
+        <input id="sServ" placeholder="Serviço">
+        <input id="sVal" type="number" placeholder="Valor R$">
+        <button class="btn-add" onclick="addServico()">Salvar e Somar no Caixa</button>
+    </div>
+
+    <div id="sec-estoque" class="card">
+        <h3>📦 Controle de Peças</h3>
+        <input id="eN" placeholder="Nome da Peça">
+        <input id="eQ" type="number" placeholder="Quantidade">
+        <button class="btn-add" onclick="addObj('estoque')">Adicionar ao Estoque</button>
+        <div id="list-estoque"></div>
+    </div>
+
+    <div id="sec-caixa" class="card">
+        <h3>💰 Lançamento Avulso</h3>
+        <input id="vR" type="number" placeholder="Valor R$">
+        <button class="btn-add" onclick="lancar('in')">Entrada (+)</button>
+        <button class="btn-del" onclick="lancar('out')">Gasto (-)</button>
+    </div>
+
+    <div id="sec-precos" class="card">
+        <h3>📋 Tabela de Preços</h3>
+        <input id="pN" placeholder="Serviço">
+        <input id="pV" placeholder="Preço Sugerido">
+        <button class="btn-blue" onclick="addObj('precos')">Salvar na Tabela</button>
+        <div id="list-precos"></div>
+    </div>
+
+    <div id="sec-forn" class="card">
+        <h3>🚛 Fornecedores</h3>
+        <input id="fN" placeholder="Nome/Loja">
+        <input id="fC" placeholder="Contato/Zap">
+        <button class="btn-blue" onclick="addObj('forn')">Salvar Contato</button>
+        <div id="list-forn"></div>
+    </div>
+
+    <div id="sec-hist" class="card">
+        <h3>📂 Prontuário de Clientes</h3>
+        <input id="busca" placeholder="Buscar por placa..." onkeyup="render()">
+        <div id="list-hist"></div>
+    </div>
+
+    <div id="sec-ia" class="card">
+        <h3>🤖 IA Lisboa</h3>
+        <div class="ai-box" id="chat">> Sistema pronto.</div>
+        <input id="msgIA" placeholder="Pergunte sobre lucros...">
+        <button class="btn-blue" onclick="ia()">Enviar</button>
+    </div>
+
+    <button onclick="location.reload()" class="btn-del" style="opacity: 0.7;">VOLTAR AO LOGIN</button>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v_final_top')) || { entrada: 0, saida: 0, historico: [], precos: [], fornecedores: [], estoque: [] };
-    let chart;
+    let db = JSON.parse(localStorage.getItem('lisboa_final_v10')) || { in: 0, out: 0, hist: [], estoque: [], precos: [], forn: [] };
+    let myChart;
 
-    function save() { localStorage.setItem('lisboa_v_final_top', JSON.stringify(db)); render(); }
+    function save() { localStorage.setItem('lisboa_final_v10', JSON.stringify(db)); render(); }
 
     function login() {
         if(user.value === "dono" && pass.value === "1234") {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            render();
-        } else { alert("Senha incorreta!"); }
+            show('sec-dash'); render();
+        } else { alert("Acesso negado"); }
     }
 
-    function lancar(tipo) {
-        let v = parseFloat(vRapido.value);
-        if(v > 0) { db[tipo] += v; vRapido.value = ""; save(); }
+    function show(id) {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('active-section'));
+        document.getElementById(id).classList.add('active-section');
     }
 
-    function salvarServico() {
-        let v = parseFloat(cVal.value);
-        if(v > 0 && cNome.value) {
-            db.entrada += v;
-            db.historico.unshift({ id: Date.now(), nome: cNome.value, placa: cPlaca.value.toUpperCase(), serv: cServ.value, val: v, status: cStatus.value, data: new Date().toLocaleDateString() });
-            cNome.value = ""; cPlaca.value = ""; cServ.value = ""; cVal.value = ""; save();
+    function lancar(t) {
+        let v = parseFloat(vR.value);
+        if(v > 0) { db[t] += v; vR.value = ""; save(); }
+    }
+
+    function addServico() {
+        let v = parseFloat(sVal.value);
+        if(v > 0 && sNome.value) {
+            db.in += v;
+            db.hist.unshift({n: sNome.value, p: sPlaca.value.toUpperCase(), s: sServ.value, v: v});
+            sNome.value = ""; sPlaca.value = ""; sServ.value = ""; sVal.value = "";
+            save(); alert("Serviço Salvo!");
         }
     }
 
-    function addItem(tipo) {
-        if(tipo==='estoque' && eNome.value) db.estoque.push({n: eNome.value, q: eQtd.value});
-        if(tipo==='precos' && pNome.value) db.precos.push({n: pNome.value, v: pVal.value});
-        if(tipo==='fornecedores' && fNome.value) db.fornecedores.push({n: fNome.value, c: fContato.value});
+    function addObj(t) {
+        if(t==='estoque') db.estoque.push({n: eN.value, v: eQ.value});
+        if(t==='precos') db.precos.push({n: pN.value, v: pV.value});
+        if(t==='forn') db.forn.push({n: fN.value, v: fC.value});
         save();
     }
 
-    function excluir(tipo, idx, val = 0) {
-        if(confirm("Excluir?")) { if(val > 0) db.entrada -= val; db[tipo].splice(idx,1); save(); }
-    }
-
-    function ia() {
-        let m = msgIA.value.toLowerCase();
-        let r = "Sou a IA da oficina. Como posso ajudar?";
-        if(m.includes("lucro")) r = "Seu lucro atual é R$ " + (db.entrada - db.saida).toFixed(2);
-        chat.innerHTML += `<div><b>Você:</b> ${msgIA.value}<br><b>IA:</b> ${r}</div>`;
-        msgIA.value = ""; chat.scrollTop = chat.scrollHeight;
-    }
-
-    function gerarPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("RECIBO - OFICINA LISBOA", 10, 20);
-        doc.text("Cliente: " + cNome.value, 10, 40);
-        doc.text("Valor: R$ " + cVal.value, 10, 60);
-        doc.save("recibo.pdf");
-    }
-
-    function enviarWpp() {
-        window.open(`https://api.whatsapp.com/send?phone=${cCel.value}&text=Olá! Sua moto está ${cStatus.value} na Oficina Lisboa.`);
+    function excluir(t, i, v=0) {
+        if(confirm("Excluir?")) { db.in -= v; db[t].splice(i, 1); save(); }
     }
 
     function render() {
-        document.getElementById("entrada").innerText = "R$ " + db.entrada.toFixed(2);
-        document.getElementById("saida").innerText = "R$ " + db.saida.toFixed(2);
-        document.getElementById("lucro").innerText = "R$ " + (db.entrada - db.saida).toFixed(2);
+        document.getElementById("d-in").innerText = "R$ " + db.in.toFixed(2);
+        document.getElementById("d-out").innerText = "R$ " + db.out.toFixed(2);
 
-        let b = busca.value.toUpperCase();
-        document.getElementById("listaHistorico").innerHTML = db.historico.filter(h => h.nome.toUpperCase().includes(b) || h.placa.includes(b)).map((h,i) => `
-            <div class="item-lista">
-                <span><b>${h.placa}</b> - ${h.nome}<br><small>${h.serv}</small></span>
-                <div style="text-align:right">
-                    <span class="badge" style="background:${h.status=='Pronto'?'#00ff9d':h.status=='Fazendo'?'#00b4ff':'#ff4b2b'}">${h.status}</span><br>
-                    <b>R$ ${h.val}</b> <i class="fas fa-trash" onclick="excluir('historico',${i},${h.val})" style="color:red;margin-left:8px"></i>
-                </div>
-            </div>
-        `).join('');
+        document.getElementById("list-hist").innerHTML = db.hist.filter(h => h.p.includes(busca.value.toUpperCase())).map((h, i) => `
+            <div class="item-lista"><span>${h.p} - ${h.n}</span><b>R$ ${h.v} <i class="fas fa-trash" onclick="excluir('hist',${i},${h.v})" style="color:red;margin-left:10px"></i></b></div>`).join('');
+        
+        document.getElementById("list-estoque").innerHTML = db.estoque.map((e, i) => `<div class="item-lista">${e.n} <b>${e.v} un</b> <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
+        document.getElementById("list-precos").innerHTML = db.precos.map((p, i) => `<div class="item-lista">${p.n} <b>R$ ${p.v}</b> <i class="fas fa-times" onclick="excluir('precos',${i})"></i></div>`).join('');
+        document.getElementById("list-forn").innerHTML = db.forn.map((f, i) => `<div class="item-lista">${f.n} <b>${f.v}</b> <i class="fas fa-times" onclick="excluir('forn',${i})"></i></div>`).join('');
 
-        document.getElementById("listaPrecos").innerHTML = db.precos.map((p,i) => `<div class="item-lista">${p.n} - R$ ${p.v} <i class="fas fa-times" onclick="excluir('precos',${i})"></i></div>`).join('');
-        document.getElementById("listaEstoque").innerHTML = db.estoque.map((e,i) => `<div class="item-lista">${e.n} - ${e.q} un <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
-        document.getElementById("listaFornecedores").innerHTML = db.fornecedores.map((f,i) => `<div class="item-lista">${f.n} - ${f.c} <i class="fas fa-times" onclick="excluir('fornecedores',${i})"></i></div>`).join('');
+        const ctx = document.getElementById('graficoCanvas').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, { type: 'pie', data: { labels: ['Entradas', 'Saídas'], datasets: [{ data: [db.in, db.out], backgroundColor: ['#00ff9d', '#ff4b2b'] }] } });
+    }
 
-        const ctx = document.getElementById('graficoCaixa').getContext('2d');
-        if(chart) chart.destroy();
-        chart = new Chart(ctx, { type: 'bar', data: { labels: ['Ganhos', 'Gastos'], datasets: [{ data: [db.entrada, db.saida], backgroundColor: ['#00ff9d', '#ff4b2b'] }] }, options: { plugins: { legend: { display: false } } } });
+    function ia() {
+        let r = "Lucro total: R$ " + (db.in - db.out).toFixed(2);
+        chat.innerHTML += `<div><b>IA:</b> ${r}</div>`;
+        msgIA.value = "";
     }
 </script>
 </body>
 </html>
+
