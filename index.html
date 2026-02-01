@@ -3,191 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OFICINA WESLEY LISBOA</title>
+    <title>LISBOA PRO ELITE - REVISÃO FINAL</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #0d1626;
-            --card: #162235;
-            --blue: #2563eb;
-            --border: #2a3a52;
-            --text: #ffffff;
+        :root { --bg: #070a11; --card: #121826; --primary: #3d7eff; --success: #00f298; --danger: #ff4b5c; --text: #f0f4f8; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; -webkit-font-smoothing: antialiased; }
+        
+        /* Layout Superior */
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: var(--card); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .header img { max-width: 110px; }
+
+        .container { padding: 15px; max-width: 500px; margin: auto; }
+
+        /* Card de Saldo Premium */
+        .balance-card { 
+            background: linear-gradient(135deg, #1e2a4a 0%, #0f172a 100%); 
+            padding: 25px; border-radius: 24px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .balance-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.6; }
+        .balance-val { font-size: 2.6rem; font-weight: 800; color: var(--success); margin: 8px 0; }
+
+        /* Grid de Funções Rápidas */
+        .quick-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .quick-item { background: var(--card); padding: 12px 5px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .quick-item i { font-size: 1.2rem; color: var(--primary); margin-bottom: 5px; display: block; }
+        .quick-item span { font-size: 0.55rem; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+
+        /* Seções Ativas */
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Estilo de Formulários */
+        input, select, textarea { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); 
+            color: white; padding: 16px; border-radius: 14px; width: 100%; box-sizing: border-box; 
+            margin: 8px 0; font-size: 16px; -webkit-appearance: none;
+        }
+        button { 
+            background: var(--primary); color: white; padding: 18px; border-radius: 16px; 
+            border: none; font-weight: 700; width: 100%; margin-top: 10px; font-size: 15px;
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(61, 126, 255, 0.2);
+        }
+        button:active { transform: scale(0.97); opacity: 0.9; }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 15px rgba(255, 75, 92, 0.2); }
+
+        /* Lista iOS Style */
+        .list-item { 
+            background: var(--card); padding: 16px; border-radius: 20px; 
+            margin-bottom: 10px; display: flex; justify-content: space-between; 
+            align-items: center; border: 1px solid rgba(255,255,255,0.03);
         }
 
-        body {
-            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg); color: var(--text);
-            -webkit-tap-highlight-color: transparent;
+        /* Barra de Navegação Inferior Fixa */
+        .nav-bar { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: rgba(18, 24, 38, 0.95); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around; padding: 15px 10px 30px 10px;
+            border-top: 1px solid rgba(255,255,255,0.05); z-index: 999;
         }
-
-        /* LOGIN */
-        #login-screen {
-            position: fixed; inset: 0; background: var(--bg);
-            z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .login-box {
-            background: var(--card); width: 85%; max-width: 340px;
-            padding: 30px 20px; border-radius: 20px; text-align: center;
-            border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* LOGO FIXO */
-        .logo-container { text-align: center; padding: 20px 0; width: 100%; }
-        .logo { width: 180px; height: auto; display: block; margin: 0 auto; }
-
-        .container { padding: 0 15px; max-width: 500px; margin: auto; }
-
-        /* GRID IGUAL A SUA FOTO */
-        .grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px;
-        }
-        .btn-menu {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 15px; padding: 20px 5px; text-align: center;
-            cursor: pointer; transition: 0.2s;
-        }
-        .btn-menu:active { background: var(--blue); transform: scale(0.95); }
-        .btn-menu i { font-size: 1.6rem; color: #3b82f6; margin-bottom: 10px; display: block; }
-        .btn-menu span { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #fff; }
-
-        /* PAGINAÇÃO */
-        .page { display: none; width: 100%; }
-        .active { display: block !important; }
-
-        /* CARDS */
-        .card-info {
-            background: var(--card); border-radius: 20px; padding: 20px;
-            border: 1px solid var(--border); margin-bottom: 20px;
-        }
-        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .box { padding: 15px; border-radius: 15px; text-align: center; background: rgba(0,0,0,0.3); }
-
-        /* FORMULÁRIOS */
-        input {
-            width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px;
-            border: 1px solid var(--border); background: #0a111e; color: white; box-sizing: border-box; font-size: 16px;
-        }
-        .btn-blue {
-            width: 100%; padding: 18px; border-radius: 12px; border: none;
-            background: var(--blue); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase;
-        }
-        .btn-voltar { background: var(--blue); margin-top: 15px; }
-
-        h2 { font-size: 1.4rem; margin: 20px 0; font-weight: bold; }
+        .nav-item { color: #666; font-size: 1.4rem; transition: 0.3s; padding: 5px 15px; }
+        .nav-item.active { color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <img src="https://raw.githubusercontent.com/sg6rsn4zrd-spec/sg6rsn4zrd-spec.github.io/main/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo" style="margin-bottom: 30px;">
-    <div class="login-box">
-        <i class="fas fa-shield-alt" style="font-size: 45px; color: #00d4ff; margin-bottom: 15px;"></i>
-        <h2 style="margin: 0 0 20px 0; font-size: 1.1rem;">ACESSO RESTRITO</h2>
-        <input id="pass" type="password" placeholder="Senha Administrativa" style="text-align: center;">
-        <button class="btn-blue" onclick="logar()">ENTRAR NO PAINEL</button>
+<div id="loginScreen">
+    <div class="container" style="text-align: center; margin-top: 80px;">
+        <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" style="max-width: 140px; margin-bottom: 20px;">
+        <div class="balance-card">
+            <h2 style="margin:0 0 20px 0;">Painel Lisboa</h2>
+            <input id="pass" type="password" placeholder="Senha" style="text-align:center">
+            <button onclick="doLogin()">ENTRAR</button>
+        </div>
     </div>
 </div>
 
-<div id="main-app" style="display:none">
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/sg6rsn4zrd-spec/sg6rsn4zrd-spec.github.io/main/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+<div id="appScreen" style="display:none">
+    <div class="header">
+        <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png">
+        <div style="text-align: right;"><b style="font-size: 0.8rem; opacity: 0.7;">V26.0 FINAL</b></div>
     </div>
 
     <div class="container">
-        <div id="page-home" class="page active">
-            <div class="grid">
-                <div class="btn-menu" onclick="irPara('page-home')"><i class="fas fa-home"></i><span>Painel</span></div>
-                <div class="btn-menu" onclick="irPara('page-servico')"><i class="fas fa-tools"></i><span>Serviço</span></div>
-                <div class="btn-menu" onclick="irPara('page-busca')"><i class="fas fa-search"></i><span>Busca</span></div>
-                <div class="btn-menu" onclick="irPara('page-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
-                <div class="btn-menu" onclick="irPara('page-caixa')"><i class="fas fa-wallet"></i><span>Caixa</span></div>
-                <div class="btn-menu" onclick="irPara('page-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
-                <div class="btn-menu" onclick="irPara('page-forn')"><i class="fas fa-truck"></i><span>Forn.</span></div>
-                <div class="btn-menu" onclick="irPara('page-taxas')"><i class="fas fa-percent"></i><span>Taxas</span></div>
-                <div class="btn-menu" onclick="irPara('page-retorno')"><i class="fas fa-calendar-alt"></i><span>Retorno</span></div>
-                <div class="btn-menu" onclick="irPara('page-compras')"><i class="fas fa-shopping-basket"></i><span>Compras</span></div>
-                <div class="btn-menu" onclick="irPara('page-avarias')"><i class="fas fa-clipboard-list"></i><span>Avarias</span></div>
-                <div class="btn-menu" onclick="irPara('page-ia')"><i class="fas fa-robot"></i><span>IA</span></div>
-            </div>
-
-            <div class="card-info">
-                <h3 style="margin:0 0 15px 0; color:#60a5fa"><i class="fas fa-chart-line"></i> Resumo Financeiro</h3>
-                <div class="resumo-box">
-                    <div class="box" style="border-bottom: 3px solid #10b981;">
-                        <small style="color:#aaa">Entradas</small><br>
-                        <strong style="color:#10b981; font-size: 1.2rem;">R$ 0.00</strong>
-                    </div>
-                    <div class="box" style="border-bottom: 3px solid #ef4444;">
-                        <small style="color:#aaa">Saídas</small><br>
-                        <strong style="color:#ef4444; font-size: 1.2rem;">R$ 0.00</strong>
-                    </div>
+        <div id="sec-home" class="section active">
+            <div class="balance-card">
+                <div class="balance-label">Saldo Real (Limpo)</div>
+                <div class="balance-val" id="res-lucro">R$ 0,00</div>
+                <div style="display:flex; justify-content:space-between; margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                    <div><small style="opacity:0.5">Ganhos</small><br><b id="res-mao" style="color:var(--success)">R$ 0</b></div>
+                    <div><small style="opacity:0.5">Contas</small><br><b id="res-contas" style="color:var(--danger)">R$ 0</b></div>
                 </div>
             </div>
+
+            <div class="quick-menu">
+                <div class="quick-item" onclick="show('sec-oleo')"><i class="fas fa-oil-can"></i><span>Óleo</span></div>
+                <div class="quick-item" onclick="show('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
+                <div class="quick-item" onclick="show('sec-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
+                <div class="quick-item" onclick="show('sec-ia')"><i class="fas fa-brain"></i><span>I.A</span></div>
+            </div>
+            
+            <canvas id="mainChart" height="150"></canvas>
         </div>
 
-        <div id="page-servico" class="page">
-            <h2>Lançar Serviço</h2>
-            <input type="text" placeholder="Nome do Cliente">
-            <input type="text" placeholder="Placa da Moto">
-            <input type="number" placeholder="Valor Mão de Obra">
-            <button class="btn-blue">SALVAR</button>
-            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
+        <div id="sec-add" class="section">
+            <h3 style="margin:0 0 15px 0">Nova Ordem</h3>
+            <input id="nCli" placeholder="Nome do Cliente">
+            <input id="nPlaca" placeholder="Placa" style="text-transform:uppercase">
+            <input id="nCel" type="tel" placeholder="WhatsApp">
+            <input id="nMao" type="number" placeholder="Mão de Obra (R$)">
+            <input id="nPec" type="number" placeholder="Custo das Peças (R$)">
+            <select id="nOleo"><option value="nao">Troca de Óleo? Não</option><option value="sim">Sim (Lembrar)</option></select>
+            <button onclick="salvarServico()">SALVAR SERVIÇO</button>
         </div>
 
-        <div id="page-estoque" class="page">
-            <h2>Estoque</h2>
-            <div class="card-info">Carregando itens...</div>
-            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
+        <div id="sec-hist" class="section">
+            <input id="query" placeholder="🔍 Buscar placa..." onkeyup="render()">
+            <div id="render-hist"></div>
         </div>
 
-        <div id="page-busca" class="page">
-            <h2>Busca</h2>
-            <input type="text" placeholder="Pesquisar por placa...">
-            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
+        <div id="sec-money" class="section">
+            <h3>Registrar Despesa</h3>
+            <input id="dNome" placeholder="Ex: Aluguel, Luz, Peças">
+            <input id="dVal" type="number" placeholder="Valor R$">
+            <button class="btn-danger" onclick="salvarDespesa()">PAGAR CONTA</button>
+            <div id="render-contas" style="margin-top:20px"></div>
         </div>
 
-        <div id="page-caixa" class="page">
-            <h2>Caixa</h2>
-            <div class="box">Saldo Atual: R$ 0.00</div>
-            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
-        </div>
+        <div id="sec-oleo" class="section"><h3>Trocas Pendentes</h3><div id="render-oleo"></div></div>
+        <div id="sec-estoque" class="section"><h3>Estoque</h3><input id="eN" placeholder="Item"><input id="eQ" type="number"><button onclick="addObj('estoque','eN','eQ')">ADD</button><div id="render-estoque"></div></div>
+        <div id="sec-tabela" class="section"><h3>Tabela</h3><input id="tN"><input id="tV"><button onclick="addObj('tabela','tN','tV')">ADD</button><div id="render-tabela"></div></div>
+        <div id="sec-ia" class="section"><h3>Analista Lisboa</h3><div id="ia-box" class="list-item">Pressione Analisar...</div><button onclick="ia()">ANALISAR</button></div>
+    </div>
 
-        <div id="page-tabela" class="page"><h2>Tabela</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-forn" class="page"><h2>Fornecedores</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-taxas" class="page"><h2>Taxas</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-retorno" class="page"><h2>Retorno</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-compras" class="page"><h2>Compras</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-avarias" class="page"><h2>Avarias</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-ia" class="page"><h2>IA</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+    <div class="nav-bar">
+        <div class="nav-item active" id="b-home" onclick="show('sec-home')"><i class="fas fa-th-large"></i></div>
+        <div class="nav-item" id="b-add" onclick="show('sec-add')"><i class="fas fa-plus-circle"></i></div>
+        <div class="nav-item" id="b-hist" onclick="show('sec-hist')"><i class="fas fa-search"></i></div>
+        <div class="nav-item" id="b-money" onclick="show('sec-money')"><i class="fas fa-file-invoice-dollar"></i></div>
     </div>
 </div>
 
 <script>
-    // FUNÇÃO LOGIN
-    function logar() {
-        const input = document.getElementById('pass').value;
-        if(input === '1234') {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-        } else {
-            alert("Senha Incorreta!");
-        }
+    let db = JSON.parse(localStorage.getItem('lisboa_final_safe')) || { mao:0, contas:0, pecas:0, servicos:[], despesas:[], estoque:[], tabela:[] };
+    let chart;
+
+    function save() { localStorage.setItem('lisboa_final_safe', JSON.stringify(db)); render(); }
+    
+    function doLogin() { 
+        if(pass.value === '1234') { loginScreen.style.display='none'; appScreen.style.display='block'; render(); }
+        else alert("Senha errada.");
     }
 
-    // FUNÇÃO NAVEGAÇÃO (CORREÇÃO DO BUG DE TELA VAZIA)
-    function irPara(idPagina) {
-        // Primeiro, esconde ABSOLUTAMENTE TUDO que for página
-        const todasPaginas = document.querySelectorAll('.page');
-        todasPaginas.forEach(p => {
-            p.classList.remove('active');
-        });
+    function show(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        // Ativar ícone
+        if(id==='sec-home') b-home.classList.add('active');
+        if(id==='sec-add') b-add.classList.add('active');
+        if(id==='sec-hist') b-hist.classList.add('active');
+        if(id==='sec-money') b-money.classList.add('active');
+    }
 
-        // Depois, mostra apenas a que foi pedida
-        const destino = document.getElementById(idPagina);
-        if(destino) {
-            destino.classList.add('active');
-            window.scrollTo(0,0);
-        }
+    function salvarServico() {
+        let m = parseFloat(nMao.value) || 0;
+        let p = parseFloat(nPec.value) || 0;
+        if(!m || !nCli.value) return alert("Preencha Nome e Mão de Obra");
+        
+        db.mao += m; db.pecas += p;
+        db.servicos.unshift({ n: nCli.value, p: nPlaca.value.toUpperCase(), v: m+p, m, p, d: new Date().getTime(), ol: nOleo.value, z: nCel.value });
+        nMao.value=''; nPec.value=''; nCli.value=''; nPlaca.value='';
+        save(); show('sec-home');
+    }
+
+    function salvarDespesa() {
+        let v = parseFloat(dVal.value) || 0;
+        if(!v) return;
+        db.contas += v;
+        db.despesas.unshift({ n: dNome.value, v: v, d: new Date().toLocaleDateString() });
+        dVal.value=''; dNome.value=''; save();
+    }
+
+    function addObj(t, i1, i2) {
+        db[t].push({ n: document.getElementById(i1).value, v: document.getElementById(i2).value });
+        save();
+    }
+
+    function render() {
+        let lucro = db.mao - db.contas;
+        document.getElementById('res-lucro').innerText = "R$ " + lucro.toLocaleString('pt-BR',{minimumFractionDigits:2});
+        document.getElementById('res-mao').innerText = "R$ " + db.mao.toFixed(2);
+        document.getElementById('res-contas').innerText = "R$ " + db.contas.toFixed(2);
+
+        // Histórico
+        document.getElementById('render-hist').innerHTML = db.servicos
+            .filter(s => s.p.includes(query.value.toUpperCase()))
+            .map(s => `<div class="list-item"><div><b>${s.p}</b><br><small>${s.n}</small></div><b>R$ ${s.v}</b></div>`).join('');
+
+        // Contas
+        document.getElementById('render-contas').innerHTML = db.despesas.map(d => `<div class="list-item"><span>${d.n}</span><b style="color:var(--danger)">- R$ ${d.v}</b></div>`).join('');
+
+        // Óleo
+        let hoje = new Date().getTime();
+        document.getElementById('render-oleo').innerHTML = db.servicos.filter(s => s.ol==='sim' && (hoje-s.d)>(90*24*60*60*1000))
+            .map(s => `<div class="list-item"><span>${s.p} - ${s.n}</span><button style="width:auto; padding:5px 15px" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Troca de óleo pendente!')">ZAP</button></div>`).join('');
+
+        // Gráfico
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if(chart) chart.destroy();
+        chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: { labels:['Lucro','Despesas','Peças'], datasets:[{ data:[lucro>0?lucro:0, db.contas, db.pecas], backgroundColor:['#00f298','#ff4b5c','#3d7eff'], borderWidth:0 }] },
+            options: { plugins: { legend: { position:'bottom', labels:{color:'#fff', font:{size:10}} } } }
+        });
+    }
+
+    function ia() {
+        let l = db.mao - db.contas;
+        let msg = l > 0 ? "O lucro está positivo. Foco em reduzir despesas para aumentar a margem!" : "Atenção: Despesas altas! Revise seus gastos fixos.";
+        document.getElementById('ia-box').innerText = msg;
     }
 </script>
 </body>
