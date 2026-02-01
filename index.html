@@ -25,20 +25,10 @@ body{
 
 /* Toast notificações */
 #toast{
-  visibility:hidden;
-  min-width:200px;
-  margin-left:-100px;
-  background-color:#333;
-  color:#fff;
-  text-align:center;
-  border-radius:8px;
-  padding:10px;
-  position:fixed;
-  z-index:9999;
-  left:50%;
-  bottom:30px;
-  font-size:14px;
-  opacity:0;
+  visibility:hidden; min-width:220px; margin-left:-110px;
+  background-color:#333; color:#fff; text-align:center;
+  border-radius:8px; padding:10px; position:fixed; z-index:9999;
+  left:50%; bottom:30px; font-size:14px; opacity:0;
   transition:opacity 0.5s,visibility 0.5s;
 }
 #toast.show{visibility:visible; opacity:1;}
@@ -77,9 +67,11 @@ button:active{opacity:0.8;}
 .btn-success{background:var(--success); color:#0a0e17;}
 .btn-danger{background:var(--danger);}
 
+/* Listas */
 .list-item{background:rgba(255,255,255,0.03); padding:12px; border-radius:16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid var(--primary);}
 .badge{background:var(--danger); color:white; border-radius:50px; padding:2px 8px; font-size:10px; position:absolute; top:-5px; right:-5px;}
 
+/* IA Box */
 .ia-box{background:#000; border:1px solid var(--success); padding:12px; border-radius:12px; font-family:'Courier New', monospace; color:var(--success); font-size:13px; line-height:1.4;}
 </style>
 </head>
@@ -110,6 +102,10 @@ button:active{opacity:0.8;}
   <div style="display:flex; justify-content:space-around; opacity:0.8; font-size:12px;">
     <span>Mão de Obra: <b id="val-mao" style="color:var(--accent)">R$ 0</b></span>
     <span>Contas: <b id="val-contas" style="color:var(--danger)">R$ 0</b></span>
+    <span>Meta: <b id="val-meta" style="color:var(--primary)">R$ 5.000</b></span>
+  </div>
+  <div style="background:rgba(255,255,255,0.1); border-radius:10px; height:10px; margin-top:5px;">
+    <div id="barra-meta" style="background:var(--success); height:10px; border-radius:10px; width:0%;"></div>
   </div>
 </div>
 
@@ -173,7 +169,7 @@ button:active{opacity:0.8;}
 <!-- Seções: Estoque -->
 <div id="sec-estoque" class="card section">
   <h3>📦 Estoque</h3>
-  <input id="eN" placeholder="Peça">
+  <input id="eN" placeholder="Nome da Peça">
   <input id="eQ" type="number" placeholder="Quantidade">
   <button onclick="addObj('estoque','eN','eQ')">➕ Adicionar</button>
   <div id="l-estoque"></div>
@@ -191,16 +187,16 @@ button:active{opacity:0.8;}
 <!-- Seções: Taxas -->
 <div id="sec-taxa" class="card section">
   <h3>💳 Calculadora de Taxas</h3>
-  <input id="taxV" type="number" placeholder="Valor do Serviço">
-  <button onclick="calcTaxa()">💸 Calcular (+12%)</button>
+  <input id="taxV" type="number" placeholder="Valor do Serviço R$">
+  <button onclick="calcTaxa()">Calcular (+12%)</button>
 </div>
 
 <!-- Seções: Agenda -->
 <div id="sec-agenda" class="card section">
   <h3>📅 Agenda de Retorno</h3>
-  <input id="aN" placeholder="Cliente">
+  <input id="aN" placeholder="Nome do Cliente">
   <input id="aD" type="date">
-  <button onclick="addObj('agenda','aN','aD')">🗓️ Agendar</button>
+  <button onclick="addObj('agenda','aN','aD')">📆 Agendar</button>
   <div id="l-agenda"></div>
 </div>
 
@@ -215,196 +211,178 @@ button:active{opacity:0.8;}
 <!-- Seções: Check-list -->
 <div id="sec-check" class="card section">
   <h3>📋 Check-list Entrada</h3>
-  <input id="chP" placeholder="Placa">
-  <textarea id="chD" placeholder="Observações/Avarias"></textarea>
+  <input id="chP" placeholder="Placa do Veículo">
+  <textarea id="chD" placeholder="Observações / Avarias"></textarea>
   <button onclick="addObj('check','chP','chD')">💾 Salvar</button>
   <div id="l-check"></div>
 </div>
 
-<!-- Seções: Analista IA -->
+<!-- Seções: IA / Analista Financeiro -->
 <div id="sec-ia" class="card section">
   <h3>🤖 Analista Inteligente</h3>
   <div id="ia-res" class="ia-box">Aguardando dados...</div>
-  <button onclick="analisarIA()">⚡ Gerar Diagnóstico</button>
-  <hr style="opacity:0.1; margin:15px 0">
-  <button onclick="gerarBackup()" style="background:#333;">💾 Gerar Backup</button>
-  <textarea id="txtBack" style="width:100%; height:50px; font-size:8px;"></textarea>
+  <button onclick="analisarIA()">GERAR DIAGNÓSTICO</button>
+  <hr style="opacity:0.1; margin:15px 0;">
+  <button onclick="gerarBackup()" style="background:#333;">GERAR BACKUP</button>
+  <textarea id="txtBack" style="width:100%; height:80px; font-size:10px;"></textarea>
 </div>
 
 <script>
-/* ========================================
-Banco de dados centralizado
-======================================== */
+/* =========================
+   Banco de Dados Centralizado
+========================= */
 let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || {
   mao:0, contas:0, pecas:0,
   servicos:[], despesas:[],
-  estoque:[], tabela:[], agenda:[], compras:[], check:[]
+  estoque:[], tabela:[], agenda:[],
+  compras:[], check:[]
 };
+
 let chart;
 
-/* ========================================
-Funções Gerais
-======================================== */
-function save(){ localStorage.setItem('lisboa_vfinal', JSON.stringify(db)); render(); }
-
+/* =========================
+   Toast de Notificação
+========================= */
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.innerText=msg;
-  t.className="show";
-  setTimeout(()=>{t.className="";},3000);
+  let t = document.getElementById('toast');
+  t.innerText = msg;
+  t.className = "show";
+  setTimeout(()=>{ t.className = t.className.replace("show",""); }, 2500);
 }
 
-function login(){
-  const pass=document.getElementById('senha').value;
-  if(pass==='1234'){
-    document.getElementById('loginPage').style.display='none';
-    document.getElementById('mainPage').style.display='block';
+/* =========================
+   Login e Navegação
+========================= */
+document.getElementById('btnLogin').onclick = ()=>{
+  if(document.getElementById('senha').value==='1234'){
+    loginPage.style.display='none';
+    mainPage.style.display='block';
     render();
-    showToast("✅ Bem-vindo ao painel!");
-  } else showToast("❌ Senha incorreta!");
+    showToast("✅ Login bem-sucedido!");
+  }else showToast("❌ Senha incorreta!");
 }
-
-document.getElementById('btnLogin').onclick=login;
 
 function nav(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* ========================================
-Serviços
-======================================== */
+/* =========================
+   Funções Básicas
+========================= */
+function save(){ localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render(); }
+
 function salvarServico(){
-  let m=parseFloat(document.getElementById('sMao').value)||0;
-  let p=parseFloat(document.getElementById('sPec').value)||0;
+  let m=parseFloat(sMao.value)||0;
+  let p=parseFloat(sPec.value)||0;
   if(m+p>0){
     db.mao+=m; db.pecas+=p;
-    db.servicos.unshift({
-      n:document.getElementById('sNome').value,
-      p:document.getElementById('sPlaca').value.toUpperCase(),
-      v:m+p, m:m, pe:p,
-      z:document.getElementById('sCel').value,
-      ol:document.getElementById('sOleo').value,
-      d:new Date().getTime()
-    });
-    document.getElementById('sNome').value='';
-    document.getElementById('sPlaca').value='';
-    document.getElementById('sMao').value='';
-    document.getElementById('sPec').value='';
-    document.getElementById('sCel').value='';
-    save(); showToast("💾 Serviço salvo!");
-  } else showToast("⚠️ Preencha valores válidos!");
+    db.servicos.unshift({ n:sNome.value, p:sPlaca.value.toUpperCase(), v:(m+p), m:m, pe:p, z:sCel.value, ol:sOleo.value, d:new Date().getTime() });
+    sMao.value=''; sPec.value=''; sNome.value=''; sPlaca.value=''; sCel.value=''; save();
+    showToast("💾 Serviço salvo!");
+  }else showToast("⚠️ Preencha valores válidos!");
 }
 
-function zapOrcamento(){
-  let sCel=document.getElementById('sCel').value;
-  let sMao=document.getElementById('sMao').value;
-  let sPec=document.getElementById('sPec').value;
-  window.open(`https://api.whatsapp.com/send?phone=${sCel}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${sMao}, Peças R$ ${sPec}. Total R$ ${parseFloat(sMao)+parseFloat(sPec)}`);
-}
-
-/* ========================================
-Contas
-======================================== */
 function salvarConta(){
-  let v=parseFloat(document.getElementById('cVal').value)||0;
+  let v=parseFloat(cVal.value)||0;
   if(v>0){
     db.contas+=v;
-    db.despesas.unshift({n:document.getElementById('cDesc').value, v:v, d:new Date().toLocaleDateString()});
-    document.getElementById('cVal').value=''; document.getElementById('cDesc').value='';
-    save(); showToast("💰 Conta adicionada!");
-  } else showToast("⚠️ Valor inválido!");
+    db.despesas.unshift({ n:cDesc.value, v:v, d:new Date().toLocaleDateString() });
+    cVal.value=''; cDesc.value=''; save();
+    showToast("💰 Conta registrada!");
+  }
 }
 
-/* ========================================
-Objetos genéricos (Estoque, Tabela, Agenda, Compras, Check)
-======================================== */
 function addObj(t,id1,id2){
-  let obj={n:document.getElementById(id1).value};
+  let obj={ n:document.getElementById(id1).value };
   if(id2) obj.v=document.getElementById(id2).value;
   db[t].push(obj);
   document.getElementById(id1).value='';
   if(id2) document.getElementById(id2).value='';
-  save(); showToast("✅ Adicionado em "+t);
+  save();
+  showToast("✅ Item adicionado em "+t);
 }
 
-/* ========================================
-Renderização dinâmica
-======================================== */
+/* =========================
+   Renderização
+========================= */
 function render(){
   // Lucro
   let lucro=db.mao-db.contas;
   document.getElementById('val-lucro').innerText="R$ "+lucro.toFixed(2);
   document.getElementById('val-mao').innerText="R$ "+db.mao.toFixed(2);
   document.getElementById('val-contas').innerText="R$ "+db.contas.toFixed(2);
+  
+  // Barra meta
+  let meta=5000;
+  let pct=Math.min(100, (lucro/meta*100).toFixed(2));
+  document.getElementById('barra-meta').style.width=pct+"%";
 
   // Histórico
-  let busca=document.getElementById('busca')?document.getElementById('busca').value.toUpperCase():'';
-  document.getElementById('lista-hist').innerHTML=db.servicos.filter(s=>s.p.includes(busca)).map(s=>`<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
+  document.getElementById('lista-hist').innerHTML=db.servicos.filter(s=>s.p.includes(busca.value.toUpperCase())).map(s=>`<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
+
+  // Contas
   document.getElementById('lista-contas').innerHTML=db.despesas.map(d=>`<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
 
-  // Óleo vencido
-  let hoje=new Date().getTime(); let vencidos=0; let htmlOleo="";
+  // Óleo
+  let hoje=new Date().getTime(), vencidos=0, htmlOleo="";
   db.servicos.forEach(s=>{
     if(s.ol==='sim'){
       let dias=Math.floor((hoje-s.d)/(1000*60*60*24));
-      if(dias>=90){
-        vencidos++;
-        htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
-      }
+      if(dias>=90){ vencidos++; htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo.')"></i></div>`; }
     }
   });
-  let notif=document.getElementById('notif-oleo');
-  notif.innerText=vencidos;
-  notif.style.display=vencidos>0?'block':'none';
-  document.getElementById('lista-oleo').innerHTML=htmlOleo||"Sem trocas pendentes.";
+  document.getElementById('notif-oleo').innerText=vencidos;
+  document.getElementById('notif-oleo').style.display=vencidos>0?'block':'none';
+  document.getElementById('lista-oleo').innerHTML=htmlOleo || "Sem trocas pendentes.";
 
   // Gráfico Doughnut
   const ctx=document.getElementById('chartFin').getContext('2d');
   if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:'doughnut',data:{labels:['Lucro','Contas','Peças'],datasets:[{data:[lucro>0?lucro:0,db.contas,db.pecas],backgroundColor:['#00f298','#ff4b5c','#00d2ff'],borderWidth:0}]},options:{plugins:{legend:{labels:{color:'white'}}}}});
+  chart=new Chart(ctx,{type:'doughnut', data:{labels:['Lucro Líquido','Contas Fixas','Custo Peças'], datasets:[{data:[lucro>0?lucro:0, db.contas, db.pecas], backgroundColor:['#00f298','#ff4b5c','#00d2ff'], borderWidth:0}]}, options:{plugins:{legend:{labels:{color:'white'}}}}});
 }
 
-/* ========================================
-IA - Analista Financeiro
-======================================== */
+/* =========================
+   IA / Analista
+========================= */
 function analisarIA(){
-  let lucro=db.mao-db.contas;
-  let analise="";
-  if(lucro<=0) analise="❌ ALERTA CRÍTICO: Gastos superam lucro!";
-  else if(db.contas>db.mao*0.5) analise="⚠️ CUIDADO: Despesas > 50% do lucro!";
-  else analise="✅ SAÚDE ÓTIMA: Lucro R$ "+lucro.toFixed(2);
-  document.getElementById('ia-res').innerText=analise+"\n\n💡 DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use a lista de óleo para atrair clientes antigos.");
+  let lucro=db.mao-db.contas, analise="";
+  if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar!";
+  else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas fixas >50% do lucro.";
+  else analise="> SAÚDE ÓTIMA: Lucro saudável R$ "+lucro.toFixed(2);
+  document.getElementById('ia-res').innerText=analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços":"Use lista de óleo para clientes antigos.");
 }
 
-/* ========================================
-Funções Extras
-======================================== */
+/* =========================
+   WhatsApp / PDF / Backup
+========================= */
+function zapOrcamento(){
+  if(sCel.value && sMao.value && sPec.value){
+    window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`);
+  }else showToast("⚠️ Preencha os dados para enviar");
+}
+
 function gerarPDF(){
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
   doc.text("Relatório Lisboa Pro",10,10);
   doc.text(`Lucro: R$ ${db.mao-db.contas}`,10,20);
   doc.save("mes.pdf");
 }
 
 function calcTaxa(){
-  const val=parseFloat(document.getElementById('taxV').value)||0;
-  alert("Para receber livre R$ "+val+", cobre do cliente R$ "+(val*1.12).toFixed(2));
+  if(taxV.value) alert("Para receber livre R$ "+taxV.value+", cobre do cliente R$ "+(taxV.value*1.12).toFixed(2));
 }
 
 function resetMes(){
-  if(confirm("Deseja zerar ganhos do mês?")){
-    db.mao=0; db.contas=0; db.pecas=0;
-    save(); showToast("🔄 Ganhos zerados!");
-  }
+  if(confirm("Deseja zerar ganhos? Histórico não será apagado.")){ db.mao=0; db.contas=0; db.pecas=0; save(); showToast("🔄 Ganhos resetados"); }
 }
 
-function gerarBackup(){
-  document.getElementById('txtBack').value=btoa(JSON.stringify(db));
-}
+function gerarBackup(){ txtBack.value=btoa(JSON.stringify(db)); showToast("💾 Backup gerado!"); }
 
-// Inicializa renderização ao carregar
+/* =========================
+   Inicializar
+========================= */
 render();
 </script>
 </body>
