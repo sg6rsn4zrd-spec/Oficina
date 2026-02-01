@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA MOTO & BIKE - LISBOA PRO</title>
+    <title>SISTEMA LISBOA PRO - COMPLETO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         :root { --primary: #1b4a9c; --accent: #00b4ff; --success: #00ff9d; --danger: #ff4b2b; --dark: #0a192f; --card: #112240; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 50px; }
@@ -16,7 +15,7 @@
         .container { padding: 15px; max-width: 850px; margin: auto; }
         .card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         h3 { margin-top: 0; color: var(--accent); font-size: 1rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 1px solid #1e3a5a; padding-bottom: 8px; }
-        input, select { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
+        input, select, textarea { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
         button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: var(--dark); }
@@ -25,9 +24,9 @@
         .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-box { background: #112240; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--primary); }
         .stat-box b { display: block; font-size: 1rem; color: var(--success); margin-top: 4px; }
-        .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 120px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); text-align: left; }
-        .hist-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #1e3a5a; background: rgba(0,0,0,0.2); margin-top: 5px; border-radius: 5px; text-align: left; }
-        #dashboard { display: none; }
+        .item-lista { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-top: 8px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; text-transform: uppercase; }
+        .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
@@ -38,192 +37,184 @@
 
 <div class="container">
     <div id="loginBox" class="card">
-        <h3><i class="fas fa-lock"></i> Acesso Restrito</h3>
+        <h3><i class="fas fa-lock"></i> Login Lisboa Pro</h3>
         <input id="user" placeholder="Usuário">
         <input id="pass" type="password" placeholder="Senha">
         <button class="btn-primary" onclick="login()">ENTRAR</button>
     </div>
 
-    <div id="dashboard">
+    <div id="dashboard" style="display:none">
         <div class="grid-stats">
-            <div class="stat-box"><small>Entradas</small><b id="entrada">R$ 0</b></div>
-            <div class="stat-box"><small>Saídas</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
+            <div class="stat-box"><small>Ganhos</small><b id="entrada">R$ 0</b></div>
+            <div class="stat-box"><small>Gastos</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
             <div class="stat-box"><small>Lucro</small><b id="lucro" style="color:var(--accent)">R$ 0</b></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-search"></i> Pesquisar Placa/Cliente</h3>
-            <input id="busca" placeholder="Digite para buscar..." onkeyup="buscar()">
-            <div id="resultadoBusca"></div>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-cash-register"></i> Caixa Rápido (Lançar Gasto/Ganho)</h3>
-            <div style="display: flex; gap: 8px;">
+            <h3><i class="fas fa-chart-bar"></i> Fluxo de Caixa</h3>
+            <canvas id="graficoCaixa" height="150"></canvas>
+            <div style="display: flex; gap: 5px; margin-top: 10px;">
                 <input id="vRapido" type="number" placeholder="Valor R$">
-                <button class="btn-success" onclick="addRapido('entrada')" style="width: 60px;"><i class="fas fa-plus"></i></button>
-                <button class="btn-danger" onclick="addRapido('saida')" style="width: 60px;"><i class="fas fa-minus"></i></button>
+                <button class="btn-success" onclick="lancar('entrada')" style="width:60px">+</button>
+                <button class="btn-danger" onclick="lancar('saida')" style="width:60px">-</button>
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-tools"></i> Novo Serviço / Orçamento</h3>
-            <select id="tipoVeiculo">
-                <option value="Moto">🏍️ Moto</option>
-                <option value="Bike">🚲 Bike</option>
+            <h3><i class="fas fa-plus-circle"></i> Novo Serviço</h3>
+            <input id="cNome" placeholder="Nome do Cliente">
+            <input id="cPlaca" placeholder="Placa/Modelo">
+            <input id="cCel" placeholder="WhatsApp (DDD+Número)">
+            <input id="cServ" placeholder="Descrição do Serviço">
+            <input id="cVal" type="number" placeholder="Valor Total R$">
+            <select id="cStatus">
+                <option value="Pendente">🟡 Pendente / Aguardando</option>
+                <option value="Fazendo">🔵 Em Manutenção</option>
+                <option value="Pronto">🟢 Pronto para Entrega</option>
             </select>
-            <input id="cliNome" placeholder="Nome do Cliente">
-            <input id="cliPlaca" placeholder="Placa ou Modelo">
-            <input id="cliCel" placeholder="WhatsApp (55...)">
-            <input id="cliServ" placeholder="Descrição do Serviço">
-            <input id="cliValor" type="number" placeholder="Preço Total R$">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <button class="btn-success" onclick="salvarServico()"><i class="fas fa-save"></i> Salvar</button>
-                <button class="btn-wpp" onclick="enviarWpp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn-wpp" onclick="enviarWpp()"><i class="fab fa-whatsapp"></i> Avisar</button>
             </div>
-            <button class="btn-primary" onclick="gerarPDF()" style="margin-top: 8px;"><i class="fas fa-file-pdf"></i> Gerar Recibo PDF</button>
+            <button class="btn-primary" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> Gerar Recibo PDF</button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-boxes"></i> Controle de Estoque</h3>
+            <h3><i class="fas fa-search"></i> Histórico / Prontuário</h3>
+            <input id="busca" placeholder="Buscar por placa ou nome..." onkeyup="render()">
+            <div id="listaHistorico"></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Tabela de Preços & Fornecedores</h3>
+            <input id="itemNome" placeholder="Item/Serviço/Fornecedor">
+            <input id="itemInfo" placeholder="Preço ou Telefone">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="btn-primary" onclick="addItem('precos')">Add Preço</button>
+                <button class="btn-primary" onclick="addItem('fornecedores')">Add Fornecedor</button>
+            </div>
+            <div id="listaItens"></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-boxes"></i> Estoque de Peças</h3>
             <div style="display: flex; gap: 5px;">
-                <input id="nPeca" placeholder="Peça">
-                <input id="qPeca" type="number" placeholder="Qtd" style="width:80px">
-                <button class="btn-success" onclick="addEstoque()" style="width:50px"><i class="fas fa-check"></i></button>
+                <input id="eNome" placeholder="Nome da Peça">
+                <input id="eQtd" type="number" placeholder="Qtd" style="width:80px">
+                <button class="btn-success" onclick="addItem('estoque')" style="width:60px">+</button>
             </div>
             <div id="listaEstoque"></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-chart-line"></i> Desempenho</h3>
-            <canvas id="grafico" height="150"></canvas>
-        </div>
-
-        <div class="card">
-            <h3><i class="fas fa-robot"></i> Assistente Lisboa IA</h3>
-            <div class="ai-box" id="chat">> Sistema Online...</div>
+            <h3><i class="fas fa-robot"></i> IA Lisboa</h3>
+            <div class="ai-box" id="chat">> Aguardando comando...</div>
             <div style="display: flex; gap: 5px; margin-top:8px;">
-                <input id="msgIA" placeholder="Pergunte ao sistema...">
-                <button class="btn-primary" onclick="responderIA()" style="width:60px">➤</button>
+                <input id="msgIA" placeholder="Dúvida?">
+                <button class="btn-primary" onclick="ia()" style="width:60px">➤</button>
             </div>
         </div>
 
-        <div class="card" style="border: 1px dashed var(--danger);">
-            <h3><i class="fas fa-edit"></i> Ajuste Manual de Saldo</h3>
-            <input id="adjEntrada" type="number" placeholder="Novo Total Entradas">
-            <input id="adjSaida" type="number" placeholder="Novo Total Saídas">
-            <button class="btn-danger" onclick="ajusteManual()">CORRIGIR TOTAIS</button>
-        </div>
-
-        <button class="btn-danger" onclick="location.reload()" style="margin-top: 20px;"><i class="fas fa-power-off"></i> ENCERRAR SESSÃO</button>
+        <button class="btn-danger" onclick="location.reload()" style="width:100%"><i class="fas fa-sign-out-alt"></i> SAIR</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('oficina_pro_vFinal')) || { entrada: 0, saida: 0, estoque: [], historico: [] };
+    let db = JSON.parse(localStorage.getItem('lisboa_v_final')) || { entrada: 0, saida: 0, historico: [], precos: [], fornecedores: [], estoque: [] };
+    let chart;
 
-    function salvar() { localStorage.setItem('oficina_pro_vFinal', JSON.stringify(db)); atualizarTela(); }
+    function save() { localStorage.setItem('lisboa_v_final', JSON.stringify(db)); render(); }
 
     function login() {
-        if (user.value === "dono" && pass.value === "1234") {
+        if(user.value === "dono" && pass.value === "1234") {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            atualizarTela();
-        } else { alert("Senha Incorreta!"); }
+            render();
+        } else { alert("Senha incorreta!"); }
     }
 
-    function addRapido(tipo) {
-        let val = parseFloat(vRapido.value);
-        if(val > 0) {
-            db[tipo] += val;
-            db.historico.unshift({ data: new Date().toLocaleDateString(), ident: "AVULSO", serv: tipo.toUpperCase(), valor: val, nome: "Caixa Rápido" });
-            vRapido.value = ""; salvar();
-        }
+    function lancar(tipo) {
+        let v = parseFloat(vRapido.value);
+        if(v > 0) { db[tipo] += v; vRapido.value = ""; save(); }
     }
 
     function salvarServico() {
-        let val = parseFloat(cliValor.value);
-        if(val > 0 && cliNome.value) {
-            db.entrada += val;
-            db.historico.unshift({
-                data: new Date().toLocaleDateString(),
-                nome: cliNome.value,
-                ident: cliPlaca.value.toUpperCase(),
-                serv: cliServ.value,
-                valor: val
-            });
-            salvar();
-            alert("Serviço registrado!");
-            cliNome.value = ""; cliPlaca.value = ""; cliServ.value = ""; cliValor.value = "";
+        let v = parseFloat(cVal.value);
+        if(v > 0 && cNome.value) {
+            db.entrada += v;
+            db.historico.unshift({ id: Date.now(), nome: cNome.value, placa: cPlaca.value.toUpperCase(), serv: cServ.value, val: v, status: cStatus.value, data: new Date().toLocaleDateString() });
+            cNome.value = ""; cPlaca.value = ""; cServ.value = ""; cVal.value = ""; save();
+            alert("Salvo!");
         }
     }
 
-    function buscar() {
-        let t = busca.value.toUpperCase();
-        let res = document.getElementById("resultadoBusca");
-        res.innerHTML = "";
-        if(t.length > 1) {
-            db.historico.filter(h => h.ident.includes(t) || h.nome.toUpperCase().includes(t)).forEach(f => {
-                res.innerHTML += `<div class="hist-item"><b>${f.data} - ${f.ident}</b><br>${f.nome} | ${f.serv} | R$ ${f.valor}</div>`;
-            });
+    function addItem(tipo) {
+        if(tipo === 'estoque') {
+            if(eNome.value) { db.estoque.push({ n: eNome.value, q: eQtd.value }); eNome.value = ""; eQtd.value = ""; }
+        } else {
+            if(itemNome.value) { db[tipo].push({ n: itemNome.value, i: itemInfo.value }); itemNome.value = ""; itemInfo.value = ""; }
+        }
+        save();
+    }
+
+    function excluir(tipo, idx, val = 0) {
+        if(confirm("Excluir item?")) {
+            if(val > 0) db.entrada -= val;
+            db[tipo].splice(idx, 1); save();
         }
     }
 
-    function addEstoque() {
-        if(nPeca.value && qPeca.value) {
-            db.estoque.push({n: nPeca.value, q: qPeca.value});
-            nPeca.value = ""; qPeca.value = ""; salvar();
-        }
-    }
-
-    function ajusteManual() {
-        if(adjEntrada.value) db.entrada = parseFloat(adjEntrada.value);
-        if(adjSaida.value) db.saida = parseFloat(adjSaida.value);
-        salvar(); alert("Saldos corrigidos!");
-    }
-
-    function responderIA() {
+    function ia() {
         let m = msgIA.value.toLowerCase();
-        let r = "Olá! Como posso ajudar na gestão da oficina?";
-        if(m.includes("lucro")) r = "O lucro líquido atual é de R$ " + (db.entrada - db.saida).toFixed(2);
-        if(m.includes("estoque")) r = "Você tem " + db.estoque.length + " itens cadastrados no estoque.";
-        chat.innerHTML += `<p style="color:#fff">Você: ${msgIA.value}</p><p>> ${r}</p>`;
+        let r = "Sou a IA Lisboa. Posso ajudar no financeiro ou estoque.";
+        if(m.includes("lucro")) r = "O lucro acumulado é R$ " + (db.entrada - db.saida).toFixed(2);
+        chat.innerHTML += `<div><b>Você:</b> ${msgIA.value}<br><b>IA:</b> ${r}</div>`;
         msgIA.value = ""; chat.scrollTop = chat.scrollHeight;
     }
 
     function gerarPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("OFICINA WESLEY LISBOA - RECIBO", 10, 20);
-        doc.text("Cliente: " + cliNome.value, 10, 40);
-        doc.text("Veículo: " + cliPlaca.value, 10, 50);
-        doc.text("Valor: R$ " + cliValor.value, 10, 60);
-        doc.save("Recibo.pdf");
+        doc.text("OFICINA WESLEY LISBOA", 10, 20);
+        doc.text("Cliente: " + cNome.value, 10, 40);
+        doc.text("Serviço: " + cServ.value, 10, 50);
+        doc.text("Valor: R$ " + cVal.value, 10, 60);
+        doc.save("recibo.pdf");
     }
 
     function enviarWpp() {
-        let msg = `Olá ${cliNome.value}, sua manutenção está pronta na Oficina Lisboa! Valor: R$ ${cliValor.value}`;
-        window.open(`https://api.whatsapp.com/send?phone=${cliCel.value}&text=${msg}`);
+        window.open(`https://api.whatsapp.com/send?phone=${cCel.value}&text=Sua manutenção na Oficina Lisboa está ${cStatus.value}! Valor: R$ ${cVal.value}`);
     }
 
-    let chart;
-    function atualizarTela() {
-        document.getElementById("entrada").innerHTML = "R$ " + db.entrada.toFixed(2);
-        document.getElementById("saida").innerHTML = "R$ " + db.saida.toFixed(2);
-        document.getElementById("lucro").innerHTML = "R$ " + (db.entrada - db.saida).toFixed(2);
-        document.getElementById("listaEstoque").innerHTML = db.estoque.map((i, idx) => 
-            `<div class="hist-item" style="display:flex; justify-content:space-between">
-                <span>${i.n}</span><b>${i.q} un <i class="fas fa-trash" onclick="db.estoque.splice(${idx},1);salvar()" style="color:red; margin-left:10px"></i></b>
-            </div>`).join('');
+    function render() {
+        document.getElementById("entrada").innerText = "R$ " + db.entrada.toFixed(2);
+        document.getElementById("saida").innerText = "R$ " + db.saida.toFixed(2);
+        document.getElementById("lucro").innerText = "R$ " + (db.entrada - db.saida).toFixed(2);
+
+        // Render Historico
+        let b = busca.value.toUpperCase();
+        document.getElementById("listaHistorico").innerHTML = db.historico.filter(h => h.nome.toUpperCase().includes(b) || h.placa.includes(b)).map((h, i) => `
+            <div class="item-lista">
+                <span><b>${h.placa}</b> - ${h.nome}<br><small>${h.serv}</small></span>
+                <div style="text-align:right">
+                    <span class="badge" style="background:${h.status=='Pronto'?'#00ff9d':'#ff4b2b'}">${h.status}</span><br>
+                    <b>R$ ${h.val}</b> <i class="fas fa-trash" onclick="excluir('historico',${i},${h.val})" style="color:red;margin-left:8px"></i>
+                </div>
+            </div>
+        `).join('');
+
+        // Render Outros
+        document.getElementById("listaItens").innerHTML = "<b>Preços:</b>" + db.precos.map((p, i) => `<div class="item-lista">${p.n} - R$ ${p.i} <i class="fas fa-times" onclick="excluir('precos',${i})"></i></div>`).join('') + 
+        "<br><b>Fornecedores:</b>" + db.fornecedores.map((f, i) => `<div class="item-lista">${f.n} - ${f.i} <i class="fas fa-times" onclick="excluir('fornecedores',${i})"></i></div>`).join('');
         
-        const ctx = document.getElementById('grafico').getContext('2d');
+        document.getElementById("listaEstoque").innerHTML = db.estoque.map((e, i) => `<div class="item-lista">${e.n} <b>${e.q} un</b> <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
+
+        // Grafico
+        const ctx = document.getElementById('graficoCaixa').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: ['Entradas', 'Saídas'], datasets: [{ data: [db.entrada, db.saida], backgroundColor: ['#00ff9d', '#ff4b2b'] }] },
-            options: { plugins: { legend: { display: false } } }
-        });
+        chart = new Chart(ctx, { type: 'bar', data: { labels: ['Ganhos', 'Gastos'], datasets: [{ data: [db.entrada, db.saida], backgroundColor: ['#00ff9d', '#ff4b2b'] }] }, options: { plugins: { legend: { display: false } } } });
     }
 </script>
 </body>
 </html>
+
