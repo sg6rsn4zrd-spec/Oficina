@@ -15,7 +15,7 @@
         }
 
         body {
-            margin: 0; font-family: sans-serif;
+            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg); color: var(--text);
             -webkit-tap-highlight-color: transparent;
         }
@@ -23,74 +23,75 @@
         /* LOGIN */
         #login-screen {
             position: fixed; inset: 0; background: var(--bg);
-            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .login-box {
             background: var(--card); width: 85%; max-width: 340px;
             padding: 30px 20px; border-radius: 20px; text-align: center;
-            border: 1px solid var(--border);
+            border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* HEADER */
-        header { text-align: center; padding: 20px 0; }
-        .logo { width: 160px; margin-bottom: 10px; }
+        /* LOGO FIXO */
+        .logo-container { text-align: center; padding: 20px 0; width: 100%; }
+        .logo { width: 180px; height: auto; display: block; margin: 0 auto; }
 
         .container { padding: 0 15px; max-width: 500px; margin: auto; }
 
-        /* GRID 12 BOTÕES */
+        /* GRID IGUAL A SUA FOTO */
         .grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px;
         }
         .btn-menu {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 15px 5px; text-align: center;
-            cursor: pointer; color: white; text-decoration: none;
+            border-radius: 15px; padding: 20px 5px; text-align: center;
+            cursor: pointer; transition: 0.2s;
         }
-        .btn-menu i { font-size: 1.4rem; color: #3b82f6; margin-bottom: 8px; display: block; }
-        .btn-menu span { font-size: 0.65rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .btn-menu:active { background: var(--blue); transform: scale(0.95); }
+        .btn-menu i { font-size: 1.6rem; color: #3b82f6; margin-bottom: 10px; display: block; }
+        .btn-menu span { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #fff; }
 
-        /* SEÇÕES */
-        .page { display: none; }
+        /* PAGINAÇÃO */
+        .page { display: none; width: 100%; }
         .active { display: block !important; }
 
-        /* CARDS INFO */
+        /* CARDS */
         .card-info {
-            background: var(--card); border-radius: 15px; padding: 15px;
-            border: 1px solid var(--border); margin-bottom: 15px;
+            background: var(--card); border-radius: 20px; padding: 20px;
+            border: 1px solid var(--border); margin-bottom: 20px;
         }
-        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .box { padding: 15px; border-radius: 10px; text-align: center; background: rgba(0,0,0,0.2); }
+        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .box { padding: 15px; border-radius: 15px; text-align: center; background: rgba(0,0,0,0.3); }
 
         /* FORMULÁRIOS */
         input {
-            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px;
-            border: 1px solid var(--border); background: #0a111e; color: white; box-sizing: border-box;
+            width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px;
+            border: 1px solid var(--border); background: #0a111e; color: white; box-sizing: border-box; font-size: 16px;
         }
         .btn-blue {
-            width: 100%; padding: 15px; border-radius: 10px; border: none;
+            width: 100%; padding: 18px; border-radius: 12px; border: none;
             background: var(--blue); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase;
         }
-        .btn-back { background: #444; margin-top: 10px; }
+        .btn-voltar { background: var(--blue); margin-top: 15px; }
 
-        h2 { font-size: 1.2rem; margin-bottom: 15px; border-left: 4px solid var(--blue); padding-left: 10px; }
+        h2 { font-size: 1.4rem; margin: 20px 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <img src="https://sg6rsn4zrd-spec.github.io/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+    <img src="https://raw.githubusercontent.com/sg6rsn4zrd-spec/sg6rsn4zrd-spec.github.io/main/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo" style="margin-bottom: 30px;">
     <div class="login-box">
-        <i class="fas fa-shield-alt" style="font-size: 40px; color: #00d4ff; margin-bottom: 15px;"></i>
-        <h3 style="margin: 0 0 20px 0;">ACESSO RESTRITO</h3>
+        <i class="fas fa-shield-alt" style="font-size: 45px; color: #00d4ff; margin-bottom: 15px;"></i>
+        <h2 style="margin: 0 0 20px 0; font-size: 1.1rem;">ACESSO RESTRITO</h2>
         <input id="pass" type="password" placeholder="Senha Administrativa" style="text-align: center;">
         <button class="btn-blue" onclick="logar()">ENTRAR NO PAINEL</button>
     </div>
 </div>
 
 <div id="main-app" style="display:none">
-    <header>
-        <img src="https://sg6rsn4zrd-spec.github.io/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
-    </header>
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/sg6rsn4zrd-spec/sg6rsn4zrd-spec.github.io/main/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+    </div>
 
     <div class="container">
         <div id="page-home" class="page active">
@@ -114,11 +115,11 @@
                 <div class="resumo-box">
                     <div class="box" style="border-bottom: 3px solid #10b981;">
                         <small style="color:#aaa">Entradas</small><br>
-                        <strong style="color:#10b981">R$ 0.00</strong>
+                        <strong style="color:#10b981; font-size: 1.2rem;">R$ 0.00</strong>
                     </div>
                     <div class="box" style="border-bottom: 3px solid #ef4444;">
                         <small style="color:#aaa">Saídas</small><br>
-                        <strong style="color:#ef4444">R$ 0.00</strong>
+                        <strong style="color:#ef4444; font-size: 1.2rem;">R$ 0.00</strong>
                     </div>
                 </div>
             </div>
@@ -129,62 +130,65 @@
             <input type="text" placeholder="Nome do Cliente">
             <input type="text" placeholder="Placa da Moto">
             <input type="number" placeholder="Valor Mão de Obra">
-            <button class="btn-blue">Salvar Serviço</button>
-            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
+            <button class="btn-blue">SALVAR</button>
+            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
         <div id="page-estoque" class="page">
-            <h2>Estoque de Peças</h2>
-            <div class="card-info">Nenhum item cadastrado.</div>
-            <button class="btn-blue">Cadastrar Peça</button>
-            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
+            <h2>Estoque</h2>
+            <div class="card-info">Carregando itens...</div>
+            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
+        </div>
+
+        <div id="page-busca" class="page">
+            <h2>Busca</h2>
+            <input type="text" placeholder="Pesquisar por placa...">
+            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
         <div id="page-caixa" class="page">
-            <h2>Fluxo de Caixa</h2>
-            <div class="resumo-box">
-                <div class="box">Saldo: R$ 0.00</div>
-            </div>
-            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
+            <h2>Caixa</h2>
+            <div class="box">Saldo Atual: R$ 0.00</div>
+            <button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
-        <div id="page-busca" class="page"><h2>Busca</h2><input type="text" placeholder="Pesquisar placa..."><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-tabela" class="page"><h2>Tabela de Preços</h2><div class="card-info">Consulte os valores.</div><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-forn" class="page"><h2>Fornecedores</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-taxas" class="page"><h2>Taxas</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-retorno" class="page"><h2>Retorno</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-compras" class="page"><h2>Compras</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-avarias" class="page"><h2>Avarias</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
-        <div id="page-ia" class="page"><h2>Analista IA</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-tabela" class="page"><h2>Tabela</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-forn" class="page"><h2>Fornecedores</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-taxas" class="page"><h2>Taxas</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-retorno" class="page"><h2>Retorno</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-compras" class="page"><h2>Compras</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-avarias" class="page"><h2>Avarias</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-ia" class="page"><h2>IA</h2><button class="btn-blue btn-voltar" onclick="irPara('page-home')">VOLTAR</button></div>
     </div>
 </div>
 
 <script>
+    // FUNÇÃO LOGIN
     function logar() {
-        const pass = document.getElementById('pass').value;
-        if(pass === '1234') { // Coloque a senha que preferir
+        const input = document.getElementById('pass').value;
+        if(input === '1234') {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
         } else {
-            alert("Senha incorreta!");
+            alert("Senha Incorreta!");
         }
     }
 
+    // FUNÇÃO NAVEGAÇÃO (CORREÇÃO DO BUG DE TELA VAZIA)
     function irPara(idPagina) {
-        // Esconde todas as páginas
-        const paginas = document.querySelectorAll('.page');
-        paginas.forEach(p => p.classList.remove('active'));
+        // Primeiro, esconde ABSOLUTAMENTE TUDO que for página
+        const todasPaginas = document.querySelectorAll('.page');
+        todasPaginas.forEach(p => {
+            p.classList.remove('active');
+        });
 
-        // Mostra a página que você clicou
+        // Depois, mostra apenas a que foi pedida
         const destino = document.getElementById(idPagina);
         if(destino) {
             destino.classList.add('active');
             window.scrollTo(0,0);
-        } else {
-            console.error("Erro: A página " + idPagina + " não existe!");
         }
     }
 </script>
-
 </body>
 </html>
