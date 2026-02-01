@@ -3,246 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LISBOA ÉLITE - V6</title>
+    <title>LISBOA GESTÃO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilo Sólido - Sem transparências que causam bugs */
+        /* CORES SÓLIDAS E PROFISSIONAIS */
+        :root {
+            --azul-escuro: #0a2342;
+            --azul-real: #1e60ff;
+            --fundo: #f4f6f9;
+            --branco: #ffffff;
+            --texto: #2d3748;
+        }
+
         body { 
-            margin: 0; font-family: Arial, sans-serif; 
-            background: #f0f2f5; color: #1a1a1a; padding-bottom: 80px;
+            margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: var(--fundo); color: var(--texto); padding-bottom: 90px;
         }
 
-        /* LOGIN */
+        /* LOGIN (CORRIGIDO) */
         #login-screen {
-            position: fixed; inset: 0; background: #0a2e5c;
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed; inset: 0; background: var(--azul-escuro);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
         }
-        .login-box {
-            background: white; padding: 30px; border-radius: 15px;
-            width: 80%; max-width: 300px; text-align: center;
+        .login-card {
+            background: var(--branco); padding: 30px; border-radius: 20px;
+            width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* HEADER */
-        .header { background: #0a2e5c; color: white; padding: 20px; text-align: center; }
-        .logo-img { width: 70px; border-radius: 50%; border: 2px solid white; }
+        /* CABEÇALHO */
+        header { background: var(--azul-escuro); color: white; padding: 20px; text-align: center; font-weight: bold; }
+        
+        .container { padding: 15px; max-width: 500px; margin: auto; }
 
-        .container { padding: 15px; max-width: 450px; margin: auto; }
-
-        /* SEÇÕES - Lógica simples de display */
-        .section { display: none; }
-        .active { display: block !important; }
+        /* SEÇÕES (O MOTOR DO APP) */
+        .page { display: none; animation: simpleFade 0.2s; }
+        .page.active { display: block !important; }
+        @keyframes simpleFade { from { opacity: 0; } to { opacity: 1; } }
 
         /* CARDS */
         .card { 
-            background: white; border-radius: 12px; padding: 20px; 
-            margin-bottom: 15px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: var(--branco); border-radius: 15px; padding: 20px; 
+            margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
         }
 
-        /* GRID 12 OPÇÕES */
-        .grid-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
-        .grid-item {
-            background: #fff; border: 1px solid #0a2e5c; padding: 12px 2px;
-            border-radius: 10px; text-align: center; cursor: pointer;
+        /* GRID DAS 12 OPÇÕES */
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .menu-item {
+            background: var(--branco); border: 1px solid #cbd5e1; padding: 12px 2px;
+            border-radius: 12px; text-align: center; cursor: pointer; transition: 0.1s;
         }
-        .grid-item i { color: #0a2e5c; font-size: 1.2rem; display: block; margin-bottom: 4px; }
-        .grid-item span { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
+        .menu-item:active { background: #edf2f7; transform: scale(0.95); }
+        .menu-item i { color: var(--azul-real); font-size: 1.2rem; display: block; margin-bottom: 5px; }
+        .menu-item span { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; color: var(--azul-escuro); }
 
-        /* INPUTS E BOTÕES */
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; background: #0a2e5c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; }
-        .btn-pdf { background: #555; margin-top: 10px; }
-
-        /* NAV BAR */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; background: white;
-            display: flex; justify-content: space-around; padding: 10px 0 20px 0;
-            border-top: 2px solid #0a2e5c;
+        /* FORMULÁRIOS */
+        input, textarea { 
+            width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #cbd5e1; 
+            border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fff;
         }
-        .nav-btn { color: #888; text-align: center; flex: 1; cursor: pointer; }
-        .nav-btn.active { color: #0a2e5c; }
-        .nav-btn span { display: block; font-size: 0.6rem; }
+        .btn-acao { 
+            width: 100%; padding: 16px; background: var(--azul-real); color: white; 
+            border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+        .btn-pdf { background: #4a5568; margin-top: 10px; }
 
-        .item-hist { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #0a2e5c; display: flex; justify-content: space-between; }
+        /* BARRA DE NAVEGAÇÃO */
+        .nav-inferior {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--branco);
+            display: flex; justify-content: space-around; padding: 12px 0 25px 0;
+            border-top: 2px solid #e2e8f0; z-index: 1000;
+        }
+        .nav-link { color: #94a3b8; text-align: center; flex: 1; text-decoration: none; cursor: pointer; }
+        .nav-link.active { color: var(--azul-real); }
+        .nav-link span { display: block; font-size: 0.65rem; font-weight: bold; }
+
+        .item-lista { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid var(--azul-real); display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <div class="login-box">
-        <h2 style="color:#0a2e5c">LISBOA ÉLITE</h2>
-        <input id="pass" type="password" placeholder="Senha" style="text-align:center">
-        <button class="btn" onclick="fLogin()">ENTRAR</button>
+    <div class="login-card">
+        <h2 style="color: var(--azul-escuro); margin-bottom: 20px;">LISBOA PRO</h2>
+        <input id="senha-input" type="password" placeholder="Digite a Senha" style="text-align:center">
+        <button class="btn-acao" onclick="autenticar()">ENTRAR NO SISTEMA</button>
     </div>
 </div>
 
-<div id="app" style="display:none">
-    <div class="header">
-        <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo-img">
-        <div style="margin-top:5px; font-weight:bold; letter-spacing:1px;">LISBOA GESTÃO</div>
-    </div>
+<div id="app-principal" style="display:none">
+    <header>OFICINA LISBOA - GESTÃO</header>
 
     <div class="container">
         
-        <div id="sec-home" class="section active">
+        <div id="p-home" class="page active">
             <div class="card">
-                <small>LUCRO LÍQUIDO</small>
-                <h2 id="res-lucro" style="color: green; margin: 5px 0;">R$ 0,00</h2>
-                <div style="font-size: 12px; display: flex; justify-content: space-between;">
-                    <span>Ganhos: <b id="res-mao" style="color:blue">R$ 0</b></span>
-                    <span>Saídas: <b id="res-contas" style="color:red">R$ 0</b></span>
+                <small style="font-weight: bold; opacity: 0.7;">LUCRO ESTIMADO</small>
+                <h1 id="total-lucro" style="color: #2f855a; margin: 10px 0;">R$ 0,00</h1>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                    <span>Entradas: <b id="total-mao" style="color:blue">R$ 0</b></span>
+                    <span>Saídas: <b id="total-gastos" style="color:red">R$ 0</b></span>
                 </div>
             </div>
 
-            <div class="grid-menu">
-                <div class="grid-item" onclick="go('sec-oleo')"><i class="fas fa-oil-can"></i><span>Óleo</span></div>
-                <div class="grid-item" onclick="go('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
-                <div class="grid-item" onclick="go('sec-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
-                <div class="grid-item" onclick="go('sec-agenda')"><i class="fas fa-calendar"></i><span>Agenda</span></div>
-                <div class="grid-item" onclick="go('sec-ia')"><i class="fas fa-brain"></i><span>Analista</span></div>
-                <div class="grid-item" onclick="go('sec-compras')"><i class="fas fa-shopping-cart"></i><span>Compras</span></div>
-                <div class="grid-item" onclick="go('sec-check')"><i class="fas fa-check-double"></i><span>Check</span></div>
-                <div class="grid-item" onclick="go('sec-taxa')"><i class="fas fa-percent"></i><span>Taxas</span></div>
-                <div class="grid-item" onclick="go('sec-cli')"><i class="fas fa-user-friends"></i><span>Clientes</span></div>
-                <div class="grid-item" onclick="go('sec-pecas')"><i class="fas fa-cogs"></i><span>Peças</span></div>
-                <div class="grid-item" onclick="go('sec-aviso')"><i class="fas fa-bell"></i><span>Avisos</span></div>
-                <div class="grid-item" onclick="fBackup()"><i class="fas fa-database"></i><span>Backup</span></div>
+            <div class="menu-grid">
+                <div class="menu-item" onclick="mudarPara('p-oleo')"><i class="fas fa-oil-can"></i><span>Óleo</span></div>
+                <div class="menu-item" onclick="mudarPara('p-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
+                <div class="menu-item" onclick="mudarPara('p-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
+                <div class="menu-item" onclick="mudarPara('p-agenda')"><i class="fas fa-calendar-alt"></i><span>Agenda</span></div>
+                <div class="menu-item" onclick="mudarPara('p-ia')"><i class="fas fa-brain"></i><span>Analista</span></div>
+                <div class="menu-item" onclick="mudarPara('p-compras')"><i class="fas fa-cart-arrow-down"></i><span>Compras</span></div>
+                <div class="menu-item" onclick="mudarPara('p-check')"><i class="fas fa-clipboard-check"></i><span>Check</span></div>
+                <div class="menu-item" onclick="mudarPara('p-taxas')"><i class="fas fa-percent"></i><span>Taxas</span></div>
+                <div class="menu-item" onclick="mudarPara('p-clientes')"><i class="fas fa-user-friends"></i><span>Clientes</span></div>
+                <div class="menu-item" onclick="mudarPara('p-pecas')"><i class="fas fa-cogs"></i><span>Peças</span></div>
+                <div class="menu-item" onclick="mudarPara('p-alertas')"><i class="fas fa-bell"></i><span>Alertas</span></div>
+                <div class="menu-item" onclick="fazerBackup()"><i class="fas fa-save"></i><span>Backup</span></div>
             </div>
             <canvas id="graficoHome" height="150"></canvas>
         </div>
 
-        <div id="sec-add" class="section">
+        <div id="p-novo" class="page">
             <div class="card">
-                <h3>Novo Serviço</h3>
-                <input id="sNome" placeholder="Nome do Cliente">
-                <input id="sPlaca" placeholder="Placa" style="text-transform:uppercase">
-                <input id="sMao" type="number" placeholder="Mão de Obra (R$)">
-                <input id="sPec" type="number" placeholder="Custo das Peças (R$)">
-                <textarea id="sObs" placeholder="Descrição"></textarea>
-                <button class="btn" onclick="fSaveS()">SALVAR NO CAIXA</button>
-                <button class="btn btn-pdf" onclick="fPdf()">GERAR PDF</button>
+                <h3>🔨 Nova Ordem de Serviço</h3>
+                <input id="in-cliente" placeholder="Nome do Cliente">
+                <input id="in-placa" placeholder="Placa da Moto" style="text-transform: uppercase;">
+                <input id="in-mao" type="number" placeholder="Sua Mão de Obra (R$)">
+                <input id="in-pecas" type="number" placeholder="Valor das Peças (R$)">
+                <textarea id="in-obs" placeholder="O que foi feito?"></textarea>
+                <button class="btn-acao" onclick="salvarNovoServico()">SALVAR NO CAIXA</button>
+                <button class="btn-acao btn-pdf" onclick="gerarRecibo()">GERAR RECIBO PDF</button>
             </div>
         </div>
 
-        <div id="sec-hist" class="section">
-            <h3>Histórico</h3>
-            <input id="q" placeholder="Buscar placa..." onkeyup="render()">
-            <div id="render-hist"></div>
+        <div id="p-busca" class="page">
+            <h3>🔍 Histórico de Serviços</h3>
+            <input id="campo-busca" placeholder="Digite a placa..." onkeyup="atualizarListas()">
+            <div id="lista-historico"></div>
         </div>
 
-        <div id="sec-cash" class="section">
+        <div id="p-caixa" class="page">
             <div class="card">
-                <h3>Pagar Conta</h3>
-                <input id="cDesc" placeholder="Descrição">
-                <input id="cVal" type="number" placeholder="Valor R$">
-                <button class="btn" style="background:red" onclick="fSaveC()">SALVAR GASTO</button>
+                <h3>💸 Registrar Gasto/Saída</h3>
+                <input id="g-desc" placeholder="O que você pagou?">
+                <input id="g-valor" type="number" placeholder="Valor R$">
+                <button class="btn-acao" style="background: #e53e3e;" onclick="salvarSaida()">REGISTRAR PAGAMENTO</button>
             </div>
-            <div id="render-cash"></div>
+            <div id="lista-gastos"></div>
         </div>
 
-        <div id="sec-oleo" class="section"><h3>Óleo</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-estoque" class="section"><h3>Estoque</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-tabela" class="section"><h3>Tabela</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-agenda" class="section"><h3>Agenda</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-ia" class="section"><h3>IA</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-compras" class="section"><h3>Compras</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-check" class="section"><h3>Check</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-taxa" class="section"><h3>Taxas</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-cli" class="section"><h3>Clientes</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-pecas" class="section"><h3>Peças</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-aviso" class="section"><h3>Avisos</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="p-oleo" class="page"><h3>🛢️ Controle de Óleo</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-estoque" class="page"><h3>📦 Estoque</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-tabela" class="page"><h3>📋 Tabela de Preços</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-agenda" class="page"><h3>📅 Agenda</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-ia" class="page"><h3>🤖 Analista IA</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-compras" class="page"><h3>🛒 Lista de Compras</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-check" class="page"><h3>📋 Check-list</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-taxas" class="page"><h3>💳 Calculadora de Taxas</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-clientes" class="page"><h3>👥 Meus Clientes</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-pecas" class="page"><h3>🔧 Peças Pendentes</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
+        <div id="p-alertas" class="page"><h3>🔔 Avisos do Sistema</h3><button class="btn-acao" onclick="mudarPara('p-home')">Voltar</button></div>
 
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-btn active" id="n-home" onclick="go('sec-home')"><i class="fas fa-home"></i><span>Home</span></div>
-        <div class="nav-btn" id="n-add" onclick="go('sec-add')"><i class="fas fa-plus-circle"></i><span>Novo</span></div>
-        <div class="nav-btn" id="n-hist" onclick="go('sec-hist')"><i class="fas fa-search"></i><span>Busca</span></div>
-        <div class="nav-btn" id="n-cash" onclick="go('sec-cash')"><i class="fas fa-wallet"></i><span>Gastos</span></div>
+    <div class="nav-inferior">
+        <div class="nav-link active" id="btn-home" onclick="mudarPara('p-home')"><i class="fas fa-home"></i><span>Início</span></div>
+        <div class="nav-link" id="btn-novo" onclick="mudarPara('p-novo')"><i class="fas fa-plus-circle"></i><span>Novo</span></div>
+        <div class="nav-link" id="btn-busca" onclick="mudarPara('p-busca')"><i class="fas fa-search"></i><span>Histórico</span></div>
+        <div class="nav-link" id="btn-caixa" onclick="mudarPara('p-caixa')"><i class="fas fa-wallet"></i><span>Caixa</span></div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v6')) || { mao:0, contas:0, servicos:[], despesas:[] };
-    let ctx = document.getElementById('graficoHome').getContext('2d');
-    let chart;
+    // BANCO DE DADOS
+    let dados = JSON.parse(localStorage.getItem('lisboa_data_v10')) || { entrada: 0, saida: 0, servicos: [], gastos: [] };
+    let chartInstance = null;
 
-    function fLogin() {
-        if(document.getElementById('pass').value === '1234') {
+    function autenticar() {
+        if(document.getElementById('senha-input').value === '1234') {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            render();
-        } else { alert("Erro!"); }
+            document.getElementById('app-principal').style.display = 'block';
+            atualizarListas();
+        } else {
+            alert("Senha incorreta!");
+        }
     }
 
-    function go(id) {
-        // Esconde tudo
-        let sections = document.getElementsByClassName('section');
-        for(let s of sections) { s.style.display = 'none'; }
-        // Mostra a certa
-        document.getElementById(id).style.display = 'block';
+    // FUNÇÃO DE NAVEGAÇÃO (BLINDADA)
+    function mudarPara(idPagina) {
+        // 1. Esconde todas as páginas
+        const paginas = document.getElementsByClassName('page');
+        for (let p of paginas) {
+            p.classList.remove('active');
+        }
+        // 2. Mostra a página correta
+        document.getElementById(idPagina).classList.add('active');
+
+        // 3. Atualiza os botões da nav bar
+        const botoes = document.getElementsByClassName('nav-link');
+        for (let b of botoes) { b.classList.remove('active'); }
         
-        // Ativa ícone
-        let btns = document.getElementsByClassName('nav-btn');
-        for(let b of btns) { b.classList.remove('active'); }
-        if(id === 'sec-home') document.getElementById('n-home').classList.add('active');
-        if(id === 'sec-add') document.getElementById('n-add').classList.add('active');
-        if(id === 'sec-hist') document.getElementById('n-hist').classList.add('active');
-        if(id === 'sec-cash') document.getElementById('n-cash').classList.add('active');
+        if(idPagina === 'p-home') document.getElementById('btn-home').classList.add('active');
+        if(idPagina === 'p-novo') document.getElementById('btn-novo').classList.add('active');
+        if(idPagina === 'p-busca') document.getElementById('btn-busca').classList.add('active');
+        if(idPagina === 'p-caixa') document.getElementById('btn-caixa').classList.add('active');
+        
         window.scrollTo(0,0);
     }
 
-    function fSaveS() {
-        let m = parseFloat(sMao.value) || 0;
-        let p = parseFloat(sPec.value) || 0;
-        if(!m || !sNome.value) return alert("Preencha!");
-        db.mao += m;
-        db.servicos.unshift({ n: sNome.value, p: sPlaca.value.toUpperCase(), v: m+p, d: new Date().toLocaleDateString() });
-        localStorage.setItem('lisboa_v6', JSON.stringify(db));
-        sNome.value=''; sPlaca.value=''; sMao.value=''; sPec.value='';
-        render(); go('sec-home');
+    function salvarNovoServico() {
+        const mao = parseFloat(document.getElementById('in-mao').value) || 0;
+        const pec = parseFloat(document.getElementById('in-pecas').value) || 0;
+        const nome = document.getElementById('in-cliente').value;
+        const placa = document.getElementById('in-placa').value.toUpperCase();
+
+        if(!nome || !mao) return alert("Preencha o Nome e a Mão de Obra!");
+
+        dados.entrada += mao;
+        dados.servicos.unshift({
+            nome, placa, total: mao + pec, data: new Date().toLocaleDateString(), obs: document.getElementById('in-obs').value
+        });
+
+        salvarERenderizar();
+        mudarPara('p-home');
+        
+        // Limpa campos
+        document.getElementById('in-cliente').value = '';
+        document.getElementById('in-placa').value = '';
+        document.getElementById('in-mao').value = '';
+        document.getElementById('in-pecas').value = '';
+        document.getElementById('in-obs').value = '';
     }
 
-    function fSaveC() {
-        let v = parseFloat(cVal.value) || 0; if(!v) return;
-        db.contas += v;
-        db.despesas.unshift({ n: cDesc.value, v: v, d: new Date().toLocaleDateString() });
-        localStorage.setItem('lisboa_v6', JSON.stringify(db));
-        cDesc.value=''; cVal.value='';
-        render();
+    function salvarSaida() {
+        const valor = parseFloat(document.getElementById('g-valor').value) || 0;
+        const desc = document.getElementById('g-desc').value;
+
+        if(!valor || !desc) return alert("Preencha o valor e a descrição!");
+
+        dados.saida += valor;
+        dados.gastos.unshift({ desc, valor, data: new Date().toLocaleDateString() });
+
+        document.getElementById('g-desc').value = '';
+        document.getElementById('g-valor').value = '';
+        salvarERenderizar();
     }
 
-    function fPdf() {
+    function salvarERenderizar() {
+        localStorage.setItem('lisboa_data_v10', JSON.stringify(dados));
+        atualizarListas();
+    }
+
+    function atualizarListas() {
+        const lucroTotal = dados.entrada - dados.saida;
+        document.getElementById('total-lucro').innerText = "R$ " + lucroTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        document.getElementById('total-mao').innerText = "R$ " + dados.entrada.toLocaleString('pt-BR');
+        document.getElementById('total-gastos').innerText = "R$ " + dados.saida.toLocaleString('pt-BR');
+
+        // Renderizar Histórico (Busca)
+        const busca = document.getElementById('campo-busca').value.toUpperCase();
+        document.getElementById('lista-historico').innerHTML = dados.servicos
+            .filter(s => s.placa.includes(busca))
+            .map(s => `
+                <div class="item-lista">
+                    <span><b>${s.placa}</b><br><small>${s.nome}</small></span>
+                    <b>R$ ${s.total.toFixed(2)}</b>
+                </div>
+            `).join('');
+
+        // Renderizar Gastos
+        document.getElementById('lista-gastos').innerHTML = dados.gastos.map(g => `
+            <div class="item-lista">
+                <span>${g.desc}<br><small>${g.data}</small></span>
+                <b style="color:red">- R$ ${g.valor.toFixed(2)}</b>
+            </div>
+        `).join('');
+
+        renderGrafico(lucroTotal);
+    }
+
+    function renderGrafico(lucro) {
+        const ctx = document.getElementById('graficoHome').getContext('2d');
+        if(chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Início', 'Hoje'],
+                datasets: [{
+                    label: 'Lucro Acumulado',
+                    data: [0, lucro],
+                    borderColor: '#1e60ff',
+                    backgroundColor: 'rgba(30,96,255,0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: false } } }
+        });
+    }
+
+    function gerarRecibo() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("RECIBO LISBOA", 10, 10);
-        doc.text("Cliente: " + sNome.value, 10, 20);
-        doc.text("Total: R$ " + (parseFloat(sMao.value||0) + parseFloat(sPec.value||0)).toFixed(2), 10, 30);
-        doc.save("recibo.pdf");
+        doc.setFontSize(20);
+        doc.text("RECIBO - OFICINA LISBOA", 20, 20);
+        doc.setFontSize(14);
+        doc.text("Cliente: " + document.getElementById('in-cliente').value, 20, 40);
+        doc.text("Placa: " + document.getElementById('in-placa').value.toUpperCase(), 20, 50);
+        doc.text("Valor Total: R$ " + (parseFloat(document.getElementById('in-mao').value||0) + parseFloat(document.getElementById('in-pecas').value||0)).toFixed(2), 20, 60);
+        doc.text("Data: " + new Date().toLocaleDateString(), 20, 70);
+        doc.save("Recibo_Lisboa.pdf");
     }
 
-    function fBackup() { alert(btoa(JSON.stringify(db))); }
-
-    function render() {
-        let lucro = db.mao - db.contas;
-        document.getElementById('res-lucro').innerText = "R$ " + lucro.toFixed(2);
-        document.getElementById('res-mao').innerText = "R$ " + db.mao.toFixed(2);
-        document.getElementById('res-contas').innerText = "R$ " + db.contas.toFixed(2);
-
-        document.getElementById('render-hist').innerHTML = db.servicos.filter(s => s.p.includes(q.value.toUpperCase())).map(s => `
-            <div class="item-hist"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v.toFixed(2)}</b></div>
-        `).join('');
-
-        document.getElementById('render-cash').innerHTML = db.despesas.map(d => `
-            <div class="item-hist"><span>${d.n}</span><b style="color:red">- R$ ${d.v.toFixed(2)}</b></div>
-        `).join('');
-
-        if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'line', data:{ labels:['','','',''], datasets:[{data:[0,lucro], borderColor:'blue', tension:0.4}] }, options:{plugins:{legend:{display:false}}, scales:{y:{display:false},x:{display:false}}}});
+    function fazerBackup() {
+        const str = btoa(JSON.stringify(dados));
+        alert("CÓDIGO DE BACKUP (COPIE E GUARDE):\n\n" + str);
     }
-
-    render();
 </script>
 </body>
 </html>
