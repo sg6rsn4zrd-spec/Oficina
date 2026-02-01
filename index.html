@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA LISBOA PRO</title>
+    <title>SISTEMA MOTO & BIKE - LISBOA PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -17,7 +17,7 @@
         .card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         h3 { margin-top: 0; color: var(--accent); font-size: 1rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 1px solid #1e3a5a; padding-bottom: 8px; }
         input, select { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
-        button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.3s; }
+        button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: var(--dark); }
         .btn-danger { background: var(--danger); color: white; }
@@ -25,8 +25,8 @@
         .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-box { background: #112240; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--primary); }
         .stat-box b { display: block; font-size: 1rem; color: var(--success); margin-top: 4px; }
-        .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 120px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); }
-        .hist-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #1e3a5a; background: rgba(0,0,0,0.2); margin-top: 5px; border-radius: 5px; }
+        .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 120px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); text-align: left; }
+        .hist-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #1e3a5a; background: rgba(0,0,0,0.2); margin-top: 5px; border-radius: 5px; text-align: left; }
         #dashboard { display: none; }
     </style>
 </head>
@@ -38,28 +38,36 @@
 
 <div class="container">
     <div id="loginBox" class="card">
-        <h3><i class="fas fa-user-shield"></i> Área do Dono</h3>
+        <h3><i class="fas fa-lock"></i> Acesso Restrito</h3>
         <input id="user" placeholder="Usuário">
         <input id="pass" type="password" placeholder="Senha">
-        <button class="btn-primary" onclick="login()">ACESSAR OFICINA</button>
-        <p style="font-size: 10px; opacity: 0.5; margin-top: 10px;">Dica: usuário "dono" e senha "1234"</p>
+        <button class="btn-primary" onclick="login()">ENTRAR</button>
     </div>
 
     <div id="dashboard">
         <div class="grid-stats">
             <div class="stat-box"><small>Entradas</small><b id="entrada">R$ 0</b></div>
-            <div class="stat-box"><small>Gastos</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
-            <div class="stat-box"><small>Saldo</small><b id="lucro" style="color:var(--accent)">R$ 0</b></div>
+            <div class="stat-box"><small>Saídas</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
+            <div class="stat-box"><small>Lucro</small><b id="lucro" style="color:var(--accent)">R$ 0</b></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-search"></i> Prontuário Digital</h3>
-            <input id="busca" placeholder="Buscar Placa ou Cliente..." onkeyup="buscar()">
+            <h3><i class="fas fa-search"></i> Pesquisar Placa/Cliente</h3>
+            <input id="busca" placeholder="Digite para buscar..." onkeyup="buscar()">
             <div id="resultadoBusca"></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-plus"></i> Novo Serviço</h3>
+            <h3><i class="fas fa-cash-register"></i> Caixa Rápido (Lançar Gasto/Ganho)</h3>
+            <div style="display: flex; gap: 8px;">
+                <input id="vRapido" type="number" placeholder="Valor R$">
+                <button class="btn-success" onclick="addRapido('entrada')" style="width: 60px;"><i class="fas fa-plus"></i></button>
+                <button class="btn-danger" onclick="addRapido('saida')" style="width: 60px;"><i class="fas fa-minus"></i></button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-tools"></i> Novo Serviço / Orçamento</h3>
             <select id="tipoVeiculo">
                 <option value="Moto">🏍️ Moto</option>
                 <option value="Bike">🚲 Bike</option>
@@ -67,43 +75,70 @@
             <input id="cliNome" placeholder="Nome do Cliente">
             <input id="cliPlaca" placeholder="Placa ou Modelo">
             <input id="cliCel" placeholder="WhatsApp (55...)">
-            <input id="cliServ" placeholder="O que foi feito?">
-            <input id="cliValor" type="number" placeholder="Valor Total R$">
+            <input id="cliServ" placeholder="Descrição do Serviço">
+            <input id="cliValor" type="number" placeholder="Preço Total R$">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <button class="btn-success" onclick="salvarServico()"><i class="fas fa-save"></i> Salvar</button>
-                <button class="btn-wpp" onclick="enviarWpp()"><i class="fab fa-whatsapp"></i> Zap</button>
+                <button class="btn-wpp" onclick="enviarWpp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
             </div>
             <button class="btn-primary" onclick="gerarPDF()" style="margin-top: 8px;"><i class="fas fa-file-pdf"></i> Gerar Recibo PDF</button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-robot"></i> IA Lisboa</h3>
-            <div class="ai-box" id="chat"></div>
+            <h3><i class="fas fa-boxes"></i> Controle de Estoque</h3>
+            <div style="display: flex; gap: 5px;">
+                <input id="nPeca" placeholder="Peça">
+                <input id="qPeca" type="number" placeholder="Qtd" style="width:80px">
+                <button class="btn-success" onclick="addEstoque()" style="width:50px"><i class="fas fa-check"></i></button>
+            </div>
+            <div id="listaEstoque"></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-chart-line"></i> Desempenho</h3>
+            <canvas id="grafico" height="150"></canvas>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-robot"></i> Assistente Lisboa IA</h3>
+            <div class="ai-box" id="chat">> Sistema Online...</div>
             <div style="display: flex; gap: 5px; margin-top:8px;">
-                <input id="msgIA" placeholder="Dúvida técnica ou financeira?">
+                <input id="msgIA" placeholder="Pergunte ao sistema...">
                 <button class="btn-primary" onclick="responderIA()" style="width:60px">➤</button>
             </div>
         </div>
 
-        <button class="btn-danger" onclick="location.reload()"><i class="fas fa-power-off"></i> SAIR</button>
+        <div class="card" style="border: 1px dashed var(--danger);">
+            <h3><i class="fas fa-edit"></i> Ajuste Manual de Saldo</h3>
+            <input id="adjEntrada" type="number" placeholder="Novo Total Entradas">
+            <input id="adjSaida" type="number" placeholder="Novo Total Saídas">
+            <button class="btn-danger" onclick="ajusteManual()">CORRIGIR TOTAIS</button>
+        </div>
+
+        <button class="btn-danger" onclick="location.reload()" style="margin-top: 20px;"><i class="fas fa-power-off"></i> ENCERRAR SESSÃO</button>
     </div>
 </div>
 
 <script>
-    // Banco de dados salvo no navegador
-    let db = JSON.parse(localStorage.getItem('oficina_lisboa_final')) || { entrada: 0, saida: 0, historico: [] };
+    let db = JSON.parse(localStorage.getItem('oficina_pro_vFinal')) || { entrada: 0, saida: 0, estoque: [], historico: [] };
 
-    function salvar() { 
-        localStorage.setItem('oficina_lisboa_final', JSON.stringify(db)); 
-        atualizarTela(); 
-    }
+    function salvar() { localStorage.setItem('oficina_pro_vFinal', JSON.stringify(db)); atualizarTela(); }
 
     function login() {
         if (user.value === "dono" && pass.value === "1234") {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             atualizarTela();
-        } else { alert("Acesso Negado!"); }
+        } else { alert("Senha Incorreta!"); }
+    }
+
+    function addRapido(tipo) {
+        let val = parseFloat(vRapido.value);
+        if(val > 0) {
+            db[tipo] += val;
+            db.historico.unshift({ data: new Date().toLocaleDateString(), ident: "AVULSO", serv: tipo.toUpperCase(), valor: val, nome: "Caixa Rápido" });
+            vRapido.value = ""; salvar();
+        }
     }
 
     function salvarServico() {
@@ -115,11 +150,10 @@
                 nome: cliNome.value,
                 ident: cliPlaca.value.toUpperCase(),
                 serv: cliServ.value,
-                valor: val,
-                tipo: tipoVeiculo.value
+                valor: val
             });
             salvar();
-            alert("Serviço salvo com sucesso!");
+            alert("Serviço registrado!");
             cliNome.value = ""; cliPlaca.value = ""; cliServ.value = ""; cliValor.value = "";
         }
     }
@@ -135,11 +169,24 @@
         }
     }
 
+    function addEstoque() {
+        if(nPeca.value && qPeca.value) {
+            db.estoque.push({n: nPeca.value, q: qPeca.value});
+            nPeca.value = ""; qPeca.value = ""; salvar();
+        }
+    }
+
+    function ajusteManual() {
+        if(adjEntrada.value) db.entrada = parseFloat(adjEntrada.value);
+        if(adjSaida.value) db.saida = parseFloat(adjSaida.value);
+        salvar(); alert("Saldos corrigidos!");
+    }
+
     function responderIA() {
         let m = msgIA.value.toLowerCase();
-        let r = "Olá! Sou a Assistente da Oficina Lisboa. Como posso ajudar?";
-        if(m.includes("lucro")) r = "O seu saldo total hoje é de R$ " + (db.entrada - db.saida).toFixed(2);
-        if(m.includes("dica")) r = "Dica: Sempre peça o WhatsApp para enviar o recibo em PDF!";
+        let r = "Olá! Como posso ajudar na gestão da oficina?";
+        if(m.includes("lucro")) r = "O lucro líquido atual é de R$ " + (db.entrada - db.saida).toFixed(2);
+        if(m.includes("estoque")) r = "Você tem " + db.estoque.length + " itens cadastrados no estoque.";
         chat.innerHTML += `<p style="color:#fff">Você: ${msgIA.value}</p><p>> ${r}</p>`;
         msgIA.value = ""; chat.scrollTop = chat.scrollHeight;
     }
@@ -147,26 +194,35 @@
     function gerarPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text("RECIBO - OFICINA WESLEY LISBOA", 10, 20);
-        doc.setFontSize(12);
-        doc.text("-----------------------------------", 10, 30);
-        doc.text("Cliente: " + (cliNome.value || "Consumidor"), 10, 40);
-        doc.text("Serviço: " + (cliServ.value || "Manutenção"), 10, 50);
-        doc.text("Valor: R$ " + (cliValor.value || "0.00"), 10, 60);
-        doc.text("Data: " + new Date().toLocaleDateString(), 10, 80);
-        doc.save("Recibo_Oficina_Lisboa.pdf");
+        doc.text("OFICINA WESLEY LISBOA - RECIBO", 10, 20);
+        doc.text("Cliente: " + cliNome.value, 10, 40);
+        doc.text("Veículo: " + cliPlaca.value, 10, 50);
+        doc.text("Valor: R$ " + cliValor.value, 10, 60);
+        doc.save("Recibo.pdf");
     }
 
     function enviarWpp() {
-        let msg = `Olá ${cliNome.value}, sua ${tipoVeiculo.value} está pronta na Oficina Lisboa!%0A%0AServiço: ${cliServ.value}%0AValor: R$ ${cliValor.value}`;
+        let msg = `Olá ${cliNome.value}, sua manutenção está pronta na Oficina Lisboa! Valor: R$ ${cliValor.value}`;
         window.open(`https://api.whatsapp.com/send?phone=${cliCel.value}&text=${msg}`);
     }
 
+    let chart;
     function atualizarTela() {
         document.getElementById("entrada").innerHTML = "R$ " + db.entrada.toFixed(2);
         document.getElementById("saida").innerHTML = "R$ " + db.saida.toFixed(2);
         document.getElementById("lucro").innerHTML = "R$ " + (db.entrada - db.saida).toFixed(2);
+        document.getElementById("listaEstoque").innerHTML = db.estoque.map((i, idx) => 
+            `<div class="hist-item" style="display:flex; justify-content:space-between">
+                <span>${i.n}</span><b>${i.q} un <i class="fas fa-trash" onclick="db.estoque.splice(${idx},1);salvar()" style="color:red; margin-left:10px"></i></b>
+            </div>`).join('');
+        
+        const ctx = document.getElementById('grafico').getContext('2d');
+        if(chart) chart.destroy();
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['Entradas', 'Saídas'], datasets: [{ data: [db.entrada, db.saida], backgroundColor: ['#00ff9d', '#ff4b2b'] }] },
+            options: { plugins: { legend: { display: false } } }
+        });
     }
 </script>
 </body>
