@@ -3,37 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LISBOA PRO ELITE - GESTÃO TOTAL</title>
+    <title>LISBOA PRO MAX - ELITE V20</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #1b4a9c; --accent: #00b4ff; --success: #00ff9d; --danger: #ff4b2b; --warning: #f39c12; --dark: #0a192f; --card: #112240; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 50px; }
-        .header-logo { text-align: center; padding: 15px; background: #112240; border-bottom: 3px solid var(--primary); }
-        .main-logo { max-width: 140px; filter: drop-shadow(0 0 5px var(--accent)); }
-        .container { padding: 10px; max-width: 850px; margin: auto; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 60px; }
+        .header-logo { text-align: center; padding: 20px; background: #112240; border-bottom: 4px solid var(--primary); }
+        .main-logo { max-width: 160px; filter: drop-shadow(0 0 10px var(--accent)); }
+        .container { padding: 12px; max-width: 850px; margin: auto; }
         
-        /* Grid 12 Opções */
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .menu-item { background: var(--card); padding: 12px 5px; border-radius: 12px; text-align: center; border: 1px solid var(--primary); cursor: pointer; transition: 0.2s; }
-        .menu-item i { font-size: 1.3rem; color: var(--accent); margin-bottom: 5px; display: block; }
-        .menu-item span { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; display: block; }
-        .menu-item:active { background: var(--primary); transform: scale(0.95); }
+        /* Grid de 12 Opções - Botões Grandes */
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .menu-item { background: var(--card); padding: 18px 5px; border-radius: 18px; text-align: center; border: 2px solid var(--primary); cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .menu-item i { font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; display: block; }
+        .menu-item span { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; display: block; }
+        .menu-item:active { transform: scale(0.9); background: var(--primary); }
 
-        .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); display: none; animation: fadeIn 0.3s; }
-        .active-section { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: var(--card); padding: 25px; border-radius: 25px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); display: none; }
+        .active-section { display: block !important; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .box-lucro { background: linear-gradient(135deg, #1b4a9c, #00ff9d); color: #000; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: bold; }
+        .box-destaque { background: linear-gradient(135deg, #1b4a9c, #00ff9d); color: #000; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 15px; }
         
-        input, select, textarea { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; font-size: 16px; }
-        button { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        input, select, textarea { background: #0d1f33; border: 2px solid #1e3a5a; color: white; padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; margin: 8px 0; font-size: 16px; font-weight: bold; }
+        button { padding: 16px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; width: 100%; margin: 8px 0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; text-transform: uppercase; }
         .btn-add { background: var(--success); color: #000; }
         .btn-blue { background: var(--primary); color: white; }
         .btn-del { background: var(--danger); color: white; }
-        
-        .item-lista { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 10px; margin-top: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .btn-wpp { background: #25d366; color: white; }
+
+        .item-lista { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid #ccc; }
+        .status-pendente { border-left-color: var(--danger) !important; }
+        .status-fazendo { border-left-color: var(--warning) !important; }
+        .status-pronto { border-left-color: var(--success) !important; }
     </style>
 </head>
 <body>
@@ -44,138 +48,109 @@
 
 <div id="loginBox" class="container">
     <div class="card active-section" style="text-align: center;">
-        <i class="fas fa-lock" style="font-size: 2rem; color: var(--accent);"></i>
-        <h3>LISBOA PRO ELITE</h3>
-        <input id="pass" type="password" placeholder="Senha de Acesso">
-        <button class="btn-blue" onclick="login()">ENTRAR NO PAINEL</button>
+        <i class="fas fa-motorcycle" style="font-size: 3rem; color: var(--accent);"></i>
+        <h2>LISBOA SISTEMA V20</h2>
+        <input id="pass" type="password" placeholder="Senha do Dono">
+        <button class="btn-blue" onclick="login()">ENTRAR AGORA</button>
     </div>
 </div>
 
 <div id="dashboard" class="container" style="display:none">
     
     <div class="menu-grid">
-        <div class="menu-item" onclick="show('sec-dash')"><i class="fas fa-chart-line"></i><span>Lucro</span></div>
-        <div class="menu-item" onclick="show('sec-serv')"><i class="fas fa-motorcycle"></i><span>Serviço</span></div>
-        <div class="menu-item" onclick="show('sec-contas')"><i class="fas fa-money-bill-wave"></i><span>Contas</span></div>
-        <div class="menu-item" onclick="show('sec-hist')"><i class="fas fa-search"></i><span>Busca</span></div>
-        <div class="menu-item" onclick="show('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
-        <div class="menu-item" onclick="show('sec-precos')"><i class="fas fa-tags"></i><span>Tabela</span></div>
+        <div class="menu-item" onclick="show('sec-dash')"><i class="fas fa-chart-pie"></i><span>Lucro</span></div>
+        <div class="menu-item" onclick="show('sec-serv')"><i class="fas fa-plus-circle"></i><span>Serviço</span></div>
+        <div class="menu-item" onclick="show('sec-contas')"><i class="fas fa-file-invoice"></i><span>Contas</span></div>
+        <div class="menu-item" onclick="show('sec-hist')"><i class="fas fa-list-ul"></i><span>Histórico</span></div>
+        <div class="menu-item" onclick="show('sec-estoque')"><i class="fas fa-box-open"></i><span>Estoque</span></div>
+        <div class="menu-item" onclick="show('sec-precos')"><i class="fas fa-tag"></i><span>Tabela</span></div>
         <div class="menu-item" onclick="show('sec-forn')"><i class="fas fa-truck"></i><span>Forn.</span></div>
-        <div class="menu-item" onclick="show('sec-calc')"><i class="fas fa-calculator"></i><span>Taxas</span></div>
-        <div class="menu-item" onclick="show('sec-agenda')"><i class="fas fa-calendar-alt"></i><span>Retorno</span></div>
+        <div class="menu-item" onclick="show('sec-calc')"><i class="fas fa-percent"></i><span>Taxas</span></div>
+        <div class="menu-item" onclick="show('sec-agenda')"><i class="fas fa-calendar-alt"></i><span>Agenda</span></div>
         <div class="menu-item" onclick="show('sec-compras')"><i class="fas fa-shopping-cart"></i><span>Compras</span></div>
-        <div class="menu-item" onclick="show('sec-check')"><i class="fas fa-clipboard-check"></i><span>Avarias</span></div>
+        <div class="menu-item" onclick="show('sec-check')"><i class="fas fa-clipboard"></i><span>Check-list</span></div>
         <div class="menu-item" onclick="show('sec-ia')"><i class="fas fa-robot"></i><span>IA/Backup</span></div>
     </div>
 
     <div id="sec-dash" class="card">
-        <div class="box-lucro">SALDO REAL (LIMPO): <br><span id="d-lucro" style="font-size: 1.8rem;">R$ 0</span></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-            <div style="background:#0d1f33; padding:10px; border-radius:10px; text-align:center"><small>Mão de Obra</small><br><b id="d-bruto" style="color:var(--success)">0</b></div>
-            <div style="background:#0d1f33; padding:10px; border-radius:10px; text-align:center"><small>Gasto Peças</small><br><b id="d-pecas" style="color:var(--warning)">0</b></div>
+        <div class="box-destaque">
+            <small>DINHEIRO NO BOLSO (LUCRO LIMPO)</small><br>
+            <span id="d-lucro" style="font-size: 2.2rem;">R$ 0</span>
         </div>
-        <canvas id="graficoFin" height="150" style="margin-top:15px"></canvas>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div style="background:#0d1f33; padding:15px; border-radius:15px; text-align:center">
+                <small>Mão de Obra</small><br><b id="d-bruto" style="color:var(--success)">0</b>
+            </div>
+            <div style="background:#0d1f33; padding:15px; border-radius:15px; text-align:center">
+                <small>Gasto Peças</small><br><b id="d-pecas" style="color:var(--warning)">0</b>
+            </div>
+        </div>
+        <canvas id="graficoFin" height="180" style="margin-top:20px"></canvas>
         <button class="btn-del" onclick="fecharMes()">ZERAR MÊS ATUAL</button>
     </div>
 
     <div id="sec-serv" class="card">
-        <h3><i class="fas fa-tools"></i> Novo Serviço</h3>
-        <input id="sNome" placeholder="Cliente">
-        <input id="sPlaca" placeholder="Placa">
+        <h3>🔧 Novo Atendimento</h3>
+        <input id="sNome" placeholder="Nome do Cliente">
+        <input id="sPlaca" placeholder="Placa da Moto">
         <input id="sCel" placeholder="Zap (Ex: 5511...)">
-        <input id="sMao" type="number" placeholder="Mão de Obra R$ (Seu lucro)">
-        <input id="sPec" type="number" placeholder="Peças R$ (Custo)">
+        <input id="sServ" placeholder="O que vai fazer?">
+        <input id="sMao" type="number" placeholder="Sua Mão de Obra R$">
+        <input id="sPec" type="number" placeholder="Custo das Peças R$">
         <select id="sStatus">
-            <option value="Pendente">🟡 Pendente</option>
-            <option value="Pronto">🟢 Pronto</option>
+            <option value="Pendente">🔴 Pendente (Fila)</option>
+            <option value="Fazendo">🟡 Fazendo (Na Mesa)</option>
+            <option value="Pronto">🟢 Pronto (Entrega)</option>
         </select>
-        <button class="btn-add" onclick="addServico()">SALVAR NO CAIXA</button>
-        <div style="display:flex; gap:5px">
-            <button class="btn-blue" onclick="zapServico()"><i class="fab fa-whatsapp"></i></button>
-            <button class="btn-blue" onclick="pdfServico()"><i class="fas fa-file-pdf"></i></button>
+        <select id="sPag">
+            <option value="Dinheiro">💵 Dinheiro</option>
+            <option value="Pix">📱 Pix</option>
+            <option value="Cartão">💳 Cartão</option>
+        </select>
+        <button class="btn-add" onclick="addServico()">SALVAR E SOMAR LUCRO</button>
+        <div style="display:flex; gap:10px">
+            <button class="btn-wpp" onclick="zapOrcamento()"><i class="fab fa-whatsapp"></i> ORÇAMENTO</button>
+            <button class="btn-blue" onclick="zapPronto()"><i class="fab fa-whatsapp"></i> AVISAR PRONTO</button>
         </div>
     </div>
 
     <div id="sec-contas" class="card">
-        <h3><i class="fas fa-hand-holding-usd"></i> Pagar Contas</h3>
-        <input id="ctN" placeholder="Ex: Luz, Aluguel, Almoço">
+        <h3>💸 Pagamentos da Oficina</h3>
+        <input id="ctN" placeholder="Ex: Aluguel, Peças, Almoço">
         <input id="ctV" type="number" placeholder="Valor R$">
-        <button class="btn-del" onclick="addConta()">PAGAR E DESCONTAR</button>
+        <button class="btn-del" onclick="addConta()">PAGAR E DESCONTAR DO LUCRO</button>
         <div id="list-contas"></div>
     </div>
 
     <div id="sec-hist" class="card">
-        <h3><i class="fas fa-history"></i> Histórico</h3>
-        <input id="busca" placeholder="Buscar placa..." onkeyup="render()">
+        <h3>📂 Busca e Status</h3>
+        <input id="busca" placeholder="Filtrar por placa..." onkeyup="render()">
         <div id="list-hist"></div>
     </div>
 
-    <div id="sec-estoque" class="card">
-        <h3><i class="fas fa-boxes"></i> Estoque</h3>
-        <input id="eN" placeholder="Peça"><input id="eQ" type="number" placeholder="Qtd">
-        <button class="btn-add" onclick="addObj('estoque')">ADD</button>
-        <div id="list-estoque"></div>
-    </div>
-
-    <div id="sec-precos" class="card">
-        <h3><i class="fas fa-tags"></i> Tabela</h3>
-        <input id="pN" placeholder="Serviço"><input id="pV" placeholder="R$">
-        <button class="btn-blue" onclick="addObj('precos')">ADD</button>
-        <div id="list-precos"></div>
-    </div>
-
-    <div id="sec-forn" class="card">
-        <h3><i class="fas fa-truck"></i> Fornecedores</h3>
-        <input id="fN" placeholder="Nome"><input id="fC" placeholder="Zap">
-        <button class="btn-blue" onclick="addObj('forn')">ADD</button>
-        <div id="list-forn"></div>
-    </div>
-
-    <div id="sec-calc" class="card">
-        <h3><i class="fas fa-calculator"></i> Calculadora Cartão</h3>
-        <input id="calcV" type="number" placeholder="Valor que quer receber">
-        <button class="btn-blue" onclick="alert('Cobrar: R$ ' + (calcV.value * 1.12).toFixed(2))">SIMULAR (Taxa 12%)</button>
-    </div>
-
-    <div id="sec-agenda" class="card">
-        <h3><i class="fas fa-calendar-alt"></i> Agenda de Retorno</h3>
-        <input id="agN" placeholder="Cliente"><input id="agD" type="date">
-        <button class="btn-add" onclick="addObj('agenda')">AGENDAR</button>
-        <div id="list-agenda"></div>
-    </div>
-
-    <div id="sec-compras" class="card">
-        <h3><i class="fas fa-shopping-basket"></i> Lista de Compras</h3>
-        <input id="cpI" placeholder="O que falta?">
-        <button class="btn-add" onclick="addObj('compras')">ADD</button>
-        <div id="list-compras"></div>
-    </div>
-
-    <div id="sec-check" class="card">
-        <h3><i class="fas fa-clipboard-list"></i> Check-list Avarias</h3>
-        <input id="avP" placeholder="Placa"><textarea id="avD" placeholder="Riscos, amassados..."></textarea>
-        <button class="btn-add" onclick="addObj('avarias')">SALVAR</button>
-        <div id="list-avarias"></div>
-    </div>
-
+    <div id="sec-estoque" class="card"><h3>📦 Estoque</h3><input id="eN" placeholder="Peça"><input id="eQ" type="number"><button class="btn-add" onclick="addObj('estoque')">ADD</button><div id="list-estoque"></div></div>
+    <div id="sec-precos" class="card"><h3>📋 Tabela</h3><input id="pN" placeholder="Serviço"><input id="pV"><button class="btn-blue" onclick="addObj('precos')">ADD</button><div id="list-precos"></div></div>
+    <div id="sec-forn" class="card"><h3>🚛 Fornecedores</h3><input id="fN" placeholder="Nome"><input id="fC" placeholder="Zap"><button class="btn-blue" onclick="addObj('forn')">ADD</button><div id="list-forn"></div></div>
+    <div id="sec-calc" class="card"><h3>💳 Taxas</h3><input id="calcV" placeholder="Valor"><button class="btn-blue" onclick="alert('Cobrar: R$ '+(calcV.value*1.12).toFixed(2))">CRÉDITO (+12%)</button></div>
+    <div id="sec-agenda" class="card"><h3>📅 Agenda</h3><input id="agN"><input id="agD" type="date"><button class="btn-add" onclick="addObj('agenda')">ADD</button><div id="list-agenda"></div></div>
+    <div id="sec-compras" class="card"><h3>🛒 Compras</h3><input id="cpI"><button class="btn-add" onclick="addObj('compras')">ADD</button><div id="list-compras"></div></div>
+    <div id="sec-check" class="card"><h3>📋 Check-list</h3><input id="avP" placeholder="Placa"><textarea id="avD" placeholder="Riscos..."></textarea><button class="btn-add" onclick="addObj('avarias')">SALVAR</button><div id="list-avarias"></div></div>
     <div id="sec-ia" class="card">
-        <h3><i class="fas fa-robot"></i> Analista IA</h3>
-        <div id="chatIA" style="background:#000; color:#00ff9d; padding:10px; border-radius:10px; font-family:monospace; margin-bottom:10px"></div>
-        <button class="btn-blue" onclick="analisarIA()">ANALISAR MEU LUCRO</button>
+        <h3>🤖 Analista IA</h3><div id="chatIA" class="box-destaque" style="background:black; color:lime; text-align:left; font-size:12px"></div>
+        <button class="btn-blue" onclick="analisarIA()">ANALISAR FINANCEIRO</button>
         <hr style="opacity:0.2; margin:20px 0">
-        <h3><i class="fas fa-database"></i> Backup</h3>
-        <button onclick="gerarBack()">GERAR CÓDIGO</button>
-        <textarea id="txtBack" style="font-size:8px"></textarea>
+        <h3>💾 Segurança</h3>
+        <button onclick="gerarBack()">CRIAR CÓDIGO BACKUP</button>
+        <textarea id="txtBack" style="font-size:8px" placeholder="Seu código aparecerá aqui"></textarea>
     </div>
 
-    <button onclick="location.reload()" class="btn-del" style="margin-top:20px; opacity:0.6">SAIR</button>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_total_v15')) || { mao: 0, pecas_total: 0, contas_total: 0, hist: [], estoque: [], precos: [], forn: [], agenda: [], compras: [], avarias: [], contas: [] };
+    let db = JSON.parse(localStorage.getItem('lisboa_v20_final')) || { mao: 0, pecas_total: 0, contas_total: 0, hist: [], estoque: [], precos: [], forn: [], agenda: [], compras: [], avarias: [], contas: [] };
     let chart;
 
-    function save() { localStorage.setItem('lisboa_total_v15', JSON.stringify(db)); render(); }
+    function save() { localStorage.setItem('lisboa_v20_final', JSON.stringify(db)); render(); }
 
     function login() { if(pass.value === "1234") { loginBox.style.display='none'; dashboard.style.display='block'; show('sec-dash'); render(); } }
 
@@ -185,8 +160,8 @@
         let m = parseFloat(sMao.value) || 0; let p = parseFloat(sPec.value) || 0;
         if(m+p > 0) {
             db.mao += m; db.pecas_total += p;
-            db.hist.unshift({n: sNome.value, p: sPlaca.value.toUpperCase(), v: (m+p), st: sStatus.value, z: sCel.value});
-            sMao.value=""; sPec.value=""; sNome.value=""; save(); alert("Salvo!");
+            db.hist.unshift({n: sNome.value, p: sPlaca.value.toUpperCase(), s: sServ.value, v: (m+p), st: sStatus.value, pag: sPag.value, z: sCel.value, mao: m, pec: p});
+            sMao.value=""; sPec.value=""; sNome.value=""; save(); alert("Serviço Salvo!");
         }
     }
 
@@ -205,8 +180,8 @@
         save();
     }
 
-    function excluir(t, i) { if(confirm("Excluir?")) { db[t].splice(i, 1); save(); } }
-    function fecharMes() { if(confirm("Zerar ganhos do mês?")) { db.mao=0; db.pecas_total=0; db.contas_total=0; save(); } }
+    function excluir(t, i) { if(confirm("Apagar registro?")) { db[t].splice(i, 1); save(); } }
+    function fecharMes() { if(confirm("Isso zerará os ganhos do gráfico. O histórico continua salvo. Ok?")) { db.mao=0; db.pecas_total=0; db.contas_total=0; save(); } }
 
     function render() {
         let lucro = db.mao - db.contas_total;
@@ -214,24 +189,24 @@
         document.getElementById("d-bruto").innerText = "R$ " + db.mao.toFixed(2);
         document.getElementById("d-pecas").innerText = "R$ " + db.pecas_total.toFixed(2);
 
-        document.getElementById("list-hist").innerHTML = db.hist.filter(h => h.p.includes(busca.value.toUpperCase())).map((h, i) => `<div class="item-lista"><span>${h.p} - ${h.n}</span><b>R$ ${h.v}</b></div>`).join('');
-        document.getElementById("list-contas").innerHTML = db.contas.map(c => `<div class="item-lista"><span>${c.n}</span><b style="color:red">- R$ ${c.v}</b></div>`).join('');
-        document.getElementById("list-estoque").innerHTML = db.estoque.map(e => `<div class="item-lista"><span>${e.n}</span><b>${e.v} un</b></div>`).join('');
+        document.getElementById("list-hist").innerHTML = db.hist.filter(h => h.p.includes(busca.value.toUpperCase())).map((h, i) => `
+            <div class="item-lista status-${h.st.toLowerCase()}">
+                <span><b>${h.p}</b> - ${h.n}<br><small>${h.s} (${h.pag})</small></span>
+                <div style="text-align:right"><b>R$ ${h.v}</b><br><i class="fas fa-trash" style="color:red" onclick="excluir('hist',${i})"></i></div>
+            </div>`).join('');
+
+        document.getElementById("list-contas").innerHTML = db.contas.map((c,i) => `<div class="item-lista"><span>${c.n}</span><b>R$ ${c.v}</b> <i class="fas fa-times" onclick="excluir('contas',${i})"></i></div>`).join('');
+        document.getElementById("list-estoque").innerHTML = db.estoque.map((e,i) => `<div class="item-lista"><span>${e.n}</span><b>${e.v} un</b> <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
 
         const ctx = document.getElementById('graficoFin').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Meu Lucro', 'Custo Peças', 'Contas'], datasets: [{ data: [lucro > 0 ? lucro : 0, db.pecas_total, db.contas_total], backgroundColor: ['#00ff9d', '#f39c12', '#ff4b2b'] }] } });
+        chart = new Chart(ctx, { type: 'bar', data: { labels: ['LUCRO', 'PEÇAS', 'CONTAS'], datasets: [{ data: [lucro, db.pecas_total, db.contas_total], backgroundColor: ['#00ff9d', '#f39c12', '#ff4b2b'] }] } });
     }
 
-    function analisarIA() {
-        let lucro = db.mao - db.contas_total;
-        let msg = lucro <= 0 ? "PAI, ALERTA: Suas contas estão maiores que seu lucro. Pare de tirar dinheiro do caixa!" : "LUCRO BOM: Você tem R$ " + lucro.toFixed(2) + " limpos hoje.";
-        document.getElementById("chatIA").innerText = "> " + msg;
-    }
-
-    function zapServico() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Sua moto está pronta na Oficina Lisboa!`); }
-    function pdfServico() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text("RECIBO OFICINA LISBOA", 10, 20); doc.save("recibo.pdf"); }
-    function gerarBack() { txtBack.value = btoa(JSON.stringify(db)); }
+    function zapOrcamento() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento da Oficina Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}. Podemos seguir?`); }
+    function zapPronto() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Sua moto está PRONTA. Valor total: R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}. Aguardamos você!`); }
+    function analisarIA() { let l = db.mao - db.contas_total; document.getElementById("chatIA").innerText = "> " + (l < 0 ? "ALERTA: Você está no prejuízo! Pare de gastar e revise seus preços." : "BOAS NOTÍCIAS: Seu lucro limpo é de R$ "+l.toFixed(2)+"."); }
+    function gerarBack() { txtBack.value = btoa(JSON.stringify(db)); alert("Backup Criado!"); }
 </script>
 </body>
 </html>
