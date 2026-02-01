@@ -3,182 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LISBOA ÉLITE V5</title>
+    <title>LISBOA ÉLITE - V6</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #0a2e5c;
-            --accent: #1e60ff;
-            --bg: #f0f4f8;
-            --card: #ffffff;
-            --text: #1a202c;
-            --success: #10b981;
-            --danger: #e53e3e;
-        }
-
+        /* Estilo Sólido - Sem transparências que causam bugs */
         body { 
-            margin: 0; font-family: -apple-system, sans-serif; 
-            background: var(--bg); color: var(--text); padding-bottom: 90px;
+            margin: 0; font-family: Arial, sans-serif; 
+            background: #f0f2f5; color: #1a1a1a; padding-bottom: 80px;
         }
 
-        /* LOGIN BLINDADO */
+        /* LOGIN */
         #login-screen {
-            position: fixed; inset: 0; background: var(--primary);
-            display: flex; align-items: center; justify-content: center; z-index: 10000;
+            position: fixed; inset: 0; background: #0a2e5c;
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
         .login-box {
-            background: white; padding: 30px; border-radius: 20px;
-            width: 85%; max-width: 320px; text-align: center;
+            background: white; padding: 30px; border-radius: 15px;
+            width: 80%; max-width: 300px; text-align: center;
         }
 
-        /* ESTRUTURA */
-        .header { background: var(--primary); color: white; padding: 15px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 100; }
-        .container { padding: 15px; max-width: 500px; margin: auto; }
-        
-        /* SISTEMA DE SEÇÕES */
-        .section { display: none; animation: fadeIn 0.2s ease-in; }
+        /* HEADER */
+        .header { background: #0a2e5c; color: white; padding: 20px; text-align: center; }
+        .logo-img { width: 70px; border-radius: 50%; border: 2px solid white; }
+
+        .container { padding: 15px; max-width: 450px; margin: auto; }
+
+        /* SEÇÕES - Lógica simples de display */
+        .section { display: none; }
         .active { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* CARDS E GRIDS */
-        .card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        
-        .grid-12 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+        /* CARDS */
+        .card { 
+            background: white; border-radius: 12px; padding: 20px; 
+            margin-bottom: 15px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* GRID 12 OPÇÕES */
+        .grid-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
         .grid-item {
-            background: white; padding: 12px 2px; border-radius: 15px;
-            text-align: center; border: 1px solid #cbd5e1; cursor: pointer;
+            background: #fff; border: 1px solid #0a2e5c; padding: 12px 2px;
+            border-radius: 10px; text-align: center; cursor: pointer;
         }
-        .grid-item i { display: block; font-size: 1.1rem; color: var(--accent); margin-bottom: 4px; }
-        .grid-item span { font-size: 0.55rem; font-weight: bold; text-transform: uppercase; }
+        .grid-item i { color: #0a2e5c; font-size: 1.2rem; display: block; margin-bottom: 4px; }
+        .grid-item span { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
 
-        /* FORMULÁRIOS */
-        input, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--accent); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .btn-pdf { background: #4a5568; margin-top: 10px; }
+        /* INPUTS E BOTÕES */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: #0a2e5c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; }
+        .btn-pdf { background: #555; margin-top: 10px; }
 
-        /* NAV FIXA */
+        /* NAV BAR */
         .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: white; display: flex; justify-content: space-around;
-            padding: 12px 0 25px 0; border-top: 1px solid #e2e8f0; z-index: 999;
+            position: fixed; bottom: 0; left: 0; right: 0; background: white;
+            display: flex; justify-content: space-around; padding: 10px 0 20px 0;
+            border-top: 2px solid #0a2e5c;
         }
-        .nav-item { color: #94a3b8; text-align: center; flex: 1; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
-        .nav-item span { display: block; font-size: 0.6rem; margin-top: 2px; }
+        .nav-btn { color: #888; text-align: center; flex: 1; cursor: pointer; }
+        .nav-btn.active { color: #0a2e5c; }
+        .nav-btn span { display: block; font-size: 0.6rem; }
 
-        .list-item { background: white; padding: 12px; border-radius: 12px; margin-bottom: 8px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .item-hist { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #0a2e5c; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="margin-top:0; color:var(--primary)">LISBOA ÉLITE</h2>
-        <input id="pass" type="password" placeholder="Senha de Acesso" style="text-align:center">
-        <button class="btn" onclick="login()">ACESSAR</button>
+        <h2 style="color:#0a2e5c">LISBOA ÉLITE</h2>
+        <input id="pass" type="password" placeholder="Senha" style="text-align:center">
+        <button class="btn" onclick="fLogin()">ENTRAR</button>
     </div>
 </div>
 
 <div id="app" style="display:none">
-    <div class="header">LISBOA GESTÃO V5.0</div>
+    <div class="header">
+        <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo-img">
+        <div style="margin-top:5px; font-weight:bold; letter-spacing:1px;">LISBOA GESTÃO</div>
+    </div>
 
     <div class="container">
         
         <div id="sec-home" class="section active">
             <div class="card">
-                <small style="font-weight:bold; opacity:0.6">LUCRO LÍQUIDO</small>
-                <h1 id="res-lucro" style="margin:5px 0; color:var(--success)">R$ 0,00</h1>
-                <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-                    <span>Entradas: <b id="res-mao" style="color:var(--accent)">R$ 0</b></span>
-                    <span>Saídas: <b id="res-contas" style="color:var(--danger)">R$ 0</b></span>
+                <small>LUCRO LÍQUIDO</small>
+                <h2 id="res-lucro" style="color: green; margin: 5px 0;">R$ 0,00</h2>
+                <div style="font-size: 12px; display: flex; justify-content: space-between;">
+                    <span>Ganhos: <b id="res-mao" style="color:blue">R$ 0</b></span>
+                    <span>Saídas: <b id="res-contas" style="color:red">R$ 0</b></span>
                 </div>
             </div>
 
-            <div class="grid-12">
+            <div class="grid-menu">
                 <div class="grid-item" onclick="go('sec-oleo')"><i class="fas fa-oil-can"></i><span>Óleo</span></div>
                 <div class="grid-item" onclick="go('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
                 <div class="grid-item" onclick="go('sec-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
                 <div class="grid-item" onclick="go('sec-agenda')"><i class="fas fa-calendar"></i><span>Agenda</span></div>
                 <div class="grid-item" onclick="go('sec-ia')"><i class="fas fa-brain"></i><span>Analista</span></div>
-                <div class="grid-item" onclick="go('sec-compras')"><i class="fas fa-cart-plus"></i><span>Compras</span></div>
-                <div class="grid-item" onclick="go('sec-check')"><i class="fas fa-clipboard-check"></i><span>Check</span></div>
+                <div class="grid-item" onclick="go('sec-compras')"><i class="fas fa-shopping-cart"></i><span>Compras</span></div>
+                <div class="grid-item" onclick="go('sec-check')"><i class="fas fa-check-double"></i><span>Check</span></div>
                 <div class="grid-item" onclick="go('sec-taxa')"><i class="fas fa-percent"></i><span>Taxas</span></div>
-                <div class="grid-item" onclick="go('sec-cliente')"><i class="fas fa-users"></i><span>Clientes</span></div>
-                <div class="grid-item" onclick="go('sec-peca')"><i class="fas fa-tools"></i><span>Peças</span></div>
-                <div class="grid-item" onclick="go('sec-avisos')"><i class="fas fa-bell"></i><span>Avisos</span></div>
-                <div class="grid-item" onclick="backup()"><i class="fas fa-database"></i><span>Backup</span></div>
+                <div class="grid-item" onclick="go('sec-cli')"><i class="fas fa-user-friends"></i><span>Clientes</span></div>
+                <div class="grid-item" onclick="go('sec-pecas')"><i class="fas fa-cogs"></i><span>Peças</span></div>
+                <div class="grid-item" onclick="go('sec-aviso')"><i class="fas fa-bell"></i><span>Avisos</span></div>
+                <div class="grid-item" onclick="fBackup()"><i class="fas fa-database"></i><span>Backup</span></div>
             </div>
-            <canvas id="chartHome" height="140"></canvas>
+            <canvas id="graficoHome" height="150"></canvas>
         </div>
 
         <div id="sec-add" class="section">
             <div class="card">
-                <h3>🔨 Nova Ordem</h3>
+                <h3>Novo Serviço</h3>
                 <input id="sNome" placeholder="Nome do Cliente">
-                <input id="sPlaca" placeholder="Placa (Ex: ABC1234)" style="text-transform:uppercase">
+                <input id="sPlaca" placeholder="Placa" style="text-transform:uppercase">
                 <input id="sMao" type="number" placeholder="Mão de Obra (R$)">
-                <input id="sPec" type="number" placeholder="Custo Peças (R$)">
-                <textarea id="sObs" placeholder="Descrição do serviço..."></textarea>
-                <button class="btn" onclick="saveS()">SALVAR SERVIÇO</button>
-                <button class="btn btn-pdf" onclick="pdf()">GERAR PDF</button>
+                <input id="sPec" type="number" placeholder="Custo das Peças (R$)">
+                <textarea id="sObs" placeholder="Descrição"></textarea>
+                <button class="btn" onclick="fSaveS()">SALVAR NO CAIXA</button>
+                <button class="btn btn-pdf" onclick="fPdf()">GERAR PDF</button>
             </div>
         </div>
 
         <div id="sec-hist" class="section">
-            <h3>🔍 Histórico de Placas</h3>
-            <input id="q" placeholder="Digite a placa..." onkeyup="render()">
-            <div id="list-hist"></div>
+            <h3>Histórico</h3>
+            <input id="q" placeholder="Buscar placa..." onkeyup="render()">
+            <div id="render-hist"></div>
         </div>
 
         <div id="sec-cash" class="section">
-            <h3>💸 Saída de Caixa</h3>
-            <input id="cDesc" placeholder="Descrição (Ex: Aluguel)">
-            <input id="cVal" type="number" placeholder="Valor R$">
-            <button class="btn" style="background:var(--danger)" onclick="saveC()">PAGAR CONTA</button>
-            <div id="list-cash" style="margin-top:15px"></div>
+            <div class="card">
+                <h3>Pagar Conta</h3>
+                <input id="cDesc" placeholder="Descrição">
+                <input id="cVal" type="number" placeholder="Valor R$">
+                <button class="btn" style="background:red" onclick="fSaveC()">SALVAR GASTO</button>
+            </div>
+            <div id="render-cash"></div>
         </div>
 
-        <div id="sec-oleo" class="section"><h3>🛢️ Retorno de Óleo</h3><div id="list-oleo"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-estoque" class="section"><h3>📦 Estoque</h3><input id="e1" placeholder="Item"><input id="e2" placeholder="Qtd"><button class="btn" onclick="add('estoque','e1','e2')">Add</button><button class="btn btn-pdf" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-tabela" class="section"><h3>📋 Tabela de Preços</h3><div id="list-tab"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-agenda" class="section"><h3>📅 Agenda</h3><div id="list-age"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-ia" class="section"><h3>🤖 Analista</h3><div class="list-item" id="ia-txt">Sincronizando dados...</div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-compras" class="section"><h3>🛒 Compras</h3><div id="list-com"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-check" class="section"><h3>📋 Check-list</h3><div id="list-chk"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-taxa" class="section"><h3>💳 Taxas</h3><input id="txV" placeholder="Valor"><button class="btn" onclick="alert('Cobre R$ '+(txV.value*1.12).toFixed(2))">Calcular 12%</button><button class="btn btn-pdf" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-cliente" class="section"><h3>👥 Clientes</h3><div id="list-cli"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-peca" class="section"><h3>🔧 Peças</h3><div id="list-pec"></div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-avisos" class="section"><h3>🔔 Avisos</h3><div class="list-item">Tudo em dia!</div><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-oleo" class="section"><h3>Óleo</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-estoque" class="section"><h3>Estoque</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-tabela" class="section"><h3>Tabela</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-agenda" class="section"><h3>Agenda</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-ia" class="section"><h3>IA</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-compras" class="section"><h3>Compras</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-check" class="section"><h3>Check</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-taxa" class="section"><h3>Taxas</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-cli" class="section"><h3>Clientes</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-pecas" class="section"><h3>Peças</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
+        <div id="sec-aviso" class="section"><h3>Avisos</h3><button class="btn" onclick="go('sec-home')">Voltar</button></div>
 
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" id="n-home" onclick="go('sec-home')"><i class="fas fa-th-large"></i><span>Início</span></div>
-        <div class="nav-item" id="n-add" onclick="go('sec-add')"><i class="fas fa-plus-circle"></i><span>Novo</span></div>
-        <div class="nav-item" id="n-hist" onclick="go('sec-hist')"><i class="fas fa-search"></i><span>Busca</span></div>
-        <div class="nav-item" id="n-cash" onclick="go('sec-cash')"><i class="fas fa-wallet"></i><span>Gastos</span></div>
+        <div class="nav-btn active" id="n-home" onclick="go('sec-home')"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="nav-btn" id="n-add" onclick="go('sec-add')"><i class="fas fa-plus-circle"></i><span>Novo</span></div>
+        <div class="nav-btn" id="n-hist" onclick="go('sec-hist')"><i class="fas fa-search"></i><span>Busca</span></div>
+        <div class="nav-btn" id="n-cash" onclick="go('sec-cash')"><i class="fas fa-wallet"></i><span>Gastos</span></div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v5')) || { mao:0, contas:0, servicos:[], despesas:[] };
+    let db = JSON.parse(localStorage.getItem('lisboa_v6')) || { mao:0, contas:0, servicos:[], despesas:[] };
+    let ctx = document.getElementById('graficoHome').getContext('2d');
     let chart;
 
-    function login() {
+    function fLogin() {
         if(document.getElementById('pass').value === '1234') {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app').style.display = 'block';
             render();
-        } else { alert("Senha Incorreta"); }
+        } else { alert("Erro!"); }
     }
 
     function go(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        // Esconde tudo
+        let sections = document.getElementsByClassName('section');
+        for(let s of sections) { s.style.display = 'none'; }
+        // Mostra a certa
+        document.getElementById(id).style.display = 'block';
         
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        // Ativa ícone
+        let btns = document.getElementsByClassName('nav-btn');
+        for(let b of btns) { b.classList.remove('active'); }
         if(id === 'sec-home') document.getElementById('n-home').classList.add('active');
         if(id === 'sec-add') document.getElementById('n-add').classList.add('active');
         if(id === 'sec-hist') document.getElementById('n-hist').classList.add('active');
@@ -186,34 +193,36 @@
         window.scrollTo(0,0);
     }
 
-    function saveS() {
-        let m = parseFloat(sMao.value) || 0; let p = parseFloat(sPec.value) || 0;
-        if(!m || !sNome.value) return alert("Preencha Nome e Mão de Obra!");
+    function fSaveS() {
+        let m = parseFloat(sMao.value) || 0;
+        let p = parseFloat(sPec.value) || 0;
+        if(!m || !sNome.value) return alert("Preencha!");
         db.mao += m;
-        db.servicos.unshift({ n:sNome.value, p:sPlaca.value.toUpperCase(), v:m+p, m, p, d:new Date().toLocaleDateString() });
-        localStorage.setItem('lisboa_v5', JSON.stringify(db));
+        db.servicos.unshift({ n: sNome.value, p: sPlaca.value.toUpperCase(), v: m+p, d: new Date().toLocaleDateString() });
+        localStorage.setItem('lisboa_v6', JSON.stringify(db));
         sNome.value=''; sPlaca.value=''; sMao.value=''; sPec.value='';
         render(); go('sec-home');
     }
 
-    function saveC() {
+    function fSaveC() {
         let v = parseFloat(cVal.value) || 0; if(!v) return;
         db.contas += v;
-        db.despesas.unshift({ n:cDesc.value, v:v, d:new Date().toLocaleDateString() });
-        localStorage.setItem('lisboa_v5', JSON.stringify(db));
-        cVal.value=''; cDesc.value=''; render();
+        db.despesas.unshift({ n: cDesc.value, v: v, d: new Date().toLocaleDateString() });
+        localStorage.setItem('lisboa_v6', JSON.stringify(db));
+        cDesc.value=''; cVal.value='';
+        render();
     }
 
-    function pdf() {
+    function fPdf() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("LISBOA ÉLITE - RECIBO", 20, 20);
-        doc.text("Cliente: " + sNome.value, 20, 40);
-        doc.text("Total: R$ " + (parseFloat(sMao.value||0) + parseFloat(sPec.value||0)).toFixed(2), 20, 50);
-        doc.save("Recibo.pdf");
+        doc.text("RECIBO LISBOA", 10, 10);
+        doc.text("Cliente: " + sNome.value, 10, 20);
+        doc.text("Total: R$ " + (parseFloat(sMao.value||0) + parseFloat(sPec.value||0)).toFixed(2), 10, 30);
+        doc.save("recibo.pdf");
     }
 
-    function backup() { alert("CÓDIGO DE BACKUP:\n\n" + btoa(JSON.stringify(db))); }
+    function fBackup() { alert(btoa(JSON.stringify(db))); }
 
     function render() {
         let lucro = db.mao - db.contas;
@@ -221,18 +230,18 @@
         document.getElementById('res-mao').innerText = "R$ " + db.mao.toFixed(2);
         document.getElementById('res-contas').innerText = "R$ " + db.contas.toFixed(2);
 
-        document.getElementById('list-hist').innerHTML = db.servicos.filter(s => s.p.includes(q.value.toUpperCase())).map(s => `
-            <div class="list-item"><div><b>${s.p}</b><br><small>${s.n}</small></div><b>R$ ${s.v.toFixed(2)}</b></div>
+        document.getElementById('render-hist').innerHTML = db.servicos.filter(s => s.p.includes(q.value.toUpperCase())).map(s => `
+            <div class="item-hist"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v.toFixed(2)}</b></div>
         `).join('');
 
-        document.getElementById('list-cash').innerHTML = db.despesas.map(d => `
-            <div class="list-item"><span>${d.n}</span><b style="color:var(--danger)">- R$ ${d.v.toFixed(2)}</b></div>
+        document.getElementById('render-cash').innerHTML = db.despesas.map(d => `
+            <div class="item-hist"><span>${d.n}</span><b style="color:red">- R$ ${d.v.toFixed(2)}</b></div>
         `).join('');
 
-        const ctx = document.getElementById('chartHome').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'line', data:{ labels:['','','',''], datasets:[{label:'Lucro', data:[0,lucro], borderColor:'#1e60ff', tension:0.3, fill:true, backgroundColor:'rgba(30,96,255,0.05)'}]}, options:{plugins:{legend:{display:false}}, scales:{y:{display:false},x:{display:false}}}});
+        chart = new Chart(ctx, { type:'line', data:{ labels:['','','',''], datasets:[{data:[0,lucro], borderColor:'blue', tension:0.4}] }, options:{plugins:{legend:{display:false}}, scales:{y:{display:false},x:{display:false}}}});
     }
+
     render();
 </script>
 </body>
