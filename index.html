@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LISBOA PRO - PERFORMANCE TURBINADO</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-:root{
-  --bg:#0a0e17; --card:#161b28; --primary:#2a5ee8; --accent:#00d2ff;
-  --success:#00f298; --danger:#ff4b5c; --warning:#ffc107; --text:#e1e8f0;
-}
-body{
-  margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px;
-}
-.header{background:var(--card); padding:20px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1);}
-.header img{max-width:130px;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LISBOA PRO - PERFORMANCE</title>
 
-.container{padding:15px; max-width:600px; margin:auto;}
+  <!-- Bibliotecas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-/* Balance Card */
-.balance-card{background:linear-gradient(135deg,#1e2a4a,#161b28); padding:25px; border-radius:24px; text-align:center; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3);}
-.balance-card h2{margin:0; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.7;}
-.balance-val{font-size:2.5rem; font-weight:800; color:var(--success); margin:10px 0;}
-#barra-meta{height:10px; width:0%; background:var(--success); border-radius:8px; transition:0.4s ease-in-out;}
+  <style>
+    :root { 
+      --bg: #0a0e17; --card: #161b28; --primary: #2a5ee8; 
+      --accent: #00d2ff; --success: #00f298; --danger: #ff4b5c; --text: #e1e8f0; 
+    }
+    body { margin:0; font-family:'Inter', sans-serif; background:var(--bg); color:var(--text); padding-bottom:80px; }
+    
+    .header { background: var(--card); padding:20px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .header img { max-width:130px; }
 
-/* Menu Grid */
-.menu-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:25px;}
-.menu-item{background:var(--card); padding:12px 5px; border-radius:16px; text-align:center; border:1px solid rgba(255,255,255,0.05); cursor:pointer; transition:0.2s;}
-.menu-item i{font-size:1.2rem; color:var(--accent); margin-bottom:6px; display:block;}
-.menu-item span{font-size:0.55rem; font-weight:700; text-transform:uppercase;}
-.menu-item:hover{background:var(--primary);}
-.menu-item:active{transform:scale(0.9);}
+    .container { padding:15px; max-width:600px; margin:auto; }
 
-/* Sections */
-.section{background:var(--card); padding:20px; border-radius:24px; display:none; border:1px solid rgba(255,255,255,0.05);}
-.active{display:block; animation:slideIn 0.3s ease-out;}
-@keyframes slideIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+    /* Cards */
+    .balance-card { background: linear-gradient(135deg,#1e2a4a,#161b28); padding:25px; border-radius:24px; text-align:center; margin-bottom:20px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+    .balance-card h2 { margin:0; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.7; }
+    .balance-val { font-size:2.5rem; font-weight:800; color: var(--success); margin:10px 0; }
+    #barra-meta { height:6px; width:0%; background: var(--accent); border-radius:6px; margin:5px 0; }
 
-/* Inputs e Botões */
-input, select, textarea{background:#0f141e; border:1px solid #2d364a; color:white; padding:14px; border-radius:12px; width:100%; box-sizing:border-box; margin:8px 0; font-size:15px;}
-button{background:var(--primary); color:white; padding:16px; border-radius:14px; border:none; font-weight:700; width:100%; cursor:pointer; margin-top:10px; font-size:14px; transition:0.2s;}
-button:active{opacity:0.8;}
-.btn-success{background:var(--success); color:#0a0e17;}
-.btn-danger{background:var(--danger);}
-.btn-warning{background:var(--warning); color:#0a0e17;}
+    /* Menu Grid */
+    .menu-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:25px; }
+    .menu-item { background:var(--card); padding:12px 5px; border-radius:16px; text-align:center; border:1px solid rgba(255,255,255,0.05); cursor:pointer; transition:0.2s; position:relative; }
+    .menu-item i { font-size:1.2rem; color: var(--accent); margin-bottom:6px; display:block; }
+    .menu-item span { font-size:0.55rem; font-weight:700; text-transform:uppercase; }
+    .menu-item:active { transform:scale(0.9); background: var(--primary); }
 
-/* Listas */
-.list-item{background:rgba(255,255,255,0.03); padding:15px; border-radius:16px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid var(--primary);}
-.badge{background:var(--danger); color:white; border-radius:50px; padding:2px 8px; font-size:10px; position:absolute; top:-5px; right:-5px;}
+    /* Seções */
+    .section { background:var(--card); padding:20px; border-radius:24px; display:none; border:1px solid rgba(255,255,255,0.05); }
+    .active { display:block; animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-/* IA Box */
-.ia-box{background:#000; border:1px solid var(--success); padding:15px; border-radius:12px; font-family:'Courier New',monospace; color:var(--success); font-size:13px; line-height:1.4;}
+    /* Inputs e Botões */
+    input, select, textarea { background:#0f141e; border:1px solid #2d364a; color:white; padding:14px; border-radius:12px; width:100%; box-sizing:border-box; margin:8px 0; font-size:15px; }
+    button { background: var(--primary); color:white; padding:16px; border-radius:14px; border:none; font-weight:700; width:100%; cursor:pointer; margin-top:10px; font-size:14px; transition:0.2s; }
+    button:active { opacity:0.8; }
+    .btn-success { background: var(--success); color:#0a0e17; }
+    .btn-danger { background: var(--danger); }
 
-/* Toast */
-#toast{visibility:hidden; min-width:200px; background:var(--primary); color:white; text-align:center; border-radius:12px; padding:12px; position:fixed; z-index:1; left:50%; bottom:30px; transform:translateX(-50%);}
-#toast.show{visibility:visible; animation:fadein 0.5s, fadeout 0.5s 2s;}
-@keyframes fadein{from{bottom:0; opacity:0;} to{bottom:30px; opacity:1;}}
-@keyframes fadeout{from{bottom:30px; opacity:1;} to{bottom:0; opacity:0;}}
-</style>
+    /* Listas */
+    .list-item { background: rgba(255,255,255,0.03); padding:15px; border-radius:16px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid var(--primary); }
+    .badge { background: var(--danger); color:white; border-radius:50px; padding:2px 8px; font-size:10px; position:absolute; top:-5px; right:-5px; }
+
+    /* IA Box */
+    .ia-box { background:#000; border:1px solid var(--success); padding:15px; border-radius:12px; font-family:'Courier New', monospace; color:var(--success); font-size:13px; line-height:1.4; }
+
+    /* Toast */
+    #toast { visibility:hidden; min-width:200px; margin-left:-100px; background-color:#333; color:#fff; text-align:center; border-radius:10px; padding:16px; position:fixed; z-index:1000; left:50%; bottom:30px; font-size:14px; }
+    #toast.show { visibility:visible; animation: fadein 0.5s, fadeout 0.5s 2s; }
+    @keyframes fadein { from{bottom:10px; opacity:0;} to{bottom:30px; opacity:1;} }
+    @keyframes fadeout { from{bottom:30px; opacity:1;} to{bottom:10px; opacity:0;} }
+  </style>
 </head>
 <body>
 
@@ -68,10 +68,6 @@ button:active{opacity:0.8;}
   <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" alt="Lisboa Pro">
 </div>
 
-<!-- Toast -->
-<div id="toast"></div>
-
-<!-- Login -->
 <div id="loginPage" class="container">
   <div class="balance-card">
     <i class="fas fa-shield-alt" style="font-size:2rem; color:var(--accent)"></i>
@@ -81,17 +77,22 @@ button:active{opacity:0.8;}
   </div>
 </div>
 
-<!-- Main Page -->
-<div id="mainPage" class="container" style="display:none">
-  <!-- Dashboard de Saldo -->
+<div id="mainPage" class="container" style="display:none"></div>
+
+<div id="toast"></div>
+<!-- PARTE B – MENU E SEÇÕES -->
+<div class="container" id="mainPage">
+
   <div class="balance-card">
     <h2>Saldo Real (LUCRO LIMPO)</h2>
     <div class="balance-val" id="val-lucro">R$ 0,00</div>
-    <div id="barra-meta"></div>
-    <div style="display:flex; justify-content:space-around; opacity:0.8; font-size:12px; margin-top:5px;">
+    <div style="display:flex; justify-content:space-around; opacity:0.8; font-size:12px;">
       <span>Mão de Obra: <b id="val-mao" style="color:var(--accent)">R$ 0</b></span>
       <span>Contas: <b id="val-contas" style="color:var(--danger)">R$ 0</b></span>
-      <span>Peças: <b id="val-pecas" style="color:var(--primary)">R$ 0</b></span>
+      <span>Peças: <b id="val-pecas" style="color:#00d2ff">R$ 0</b></span>
+    </div>
+    <div style="background:#111; border-radius:6px; margin-top:10px;">
+      <div id="barra-meta"></div>
     </div>
   </div>
 
@@ -114,9 +115,7 @@ button:active{opacity:0.8;}
     <div class="menu-item" onclick="nav('sec-ia')"><i class="fas fa-brain"></i><span>I.A</span></div>
   </div>
 
-  <!-- Seções -->
-
-  <!-- Dashboard Financeiro -->
+  <!-- Dash -->
   <div id="sec-dash" class="section active">
     <h3>📊 Resumo Financeiro</h3>
     <canvas id="chartFin" height="200"></canvas>
@@ -184,7 +183,12 @@ button:active{opacity:0.8;}
   <div id="sec-taxa" class="section">
     <h3>💳 Calculadora de Taxas</h3>
     <input id="taxV" type="number" placeholder="Valor do Serviço">
-    <button onclick="calcTaxa()">CALCULAR (+12%)</button>
+    <select id="tipoPagamento">
+      <option value="pix">Pix / Dinheiro (0%)</option>
+      <option value="debito">Débito (+2%)</option>
+      <option value="credito">Cartão de Crédito (+12%)</option>
+    </select>
+    <button onclick="calcTaxa()">CALCULAR</button>
   </div>
 
   <!-- Agenda -->
@@ -213,7 +217,7 @@ button:active{opacity:0.8;}
     <div id="l-check"></div>
   </div>
 
-  <!-- IA -->
+  <!-- Analista Inteligente -->
   <div id="sec-ia" class="section">
     <h3>🤖 Analista Inteligente</h3>
     <div id="ia-res" class="ia-box">Aguardando dados...</div>
@@ -222,6 +226,8 @@ button:active{opacity:0.8;}
     <button onclick="gerarBackup()" style="background:#333">GERAR CÓDIGO BACKUP</button>
     <textarea id="txtBack" style="font-size:8px"></textarea>
   </div>
+
+</div>
 <script>
   // Banco de Dados Centralizado
   let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || { 
@@ -230,88 +236,104 @@ button:active{opacity:0.8;}
   let chart;
 
   // Toast
-  function showToast(msg){
+  function showToast(msg) {
     const t = document.getElementById('toast');
     t.innerText = msg;
-    t.className = 'show';
-    setTimeout(()=>{t.className='';},2500);
+    t.className = "show";
+    setTimeout(()=>{t.className = t.className.replace("show","");},2500);
   }
 
   // Login
   const btnLogin = document.getElementById('btnLogin');
-  btnLogin.onclick = function(){
-    if(document.getElementById('senha').value === '1234'){
+  btnLogin.addEventListener('click', () => {
+    const senha = document.getElementById('senha').value;
+    if(senha === '1234'){
       document.getElementById('loginPage').style.display='none';
       document.getElementById('mainPage').style.display='block';
       render();
-    } else showToast('Senha incorreta!');
-  }
+      showToast("✅ Bem-vindo ao Painel!");
+    } else {
+      showToast("❌ Senha incorreta!");
+    }
+  });
 
   // Navegação
   function nav(id){
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
   }
 
-  // Salvar Serviço
+  // Salvar dados
+  function save(){ 
+    localStorage.setItem('lisboa_vfinal', JSON.stringify(db)); 
+    render(); 
+  }
+
+  // Salvar serviço
   function salvarServico(){
-    let m = parseFloat(sMao.value) || 0;
-    let p = parseFloat(sPec.value) || 0;
+    let m = parseFloat(document.getElementById('sMao').value) || 0;
+    let p = parseFloat(document.getElementById('sPec').value) || 0;
     if(m+p>0){
-      db.mao+=m; db.pecas+=p;
-      db.servicos.unshift({ 
-        n:sNome.value, p:sPlaca.value.toUpperCase(), v:(m+p), m:m, pe:p, z:sCel.value, ol:sOleo.value, d:new Date().getTime() 
+      db.mao += m;
+      db.pecas += p;
+      db.servicos.unshift({
+        n: document.getElementById('sNome').value,
+        p: document.getElementById('sPlaca').value.toUpperCase(),
+        v: m+p,
+        m: m,
+        pe: p,
+        z: document.getElementById('sCel').value,
+        ol: document.getElementById('sOleo').value,
+        d: new Date().getTime()
       });
-      sMao.value=''; sPec.value=''; sNome.value=''; sPlaca.value=''; sCel.value='nao';
+      document.getElementById('sMao').value='';
+      document.getElementById('sPec').value='';
+      document.getElementById('sNome').value='';
+      showToast("✅ Serviço salvo!");
       save();
-      showToast('✅ Serviço salvo!');
-    }
+    } else showToast("⚠️ Preencha Mão de Obra ou Peças");
   }
 
-  // Salvar Conta
+  // Salvar conta
   function salvarConta(){
-    let v = parseFloat(cVal.value) || 0;
+    let v = parseFloat(document.getElementById('cVal').value) || 0;
     if(v>0){
-      db.contas+=v;
-      db.despesas.unshift({ n:cDesc.value, v:v, d:new Date().toLocaleDateString() });
-      cVal.value=''; cDesc.value=''; save();
-      showToast('💸 Conta registrada!');
-    }
-  }
-
-  // Adicionar objetos genéricos
-  function addObj(t,id1,id2){
-    let obj = { n:document.getElementById(id1).value, v:id2?document.getElementById(id2).value:null };
-    if(obj.n){
-      db[t].push(obj);
-      document.getElementById(id1).value='';
-      if(id2) document.getElementById(id2).value='';
+      db.contas += v;
+      db.despesas.unshift({ n: document.getElementById('cDesc').value, v:v, d:new Date().toLocaleDateString()});
+      document.getElementById('cVal').value='';
+      document.getElementById('cDesc').value='';
+      showToast("✅ Conta adicionada!");
       save();
-      showToast('✅ Adicionado em '+t);
-    }
+    } else showToast("⚠️ Valor inválido");
   }
 
-  // Renderizar tudo
+  // Adicionar objeto genérico (estoque, tabela, agenda, compras, check)
+  function addObj(tipo, id1, id2=null){
+    let obj = { n: document.getElementById(id1).value, v: id2 ? document.getElementById(id2).value : null };
+    db[tipo].push(obj);
+    document.getElementById(id1).value='';
+    if(id2) document.getElementById(id2).value='';
+    showToast(`✅ ${tipo} atualizado`);
+    save();
+  }
+
+  // Renderizar dashboards e listas
   function render(){
     let lucro = db.mao - db.contas;
-    document.getElementById('val-lucro').innerText = "R$ "+lucro.toFixed(2);
-    document.getElementById('val-mao').innerText = "R$ "+db.mao.toFixed(2);
-    document.getElementById('val-contas').innerText = "R$ "+db.contas.toFixed(2);
-    document.getElementById('val-pecas').innerText = "R$ "+db.pecas.toFixed(2);
+    document.getElementById('val-lucro').innerText = "R$ " + lucro.toFixed(2);
+    document.getElementById('val-mao').innerText = "R$ " + db.mao.toFixed(2);
+    document.getElementById('val-contas').innerText = "R$ " + db.contas.toFixed(2);
+    document.getElementById('val-pecas').innerText = "R$ " + db.pecas.toFixed(2);
 
-    // Barra de meta (lucro >= 1000 = 100%)
-    let barra = Math.min(100,(lucro/1000)*100);
-    document.getElementById('barra-meta').style.width=barra+'%';
+    // Barra de Meta (ex: meta de R$5000)
+    let meta = 5000;
+    let perc = Math.min((lucro/meta)*100,100);
+    document.getElementById('barra-meta').style.width = perc + "%";
 
     // Histórico
-    document.getElementById('lista-hist').innerHTML = db.servicos.filter(s => s.p.includes(busca.value.toUpperCase())).map(s => 
-      `<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`
-    ).join('');
-
-    // Contas
-    document.getElementById('lista-contas').innerHTML = db.despesas.map(d => 
-      `<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`
-    ).join('');
+    const buscaVal = document.getElementById('busca') ? document.getElementById('busca').value.toUpperCase() : "";
+    document.getElementById('lista-hist').innerHTML = db.servicos.filter(s=>s.p.includes(buscaVal)).map(s=>`<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
+    document.getElementById('lista-contas').innerHTML = db.despesas.map(d=>`<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
 
     // Óleo
     let hoje = new Date().getTime();
@@ -319,16 +341,16 @@ button:active{opacity:0.8;}
     let htmlOleo="";
     db.servicos.forEach(s=>{
       if(s.ol==='sim'){
-        let dias = Math.floor((hoje-s.d)/(1000*60*60*24));
+        let dias = Math.floor((hoje - s.d)/(1000*60*60*24));
         if(dias>=90){
           vencidos++;
-          htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
+          htmlOleo += `<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
         }
       }
     });
-    document.getElementById('notif-oleo').innerText=vencidos;
-    document.getElementById('notif-oleo').style.display=vencidos>0?'block':'none';
-    document.getElementById('lista-oleo').innerHTML=htmlOleo||"Sem trocas pendentes.";
+    document.getElementById('notif-oleo').innerText = vencidos;
+    document.getElementById('notif-oleo').style.display = vencidos>0 ? 'block':'none';
+    document.getElementById('lista-oleo').innerHTML = htmlOleo || "Sem trocas pendentes.";
 
     // Gráfico
     const ctx = document.getElementById('chartFin').getContext('2d');
@@ -339,73 +361,65 @@ button:active{opacity:0.8;}
         labels:['Lucro Limpo','Contas Fixas','Custo Peças'],
         datasets:[{data:[lucro>0?lucro:0, db.contas, db.pecas], backgroundColor:['#00f298','#ff4b5c','#00d2ff'], borderWidth:0}]
       },
-      options:{plugins:{legend:{labels:{color:'white'}}}}
-    });
-
-    // Render listas genéricas
-    ['estoque','tabela','agenda','compras','check'].forEach(t=>{
-      let html='';
-      db[t].forEach(o=>{
-        html+=`<div class="list-item">${o.n}${o.v?(' - '+o.v):''}</div>`;
-      });
-      document.getElementById('l-'+t).innerHTML=html;
+      options:{ plugins:{ legend:{ labels:{ color:'white' } } } }
     });
   }
 
-  // Salvar LocalStorage
-  function save(){ localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render(); }
+  // Análise IA
+  function analisarIA(){
+    let lucro = db.mao - db.contas;
+    let analise="";
+    if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar. Contas superam ganho.";
+    else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas fixas >50% do lucro.";
+    else analise="> SAÚDE ÓTIMA: Lucro saudável. R$ "+lucro.toFixed(2)+" limpos.";
 
-  // WhatsApp Orçamento
+    document.getElementById('ia-res').innerText = analise + "\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use a lista de óleo para reter clientes.");
+  }
+
+  // WhatsApp orçamento
   function zapOrcamento(){
-    if(sCel.value && (sMao.value || sPec.value)){
-      let total = (parseFloat(sMao.value)||0)+(parseFloat(sPec.value)||0);
-      window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${total}`);
-    } else showToast('Preencha os campos antes!');
+    let numero = document.getElementById('sCel').value;
+    let m = parseFloat(document.getElementById('sMao').value)||0;
+    let p = parseFloat(document.getElementById('sPec').value)||0;
+    window.open(`https://api.whatsapp.com/send?phone=${numero}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${m}, Peças R$ ${p}. Total R$ ${m+p}`);
   }
 
-  // Gerar PDF
+  // PDF
   function gerarPDF(){
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     doc.text("Relatório Lisboa Pro",10,10);
     doc.text(`Lucro: R$ ${db.mao - db.contas}`,10,20);
-    doc.autoTable({
-      head:[['Serviço','Placa','Cliente','Valor']],
-      body: db.servicos.map(s=>[s.n,s.p,s.z,'R$ '+s.v])
-    });
+    doc.autoTable({ head:[['Cliente','Placa','Valor']], body: db.servicos.map(s=>[s.n,s.p,s.v]) });
     doc.save("mes.pdf");
-    showToast('📄 PDF gerado!');
   }
 
-  // Calculadora de Taxas
+  // Calculadora de taxas múltiplas
   function calcTaxa(){
-    if(taxV.value){
-      let total = parseFloat(taxV.value)*1.12;
-      alert("Para receber R$ "+taxV.value+", cobre do cliente: R$ "+total.toFixed(2));
-    }
+    let val = parseFloat(document.getElementById('taxV').value)||0;
+    let tipo = document.getElementById('tipoPagamento').value;
+    let finalVal=val;
+    let taxaStr="";
+    if(tipo==='credito'){ finalVal=val*1.12; taxaStr="+12%"; }
+    else if(tipo==='debito'){ finalVal=val*1.02; taxaStr="+2%"; }
+    else taxaStr="0%";
+    showToast(`💰 Valor final (${tipo} ${taxaStr}): R$ ${finalVal.toFixed(2)}`);
   }
 
-  // Reset do Mês
-  function resetMes(){
-    if(confirm("Deseja zerar ganhos e custos? Histórico permanecerá.")){
+  // Reset mês
+  function resetMes(){ 
+    if(confirm("Deseja zerar os ganhos? Histórico não será apagado.")){
       db.mao=0; db.contas=0; db.pecas=0;
-      save();
-      showToast('💥 Dados do mês zerados!');
+      save(); 
+      showToast("✅ Mes resetado");
     }
-  }
-
-  // IA Analista
-  function analisarIA(){
-    let lucro = db.mao - db.contas;
-    let analise='';
-    if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar!";
-    else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas fixas consomem >50% do lucro!";
-    else analise="> SAÚDE ÓTIMA: Lucro saudável! R$ "+lucro.toFixed(2);
-    document.getElementById('ia-res').innerText=analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use a lista de óleo para atrair clientes antigos.");
   }
 
   // Backup
-  function gerarBackup(){ txtBack.value = btoa(JSON.stringify(db)); showToast('💾 Backup gerado!'); }
+  function gerarBackup(){ 
+    document.getElementById('txtBack').value = btoa(JSON.stringify(db)); 
+    showToast("✅ Backup gerado!");
+  }
 
   // Inicializa render
   render();
