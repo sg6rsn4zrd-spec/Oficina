@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA LISBOA PRO - COMPLETO</title>
+    <title>SISTEMA LISBOA PRO - VERSÃO FINAL</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,17 +15,17 @@
         .container { padding: 15px; max-width: 850px; margin: auto; }
         .card { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         h3 { margin-top: 0; color: var(--accent); font-size: 1rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 1px solid #1e3a5a; padding-bottom: 8px; }
-        input, select, textarea { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
-        button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        input, select { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box; margin: 5px 0; outline: none; font-size: 16px; }
+        button { padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: var(--dark); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-wpp { background: #25d366; color: white; }
         .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-box { background: #112240; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--primary); }
-        .stat-box b { display: block; font-size: 1rem; color: var(--success); margin-top: 4px; }
-        .item-lista { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-top: 8px; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
-        .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; text-transform: uppercase; }
+        .stat-box b { display: block; font-size: 1rem; color: var(--success); }
+        .item-lista { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
+        .badge { padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; }
         .ai-box { background: #000; padding: 10px; border-radius: 10px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 12px; color: #00ff9d; border: 1px solid var(--primary); }
     </style>
 </head>
@@ -45,13 +45,13 @@
 
     <div id="dashboard" style="display:none">
         <div class="grid-stats">
-            <div class="stat-box"><small>Ganhos</small><b id="entrada">R$ 0</b></div>
-            <div class="stat-box"><small>Gastos</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
+            <div class="stat-box"><small>Entradas</small><b id="entrada">R$ 0</b></div>
+            <div class="stat-box"><small>Saídas</small><b id="saida" style="color:var(--danger)">R$ 0</b></div>
             <div class="stat-box"><small>Lucro</small><b id="lucro" style="color:var(--accent)">R$ 0</b></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-chart-bar"></i> Fluxo de Caixa</h3>
+            <h3><i class="fas fa-chart-line"></i> Fluxo e Caixa Rápido</h3>
             <canvas id="graficoCaixa" height="150"></canvas>
             <div style="display: flex; gap: 5px; margin-top: 10px;">
                 <input id="vRapido" type="number" placeholder="Valor R$">
@@ -61,69 +61,78 @@
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-plus-circle"></i> Novo Serviço</h3>
+            <h3><i class="fas fa-motorcycle"></i> Novo Serviço / Orçamento</h3>
             <input id="cNome" placeholder="Nome do Cliente">
-            <input id="cPlaca" placeholder="Placa/Modelo">
-            <input id="cCel" placeholder="WhatsApp (DDD+Número)">
-            <input id="cServ" placeholder="Descrição do Serviço">
-            <input id="cVal" type="number" placeholder="Valor Total R$">
+            <input id="cPlaca" placeholder="Placa ou Modelo">
+            <input id="cCel" placeholder="WhatsApp (DDD...)">
+            <input id="cServ" placeholder="O que será feito?">
+            <input id="cVal" type="number" placeholder="Valor R$">
             <select id="cStatus">
-                <option value="Pendente">🟡 Pendente / Aguardando</option>
+                <option value="Pendente">🟡 Pendente</option>
                 <option value="Fazendo">🔵 Em Manutenção</option>
                 <option value="Pronto">🟢 Pronto para Entrega</option>
             </select>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button class="btn-success" onclick="salvarServico()"><i class="fas fa-save"></i> Salvar</button>
-                <button class="btn-wpp" onclick="enviarWpp()"><i class="fab fa-whatsapp"></i> Avisar</button>
+                <button class="btn-success" onclick="salvarServico()">SALVAR</button>
+                <button class="btn-wpp" onclick="enviarWpp()">ZAP</button>
             </div>
-            <button class="btn-primary" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> Gerar Recibo PDF</button>
+            <button class="btn-primary" onclick="gerarPDF()">GERAR RECIBO PDF</button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-search"></i> Histórico / Prontuário</h3>
-            <input id="busca" placeholder="Buscar por placa ou nome..." onkeyup="render()">
+            <h3><i class="fas fa-search"></i> Prontuário Digital</h3>
+            <input id="busca" placeholder="Pesquisar placa ou cliente..." onkeyup="render()">
             <div id="listaHistorico"></div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-list"></i> Tabela de Preços & Fornecedores</h3>
-            <input id="itemNome" placeholder="Item/Serviço/Fornecedor">
-            <input id="itemInfo" placeholder="Preço ou Telefone">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button class="btn-primary" onclick="addItem('precos')">Add Preço</button>
-                <button class="btn-primary" onclick="addItem('fornecedores')">Add Fornecedor</button>
+            <h3><i class="fas fa-tags"></i> Tabela de Preços Fixos</h3>
+            <div style="display: flex; gap: 5px;">
+                <input id="pNome" placeholder="Serviço">
+                <input id="pVal" type="number" placeholder="R$" style="width:80px">
+                <button class="btn-primary" onclick="addItem('precos')" style="width:50px">+</button>
             </div>
-            <div id="listaItens"></div>
+            <div id="listaPrecos"></div>
         </div>
 
         <div class="card">
             <h3><i class="fas fa-boxes"></i> Estoque de Peças</h3>
             <div style="display: flex; gap: 5px;">
-                <input id="eNome" placeholder="Nome da Peça">
+                <input id="eNome" placeholder="Peça">
                 <input id="eQtd" type="number" placeholder="Qtd" style="width:80px">
-                <button class="btn-success" onclick="addItem('estoque')" style="width:60px">+</button>
+                <button class="btn-success" onclick="addItem('estoque')" style="width:50px">+</button>
             </div>
             <div id="listaEstoque"></div>
         </div>
 
         <div class="card">
+            <h3><i class="fas fa-truck"></i> Fornecedores</h3>
+            <div style="display: flex; gap: 5px;">
+                <input id="fNome" placeholder="Fornecedor">
+                <input id="fContato" placeholder="Contato">
+                <button class="btn-primary" onclick="addItem('fornecedores')" style="width:50px">+</button>
+            </div>
+            <div id="listaFornecedores"></div>
+        </div>
+
+        <div class="card">
             <h3><i class="fas fa-robot"></i> IA Lisboa</h3>
-            <div class="ai-box" id="chat">> Aguardando comando...</div>
+            <div class="ai-box" id="chat">> Pronta para ajudar...</div>
             <div style="display: flex; gap: 5px; margin-top:8px;">
-                <input id="msgIA" placeholder="Dúvida?">
+                <input id="msgIA" placeholder="Pergunte algo...">
                 <button class="btn-primary" onclick="ia()" style="width:60px">➤</button>
             </div>
         </div>
 
-        <button class="btn-danger" onclick="location.reload()" style="width:100%"><i class="fas fa-sign-out-alt"></i> SAIR</button>
+        <button class="btn-danger" onclick="location.reload()" style="width:100%"><i class="fas fa-power-off"></i> SAIR</button>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v_final')) || { entrada: 0, saida: 0, historico: [], precos: [], fornecedores: [], estoque: [] };
+    let db = JSON.parse(localStorage.getItem('lisboa_v_final_top')) || { entrada: 0, saida: 0, historico: [], precos: [], fornecedores: [], estoque: [] };
     let chart;
 
-    function save() { localStorage.setItem('lisboa_v_final', JSON.stringify(db)); render(); }
+    function save() { localStorage.setItem('lisboa_v_final_top', JSON.stringify(db)); render(); }
 
     function login() {
         if(user.value === "dono" && pass.value === "1234") {
@@ -144,30 +153,24 @@
             db.entrada += v;
             db.historico.unshift({ id: Date.now(), nome: cNome.value, placa: cPlaca.value.toUpperCase(), serv: cServ.value, val: v, status: cStatus.value, data: new Date().toLocaleDateString() });
             cNome.value = ""; cPlaca.value = ""; cServ.value = ""; cVal.value = ""; save();
-            alert("Salvo!");
         }
     }
 
     function addItem(tipo) {
-        if(tipo === 'estoque') {
-            if(eNome.value) { db.estoque.push({ n: eNome.value, q: eQtd.value }); eNome.value = ""; eQtd.value = ""; }
-        } else {
-            if(itemNome.value) { db[tipo].push({ n: itemNome.value, i: itemInfo.value }); itemNome.value = ""; itemInfo.value = ""; }
-        }
+        if(tipo==='estoque' && eNome.value) db.estoque.push({n: eNome.value, q: eQtd.value});
+        if(tipo==='precos' && pNome.value) db.precos.push({n: pNome.value, v: pVal.value});
+        if(tipo==='fornecedores' && fNome.value) db.fornecedores.push({n: fNome.value, c: fContato.value});
         save();
     }
 
     function excluir(tipo, idx, val = 0) {
-        if(confirm("Excluir item?")) {
-            if(val > 0) db.entrada -= val;
-            db[tipo].splice(idx, 1); save();
-        }
+        if(confirm("Excluir?")) { if(val > 0) db.entrada -= val; db[tipo].splice(idx,1); save(); }
     }
 
     function ia() {
         let m = msgIA.value.toLowerCase();
-        let r = "Sou a IA Lisboa. Posso ajudar no financeiro ou estoque.";
-        if(m.includes("lucro")) r = "O lucro acumulado é R$ " + (db.entrada - db.saida).toFixed(2);
+        let r = "Sou a IA da oficina. Como posso ajudar?";
+        if(m.includes("lucro")) r = "Seu lucro atual é R$ " + (db.entrada - db.saida).toFixed(2);
         chat.innerHTML += `<div><b>Você:</b> ${msgIA.value}<br><b>IA:</b> ${r}</div>`;
         msgIA.value = ""; chat.scrollTop = chat.scrollHeight;
     }
@@ -175,15 +178,14 @@
     function gerarPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("OFICINA WESLEY LISBOA", 10, 20);
+        doc.text("RECIBO - OFICINA LISBOA", 10, 20);
         doc.text("Cliente: " + cNome.value, 10, 40);
-        doc.text("Serviço: " + cServ.value, 10, 50);
         doc.text("Valor: R$ " + cVal.value, 10, 60);
         doc.save("recibo.pdf");
     }
 
     function enviarWpp() {
-        window.open(`https://api.whatsapp.com/send?phone=${cCel.value}&text=Sua manutenção na Oficina Lisboa está ${cStatus.value}! Valor: R$ ${cVal.value}`);
+        window.open(`https://api.whatsapp.com/send?phone=${cCel.value}&text=Olá! Sua moto está ${cStatus.value} na Oficina Lisboa.`);
     }
 
     function render() {
@@ -191,25 +193,21 @@
         document.getElementById("saida").innerText = "R$ " + db.saida.toFixed(2);
         document.getElementById("lucro").innerText = "R$ " + (db.entrada - db.saida).toFixed(2);
 
-        // Render Historico
         let b = busca.value.toUpperCase();
-        document.getElementById("listaHistorico").innerHTML = db.historico.filter(h => h.nome.toUpperCase().includes(b) || h.placa.includes(b)).map((h, i) => `
+        document.getElementById("listaHistorico").innerHTML = db.historico.filter(h => h.nome.toUpperCase().includes(b) || h.placa.includes(b)).map((h,i) => `
             <div class="item-lista">
                 <span><b>${h.placa}</b> - ${h.nome}<br><small>${h.serv}</small></span>
                 <div style="text-align:right">
-                    <span class="badge" style="background:${h.status=='Pronto'?'#00ff9d':'#ff4b2b'}">${h.status}</span><br>
+                    <span class="badge" style="background:${h.status=='Pronto'?'#00ff9d':h.status=='Fazendo'?'#00b4ff':'#ff4b2b'}">${h.status}</span><br>
                     <b>R$ ${h.val}</b> <i class="fas fa-trash" onclick="excluir('historico',${i},${h.val})" style="color:red;margin-left:8px"></i>
                 </div>
             </div>
         `).join('');
 
-        // Render Outros
-        document.getElementById("listaItens").innerHTML = "<b>Preços:</b>" + db.precos.map((p, i) => `<div class="item-lista">${p.n} - R$ ${p.i} <i class="fas fa-times" onclick="excluir('precos',${i})"></i></div>`).join('') + 
-        "<br><b>Fornecedores:</b>" + db.fornecedores.map((f, i) => `<div class="item-lista">${f.n} - ${f.i} <i class="fas fa-times" onclick="excluir('fornecedores',${i})"></i></div>`).join('');
-        
-        document.getElementById("listaEstoque").innerHTML = db.estoque.map((e, i) => `<div class="item-lista">${e.n} <b>${e.q} un</b> <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
+        document.getElementById("listaPrecos").innerHTML = db.precos.map((p,i) => `<div class="item-lista">${p.n} - R$ ${p.v} <i class="fas fa-times" onclick="excluir('precos',${i})"></i></div>`).join('');
+        document.getElementById("listaEstoque").innerHTML = db.estoque.map((e,i) => `<div class="item-lista">${e.n} - ${e.q} un <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
+        document.getElementById("listaFornecedores").innerHTML = db.fornecedores.map((f,i) => `<div class="item-lista">${f.n} - ${f.c} <i class="fas fa-times" onclick="excluir('fornecedores',${i})"></i></div>`).join('');
 
-        // Grafico
         const ctx = document.getElementById('graficoCaixa').getContext('2d');
         if(chart) chart.destroy();
         chart = new Chart(ctx, { type: 'bar', data: { labels: ['Ganhos', 'Gastos'], datasets: [{ data: [db.entrada, db.saida], backgroundColor: ['#00ff9d', '#ff4b2b'] }] }, options: { plugins: { legend: { display: false } } } });
@@ -217,4 +215,3 @@
 </script>
 </body>
 </html>
-
