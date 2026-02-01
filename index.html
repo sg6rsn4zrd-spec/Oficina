@@ -4,233 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OFICINA WESLEY LISBOA</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0d1626;
-            --card-bg: #162235;
-            --accent-blue: #2563eb;
-            --border-color: #2a3a52;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
+            --bg: #0d1626;
+            --card: #162235;
+            --blue: #2563eb;
+            --border: #2a3a52;
+            --text: #ffffff;
         }
 
         body {
-            margin: 0; font-family: -apple-system, system-ui, sans-serif;
-            background-color: var(--bg-dark); color: var(--text-main);
-            padding-bottom: 20px; overflow-x: hidden;
+            margin: 0; font-family: sans-serif;
+            background-color: var(--bg); color: var(--text);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* TELA DE LOGIN ESTILO IMAGEM 1 */
+        /* LOGIN */
         #login-screen {
-            position: fixed; inset: 0; background: var(--bg-dark);
-            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; inset: 0; background: var(--bg);
+            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .login-container {
-            background: var(--card-bg); width: 85%; max-width: 340px;
-            padding: 40px 20px; border-radius: 25px; text-align: center;
-            border: 1px solid var(--border-color);
+        .login-box {
+            background: var(--card); width: 85%; max-width: 340px;
+            padding: 30px 20px; border-radius: 20px; text-align: center;
+            border: 1px solid var(--border);
         }
-        .shield-icon { color: #00d4ff; font-size: 50px; margin-bottom: 20px; }
-        .login-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 25px; letter-spacing: 1px; }
 
-        /* PAINEL PRINCIPAL ESTILO IMAGEM 2 */
-        .header { text-align: center; padding: 30px 0; background: var(--bg-dark); }
-        .logo-main { width: 180px; filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.5)); }
+        /* HEADER */
+        header { text-align: center; padding: 20px 0; }
+        .logo { width: 160px; margin-bottom: 10px; }
 
-        .container { padding: 0 15px; }
+        .container { padding: 0 15px; max-width: 500px; margin: auto; }
 
-        .grid-menu {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px;
+        /* GRID 12 BOTÕES */
+        .grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
         }
-        .menu-item {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 15px; padding: 20px 5px; text-align: center;
-            cursor: pointer; transition: transform 0.1s;
+        .btn-menu {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 15px 5px; text-align: center;
+            cursor: pointer; color: white; text-decoration: none;
         }
-        .menu-item:active { transform: scale(0.95); background: var(--accent-blue); }
-        .menu-item i { font-size: 1.5rem; color: #3b82f6; margin-bottom: 8px; display: block; }
-        .menu-item span { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+        .btn-menu i { font-size: 1.4rem; color: #3b82f6; margin-bottom: 8px; display: block; }
+        .btn-menu span { font-size: 0.65rem; font-weight: bold; text-transform: uppercase; display: block; }
 
-        /* RESUMO FINANCEIRO */
-        .card-finance {
-            background: var(--card-bg); border-radius: 20px; padding: 20px;
-            border: 1px solid var(--border-color); margin-bottom: 20px;
-        }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; color: #60a5fa; display: flex; align-items: center; }
-        .card-title i { margin-right: 10px; }
-
-        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .fin-box {
-            background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; text-align: center;
-            border-bottom: 3px solid transparent;
-        }
-        .fin-box.in { border-color: #10b981; }
-        .fin-box.out { border-color: #ef4444; }
-        .fin-label { font-size: 0.75rem; opacity: 0.8; margin-bottom: 5px; }
-        .fin-val { font-size: 1.1rem; font-weight: bold; }
-
-        /* SEÇÕES DE CONTEÚDO */
-        .section { display: none; padding-top: 10px; }
+        /* SEÇÕES */
+        .page { display: none; }
         .active { display: block !important; }
 
-        /* INPUTS E BOTÕES */
-        input, textarea {
-            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px;
-            border: 1px solid var(--border-color); background: #0a111e; color: white;
-            box-sizing: border-box; font-size: 16px;
+        /* CARDS INFO */
+        .card-info {
+            background: var(--card); border-radius: 15px; padding: 15px;
+            border: 1px solid var(--border); margin-bottom: 15px;
         }
-        .btn-action {
-            width: 100%; padding: 18px; border-radius: 12px; border: none;
-            background: var(--accent-blue); color: white; font-weight: bold; font-size: 1rem;
-            cursor: pointer; text-transform: uppercase;
+        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .box { padding: 15px; border-radius: 10px; text-align: center; background: rgba(0,0,0,0.2); }
+
+        /* FORMULÁRIOS */
+        input {
+            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px;
+            border: 1px solid var(--border); background: #0a111e; color: white; box-sizing: border-box;
         }
+        .btn-blue {
+            width: 100%; padding: 15px; border-radius: 10px; border: none;
+            background: var(--blue); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase;
+        }
+        .btn-back { background: #444; margin-top: 10px; }
+
+        h2 { font-size: 1.2rem; margin-bottom: 15px; border-left: 4px solid var(--blue); padding-left: 10px; }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" style="width: 120px; margin-bottom: 40px;">
-    <div class="login-container">
-        <i class="fas fa-shield-alt shield-icon"></i>
-        <div class="login-title">ACESSO RESTRITO</div>
-        <input id="pass" type="password" placeholder="Senha Administrativa" style="text-align:center">
-        <button class="btn-action" onclick="checkLogin()">ENTRAR NO PAINEL</button>
+    <img src="https://sg6rsn4zrd-spec.github.io/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+    <div class="login-box">
+        <i class="fas fa-shield-alt" style="font-size: 40px; color: #00d4ff; margin-bottom: 15px;"></i>
+        <h3 style="margin: 0 0 20px 0;">ACESSO RESTRITO</h3>
+        <input id="pass" type="password" placeholder="Senha Administrativa" style="text-align: center;">
+        <button class="btn-blue" onclick="logar()">ENTRAR NO PAINEL</button>
     </div>
 </div>
 
-<div id="app" style="display:none">
-    <div class="header">
-        <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo-main">
-    </div>
+<div id="main-app" style="display:none">
+    <header>
+        <img src="https://sg6rsn4zrd-spec.github.io/B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+    </header>
 
     <div class="container">
-        <div id="sec-home" class="section active">
-            <div class="grid-menu">
-                <div class="menu-item" onclick="go('sec-home')"><i class="fas fa-home"></i><span>Painel</span></div>
-                <div class="menu-item" onclick="go('sec-serv')"><i class="fas fa-tools"></i><span>Serviço</span></div>
-                <div class="menu-item" onclick="go('sec-busca')"><i class="fas fa-search"></i><span>Busca</span></div>
-                <div class="menu-item" onclick="go('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
-                <div class="menu-item" onclick="go('sec-caixa')"><i class="fas fa-wallet"></i><span>Caixa</span></div>
-                <div class="menu-item" onclick="go('sec-tab')"><i class="fas fa-tag"></i><span>Tabela</span></div>
-                <div class="menu-item" onclick="go('sec-forn')"><i class="fas fa-truck"></i><span>Forn.</span></div>
-                <div class="menu-item" onclick="go('sec-taxa')"><i class="fas fa-percent"></i><span>Taxas</span></div>
-                <div class="menu-item" onclick="go('sec-ret')"><i class="fas fa-calendar-alt"></i><span>Retorno</span></div>
-                <div class="menu-item" onclick="go('sec-compras')"><i class="fas fa-shopping-basket"></i><span>Compras</span></div>
-                <div class="menu-item" onclick="go('sec-avaria')"><i class="fas fa-clipboard-list"></i><span>Avarias</span></div>
-                <div class="menu-item" onclick="go('sec-ia')"><i class="fas fa-robot"></i><span>IA</span></div>
+        <div id="page-home" class="page active">
+            <div class="grid">
+                <div class="btn-menu" onclick="irPara('page-home')"><i class="fas fa-home"></i><span>Painel</span></div>
+                <div class="btn-menu" onclick="irPara('page-servico')"><i class="fas fa-tools"></i><span>Serviço</span></div>
+                <div class="btn-menu" onclick="irPara('page-busca')"><i class="fas fa-search"></i><span>Busca</span></div>
+                <div class="btn-menu" onclick="irPara('page-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
+                <div class="btn-menu" onclick="irPara('page-caixa')"><i class="fas fa-wallet"></i><span>Caixa</span></div>
+                <div class="btn-menu" onclick="irPara('page-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
+                <div class="btn-menu" onclick="irPara('page-forn')"><i class="fas fa-truck"></i><span>Forn.</span></div>
+                <div class="btn-menu" onclick="irPara('page-taxas')"><i class="fas fa-percent"></i><span>Taxas</span></div>
+                <div class="btn-menu" onclick="irPara('page-retorno')"><i class="fas fa-calendar-alt"></i><span>Retorno</span></div>
+                <div class="btn-menu" onclick="irPara('page-compras')"><i class="fas fa-shopping-basket"></i><span>Compras</span></div>
+                <div class="btn-menu" onclick="irPara('page-avarias')"><i class="fas fa-clipboard-list"></i><span>Avarias</span></div>
+                <div class="btn-menu" onclick="irPara('page-ia')"><i class="fas fa-robot"></i><span>IA</span></div>
             </div>
 
-            <div class="card-finance">
-                <div class="card-title"><i class="fas fa-chart-line"></i> Resumo Financeiro</div>
-                <div class="finance-grid">
-                    <div class="fin-box in">
-                        <div class="fin-label">Entradas</div>
-                        <div class="fin-val" id="res-in" style="color: #10b981;">R$ 0.00</div>
+            <div class="card-info">
+                <h3 style="margin:0 0 15px 0; color:#60a5fa"><i class="fas fa-chart-line"></i> Resumo Financeiro</h3>
+                <div class="resumo-box">
+                    <div class="box" style="border-bottom: 3px solid #10b981;">
+                        <small style="color:#aaa">Entradas</small><br>
+                        <strong style="color:#10b981">R$ 0.00</strong>
                     </div>
-                    <div class="fin-box out">
-                        <div class="fin-label">Saídas</div>
-                        <div class="fin-val" id="res-out" style="color: #ef4444;">R$ 0.00</div>
+                    <div class="box" style="border-bottom: 3px solid #ef4444;">
+                        <small style="color:#aaa">Saídas</small><br>
+                        <strong style="color:#ef4444">R$ 0.00</strong>
                     </div>
                 </div>
             </div>
-            <canvas id="chartG" height="150"></canvas>
         </div>
 
-        <div id="sec-serv" class="section">
-            <h2>Novo Serviço</h2>
-            <input id="sCli" placeholder="Nome do Cliente">
-            <input id="sPlaca" placeholder="Placa da Moto" style="text-transform:uppercase">
-            <input id="sMao" type="number" placeholder="Mão de Obra R$">
-            <input id="sPec" type="number" placeholder="Peças R$">
-            <button class="btn-action" onclick="saveS()">Salvar e Gerar Recibo</button>
-            <button class="btn-action" style="background:#444; margin-top:10px" onclick="go('sec-home')">Voltar</button>
+        <div id="page-servico" class="page">
+            <h2>Lançar Serviço</h2>
+            <input type="text" placeholder="Nome do Cliente">
+            <input type="text" placeholder="Placa da Moto">
+            <input type="number" placeholder="Valor Mão de Obra">
+            <button class="btn-blue">Salvar Serviço</button>
+            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
-        <div id="sec-caixa" class="section">
-            <h2>Registrar Saída</h2>
-            <input id="cDesc" placeholder="Descrição do Gasto">
-            <input id="cVal" type="number" placeholder="Valor R$">
-            <button class="btn-action" style="background:#ef4444" onclick="saveC()">Registrar Saída</button>
-            <button class="btn-action" style="background:#444; margin-top:10px" onclick="go('sec-home')">Voltar</button>
+        <div id="page-estoque" class="page">
+            <h2>Estoque de Peças</h2>
+            <div class="card-info">Nenhum item cadastrado.</div>
+            <button class="btn-blue">Cadastrar Peça</button>
+            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
-        <div id="sec-busca" class="section">
-            <h2>Buscar Histórico</h2>
-            <input id="q" placeholder="Digite a Placa..." onkeyup="render()">
-            <div id="list-h"></div>
-            <button class="btn-action" style="background:#444; margin-top:10px" onclick="go('sec-home')">Voltar</button>
+        <div id="page-caixa" class="page">
+            <h2>Fluxo de Caixa</h2>
+            <div class="resumo-box">
+                <div class="box">Saldo: R$ 0.00</div>
+            </div>
+            <button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button>
         </div>
 
-        <div id="sec-estoque" class="section"><h2>Estoque</h2><button class="btn-action" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-tab" class="section"><h2>Tabela de Preços</h2><button class="btn-action" onclick="go('sec-home')">Voltar</button></div>
-        <div id="sec-ia" class="section"><h2>Inteligência Artificial</h2><button class="btn-action" onclick="go('sec-home')">Voltar</button></div>
+        <div id="page-busca" class="page"><h2>Busca</h2><input type="text" placeholder="Pesquisar placa..."><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-tabela" class="page"><h2>Tabela de Preços</h2><div class="card-info">Consulte os valores.</div><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-forn" class="page"><h2>Fornecedores</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-taxas" class="page"><h2>Taxas</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-retorno" class="page"><h2>Retorno</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-compras" class="page"><h2>Compras</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-avarias" class="page"><h2>Avarias</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
+        <div id="page-ia" class="page"><h2>Analista IA</h2><button class="btn-blue btn-back" onclick="irPara('page-home')">VOLTAR</button></div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v_final')) || { in: 0, out: 0, servs: [], gastos: [] };
-    let myChart;
-
-    function checkLogin() {
-        if(document.getElementById('pass').value === '1234') {
+    function logar() {
+        const pass = document.getElementById('pass').value;
+        if(pass === '1234') { // Coloque a senha que preferir
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            render();
-        } else { alert("Senha Incorreta"); }
+            document.getElementById('main-app').style.display = 'block';
+        } else {
+            alert("Senha incorreta!");
+        }
     }
 
-    function go(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
+    function irPara(idPagina) {
+        // Esconde todas as páginas
+        const paginas = document.querySelectorAll('.page');
+        paginas.forEach(p => p.classList.remove('active'));
+
+        // Mostra a página que você clicou
+        const destino = document.getElementById(idPagina);
+        if(destino) {
+            destino.classList.add('active');
+            window.scrollTo(0,0);
+        } else {
+            console.error("Erro: A página " + idPagina + " não existe!");
+        }
     }
-
-    function saveS() {
-        let m = parseFloat(document.getElementById('sMao').value) || 0;
-        let p = parseFloat(document.getElementById('sPec').value) || 0;
-        let n = document.getElementById('sCli').value;
-        if(!n || m === 0) return alert("Preencha Nome e Mão de Obra");
-        
-        db.in += m;
-        db.servs.unshift({ n, p: document.getElementById('sPlaca').value, v: m+p, d: new Date().toLocaleDateString() });
-        localStorage.setItem('lisboa_v_final', JSON.stringify(db));
-        
-        alert("Serviço Salvo!");
-        go('sec-home'); render();
-    }
-
-    function saveC() {
-        let v = parseFloat(document.getElementById('cVal').value) || 0;
-        if(v === 0) return;
-        db.out += v;
-        db.gastos.unshift({ d: document.getElementById('cDesc').value, v: v });
-        localStorage.setItem('lisboa_v_final', JSON.stringify(db));
-        go('sec-home'); render();
-    }
-
-    function render() {
-        document.getElementById('res-in').innerText = "R$ " + db.in.toFixed(2);
-        document.getElementById('res-out').innerText = "R$ " + db.out.toFixed(2);
-
-        const ctx = document.getElementById('chartG').getContext('2d');
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: { labels: ['','','',''], datasets: [{ label: 'Lucro', data: [0, (db.in - db.out)], borderColor: '#3b82f6', tension: 0.4 }] },
-            options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: false } } }
-        });
-
-        document.getElementById('list-h').innerHTML = db.servs.filter(s => s.p.includes(document.getElementById('q').value.toUpperCase())).map(s => `
-            <div style="background:#162235; padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid #3b82f6">
-                <b>${s.p}</b> - ${s.n}<br><small>${s.d} - R$ ${s.v.toFixed(2)}</small>
-            </div>
-        `).join('');
-    }
-
-    render();
 </script>
+
 </body>
 </html>
