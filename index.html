@@ -3,119 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LISBOA ÉLITE - V27 FINAL</title>
+    <title>LISBOA BLUE EDITION</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0a0c14;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --accent: #8b5cf6;
-            --success: #10b981;
-            --danger: #ef4444;
+            --primary-blue: #0052ff;
+            --dark-blue: #0a192f;
+            --glass-blue: rgba(0, 82, 255, 0.1);
             --text: #ffffff;
-            --input-focus: rgba(139, 92, 246, 0.2);
+            --success: #00f298;
+            --danger: #ff4b5c;
         }
 
         body {
-            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
-            background-image: radial-gradient(circle at 50% -20%, #1e1b4b, transparent);
-            min-height: 100vh; padding-bottom: 110px; -webkit-tap-highlight-color: transparent;
+            margin: 0; font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--dark-blue); color: var(--text);
+            padding-bottom: 100px; overflow-x: hidden;
         }
 
-        .header { text-align: center; padding: 30px 20px; }
-        .logo { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--accent); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); margin-bottom: 10px; object-fit: cover; }
+        .header { text-align: center; padding: 25px 20px; background: linear-gradient(to bottom, #112240, var(--dark-blue)); }
+        .logo { width: 100px; border-radius: 50%; border: 2px solid var(--primary-blue); box-shadow: 0 0 20px rgba(0, 82, 255, 0.4); }
 
         .container { padding: 0 15px; max-width: 480px; margin: auto; }
 
-        /* Card Saldo */
-        .balance-card {
-            background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
-            padding: 25px; border-radius: 28px; text-align: center; margin-bottom: 20px;
+        /* Card de Saldo */
+        .card-main {
+            background: linear-gradient(135deg, #112240 0%, #0a192f 100%);
+            border: 1px solid rgba(0, 82, 255, 0.3); padding: 25px;
+            border-radius: 24px; text-align: center; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .balance-val { font-size: 2.5rem; font-weight: 800; color: var(--success); text-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .val-lucro { font-size: 2.5rem; font-weight: 800; color: var(--success); margin: 10px 0; }
 
-        /* Grid 12 Funções */
+        /* Grid de 12 Funções Real */
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
         .menu-item {
-            background: var(--glass); border: 1px solid var(--glass-border);
+            background: #112240; border: 1px solid rgba(255,255,255,0.05);
             padding: 15px 5px; border-radius: 18px; text-align: center; transition: 0.2s;
         }
-        .menu-item:active { transform: scale(0.9); background: var(--accent); }
-        .menu-item i { font-size: 1.2rem; color: var(--accent); margin-bottom: 5px; display: block; }
-        .menu-item span { font-size: 0.55rem; text-transform: uppercase; font-weight: 700; opacity: 0.8; }
-        .menu-item:active i { color: white; }
+        .menu-item i { font-size: 1.2rem; color: var(--primary-blue); margin-bottom: 5px; display: block; }
+        .menu-item span { font-size: 0.6rem; text-transform: uppercase; font-weight: 700; opacity: 0.8; }
+        .menu-item:active { background: var(--primary-blue); transform: scale(0.9); }
 
-        /* Estilo Seções e Inputs */
-        .section { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 20px; border-radius: 24px; display: none; animation: fadeIn 0.3s ease; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Seções e Forms */
+        .section { display: none; animation: slideIn 0.3s ease-out; }
+        .section.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        label { font-size: 0.7rem; color: var(--accent); font-weight: 800; letter-spacing: 1px; margin-left: 5px; }
         input, select, textarea {
-            background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: white;
-            padding: 15px; border-radius: 14px; width: 100%; box-sizing: border-box; margin: 6px 0 15px 0; font-size: 16px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(0, 82, 255, 0.3);
+            color: white; padding: 16px; border-radius: 15px; width: 100%; box-sizing: border-box;
+            margin: 10px 0; font-size: 16px; outline: none;
         }
-        input:focus { border-color: var(--accent); background: var(--input-focus); outline: none; }
+        input:focus { border-color: var(--primary-blue); background: rgba(0, 82, 255, 0.1); }
 
-        .btn-main { background: var(--accent); color: white; padding: 16px; border-radius: 14px; border: none; font-weight: 700; width: 100%; cursor: pointer; margin-top: 5px; box-shadow: 0 8px 15px rgba(139, 92, 246, 0.2); }
-        .btn-pdf { background: #f8fafc; color: #0f172a; margin-top: 10px; }
-        .btn-whats { background: #22c55e; margin-top: 10px; }
+        .btn {
+            background: var(--primary-blue); color: white; padding: 18px; border-radius: 15px;
+            border: none; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px;
+        }
+        .btn-pdf { background: #334155; margin-top: 5px; }
 
-        /* Lista de Itens */
-        .item-row { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 10px; border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .list-item {
+            background: rgba(255,255,255,0.03); padding: 15px; border-radius: 18px;
+            margin-bottom: 10px; border-left: 4px solid var(--primary-blue);
+            display: flex; justify-content: space-between; align-items: center;
+        }
 
-        /* Navegação */
-        .nav-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(10,12,20,0.9); backdrop-filter: blur(20px); padding: 12px; border-radius: 25px; display: flex; justify-content: space-around; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .nav-item { color: rgba(255,255,255,0.3); font-size: 1.3rem; transition: 0.3s; }
-        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
+        /* Nav Bottom */
+        .nav-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: rgba(10, 25, 47, 0.95); backdrop-filter: blur(10px);
+            padding: 15px; border-radius: 25px; display: flex; justify-content: space-around;
+            border: 1px solid rgba(0, 82, 255, 0.2); z-index: 1000;
+        }
+        .nav-btn { color: rgba(255,255,255,0.3); font-size: 1.3rem; transition: 0.3s; }
+        .nav-btn.active { color: var(--primary-blue); transform: translateY(-5px); }
     </style>
 </head>
 <body>
 
 <div class="header">
     <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo">
-    <div style="font-size: 0.7rem; font-weight: 900; letter-spacing: 3px; opacity: 0.6;">LISBOA ÉLITE GRAND LUX</div>
+    <p style="font-size: 0.6rem; letter-spacing: 2px; font-weight: 800; color: var(--primary-blue);">SISTEMA LISBOA V3.0</p>
 </div>
 
 <div class="container">
     <div id="sec-home" class="section active">
-        <div class="balance-card">
-            <small style="opacity: 0.5; font-weight: 700;">SALDO DISPONÍVEL</small>
-            <div class="balance-val" id="res-lucro">R$ 0,00</div>
-            <div style="display:flex; justify-content:space-between; margin-top:15px; border-top:1px solid var(--glass-border); padding-top:15px; font-size: 0.8rem;">
-                <span>Mão de Obra: <b id="res-mao" style="color:var(--accent)">R$ 0</b></span>
+        <div class="card-main">
+            <small style="opacity:0.6; font-weight:bold;">LUCRO LÍQUIDO DO MÊS</small>
+            <div class="val-lucro" id="res-lucro">R$ 0,00</div>
+            <div style="display:flex; justify-content:space-around; opacity:0.8; font-size:12px;">
+                <span>Ganhos: <b id="res-mao" style="color:var(--success)">R$ 0</b></span>
                 <span>Contas: <b id="res-contas" style="color:var(--danger)">R$ 0</b></span>
             </div>
         </div>
-        
+
         <div class="menu-grid">
             <div class="menu-item" onclick="nav('sec-oleo')"><i class="fas fa-oil-can"></i><span>Óleo</span></div>
             <div class="menu-item" onclick="nav('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
             <div class="menu-item" onclick="nav('sec-tabela')"><i class="fas fa-tags"></i><span>Tabela</span></div>
-            <div class="menu-item" onclick="nav('sec-ia')"><i class="fas fa-brain"></i><span>Gestão</span></div>
+            <div class="menu-item" onclick="nav('sec-ia')"><i class="fas fa-brain"></i><span>I.A</span></div>
             <div class="menu-item" onclick="nav('sec-agenda')"><i class="fas fa-calendar"></i><span>Agenda</span></div>
-            <div class="menu-item" onclick="nav('sec-compras')"><i class="fas fa-shopping-cart"></i><span>Compras</span></div>
-            <div class="menu-item" onclick="nav('sec-check')"><i class="fas fa-clipboard-check"></i><span>Avarias</span></div>
+            <div class="menu-item" onclick="nav('sec-compras')"><i class="fas fa-cart-plus"></i><span>Compras</span></div>
+            <div class="menu-item" onclick="nav('sec-check')"><i class="fas fa-clipboard"></i><span>Check</span></div>
             <div class="menu-item" onclick="nav('sec-taxa')"><i class="fas fa-percent"></i><span>Taxas</span></div>
         </div>
-        <canvas id="chartFin" height="140"></canvas>
+        <canvas id="chartFin" height="150"></canvas>
     </div>
 
     <div id="sec-add" class="section">
-        <h3 style="margin-top:0">🔨 Novo Registro</h3>
-        <label>CLIENTE</label><input id="sNome" placeholder="Nome Completo">
-        <label>PLACA</label><input id="sPlaca" placeholder="Moto" style="text-transform:uppercase">
-        <label>WHATSAPP</label><input id="sCel" type="tel" placeholder="55119...">
-        <label>MÃO DE OBRA (R$)</label><input id="sMao" type="number" placeholder="Seu ganho limpo">
-        <label>PEÇAS (R$)</label><input id="sPec" type="number" placeholder="Custo de reposição">
-        <label>OBSERVAÇÃO</label><textarea id="sObs" placeholder="Serviço realizado..."></textarea>
-        
-        <button class="btn-main" onclick="salvarServico()">SALVAR NO CAIXA</button>
-        <button class="btn-main btn-pdf" onclick="gerarPDF()">GERAR PDF PARA CLIENTE</button>
+        <h3>🔧 Nova Ordem</h3>
+        <input id="sNome" placeholder="Nome do Cliente">
+        <input id="sPlaca" placeholder="Placa (Ex: ABC1234)" style="text-transform:uppercase">
+        <input id="sCel" type="tel" placeholder="WhatsApp (DDD + Número)">
+        <input id="sMao" type="number" placeholder="Mão de Obra (Seu Ganho)">
+        <input id="sPec" type="number" placeholder="Custo das Peças">
+        <textarea id="sObs" placeholder="Descrição do que foi feito..."></textarea>
+        <button class="btn" onclick="salvarServico()">SALVAR NO CAIXA</button>
+        <button class="btn btn-pdf" onclick="gerarPDF()">GERAR PDF/RECIBO</button>
     </div>
 
     <div id="sec-hist" class="section">
@@ -125,86 +132,72 @@
     </div>
 
     <div id="sec-money" class="section">
-        <h3>💸 Pagar Contas</h3>
-        <label>DESCRIÇÃO</label><input id="cDesc" placeholder="Luz, Aluguel, Almoço...">
-        <label>VALOR (R$)</label><input id="cVal" type="number">
-        <button class="btn-main" style="background:var(--danger)" onclick="salvarConta()">PAGAR E DESCONTAR</button>
+        <h3>💸 Registrar Gasto</h3>
+        <input id="cDesc" placeholder="Descrição (Luz, Aluguel, Almoço)">
+        <input id="cVal" type="number" placeholder="Valor R$">
+        <button class="btn" style="background:var(--danger)" onclick="salvarConta()">PAGAR E DESCONTAR</button>
         <div id="render-contas" style="margin-top:20px"></div>
     </div>
 
-    <div id="sec-ia" class="section">
-        <h3>🤖 Analista de Gestão</h3>
-        <div id="ia-box" class="item-row">Aguardando dados...</div>
-        <button class="btn-main" onclick="analisarIA()">ANALISAR HOJE</button>
-        <hr style="opacity:0.1; margin:20px 0">
-        <button class="btn-main" style="background:#333" onclick="alert(btoa(JSON.stringify(db)))">GERAR CÓDIGO BACKUP</button>
-    </div>
-
     <div id="sec-oleo" class="section"><h3>🛢️ Retorno de Óleo</h3><div id="render-oleo"></div></div>
-    <div id="sec-estoque" class="section"><h3>📦 Estoque</h3><input id="eN" placeholder="Peça"><input id="eQ" type="number"><button class="btn-main" onclick="addObj('estoque','eN','eQ')">ADD</button><div id="render-estoque"></div></div>
-    <div id="sec-tabela" class="section"><h3>📋 Tabela</h3><input id="tN"><input id="tV"><button class="btn-main" onclick="addObj('tabela','tN','tV')">ADD</button><div id="render-tabela"></div></div>
-
+    <div id="sec-estoque" class="section"><h3>📦 Estoque</h3><input id="eN" placeholder="Peça"><input id="eQ" type="number"><button class="btn" onclick="addObj('estoque','eN','eQ')">ADD</button><div id="render-estoque"></div></div>
+    <div id="sec-tabela" class="section"><h3>📋 Tabela</h3><input id="tN"><input id="tV"><button class="btn" onclick="addObj('tabela','tN','tV')">ADD</button><div id="render-tabela"></div></div>
+    <div id="sec-agenda" class="section"><h3>📅 Agenda</h3><input id="aN"><input id="aD" type="date"><button class="btn" onclick="addObj('agenda','aN','aD')">AGENDAR</button><div id="render-agenda"></div></div>
+    <div id="sec-compras" class="section"><h3>🛒 Compras</h3><input id="cpN"><button class="btn" onclick="addObj('compras','cpN')">ADD</button><div id="render-compras"></div></div>
+    <div id="sec-check" class="section"><h3>📋 Check-list</h3><input id="chP" placeholder="Placa"><textarea id="chD"></textarea><button class="btn" onclick="addObj('check','chP','chD')">SALVAR</button><div id="render-check"></div></div>
+    <div id="sec-taxa" class="section"><h3>💳 Calculadora</h3><input id="txV" type="number" placeholder="Valor do Serviço"><button class="btn" onclick="alert('Cobre R$ '+(txV.value*1.12).toFixed(2))">CALCULAR (+12%)</button></div>
+    <div id="sec-ia" class="section"><h3>🤖 Gestão I.A</h3><div id="ia-box" class="list-item">...</div><button class="btn" onclick="analisarIA()">ANALISAR</button><br><button class="btn" style="background:#333" onclick="alert(btoa(JSON.stringify(db)))">BACKUP</button></div>
 </div>
 
 <div class="nav-bar">
-    <div class="nav-item active" id="n-home" onclick="nav('sec-home')"><i class="fas fa-chart-pie"></i></div>
-    <div class="nav-item" id="n-add" onclick="nav('sec-add')"><i class="fas fa-plus-circle"></i></div>
-    <div class="nav-item" id="n-hist" onclick="nav('sec-hist')"><i class="fas fa-history"></i></div>
-    <div class="nav-item" id="n-money" onclick="nav('sec-money')"><i class="fas fa-wallet"></i></div>
+    <div class="nav-btn active" id="n-home" onclick="nav('sec-home')"><i class="fas fa-home"></i></div>
+    <div class="nav-btn" id="n-add" onclick="nav('sec-add')"><i class="fas fa-plus-circle"></i></div>
+    <div class="nav-btn" id="n-hist" onclick="nav('sec-hist')"><i class="fas fa-search"></i></div>
+    <div class="nav-btn" id="n-money" onclick="nav('sec-money')"><i class="fas fa-wallet"></i></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_grand_v27')) || { mao: 0, contas: 0, pecas_total: 0, servicos: [], despesas: [], estoque: [], tabela: [] };
+    let db = JSON.parse(localStorage.getItem('lisboa_v3')) || { mao:0, contas:0, servicos:[], despesas:[], estoque:[], tabela:[], agenda:[], compras:[], check:[] };
     let chart;
 
-    function save() { localStorage.setItem('lisboa_grand_v27', JSON.stringify(db)); render(); }
+    function save() { localStorage.setItem('lisboa_v3', JSON.stringify(db)); render(); }
     
     function nav(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.getElementById('n-' + id.split('-')[1]).classList.add('active');
         window.scrollTo(0,0);
     }
 
     function salvarServico() {
-        let m = parseFloat(sMao.value) || 0;
-        let p = parseFloat(sPec.value) || 0;
-        if(!m || !sNome.value) return alert("Nome e Mão de Obra são obrigatórios!");
-        db.mao += m; db.pecas_total += p;
-        db.servicos.unshift({ n: sNome.value, p: sPlaca.value.toUpperCase(), v: m+p, m, p, obs: sObs.value, d: new Date().toLocaleDateString(), t: new Date().getTime() });
+        let m = parseFloat(sMao.value) || 0; let p = parseFloat(sPec.value) || 0;
+        if(!m || !sNome.value) return alert("Preencha Nome e Valor!");
+        db.mao += m;
+        db.servicos.unshift({ n:sNome.value, p:sPlaca.value.toUpperCase(), v:m+p, m, p, d:new Date().toLocaleDateString(), t:new Date().getTime(), obs:sObs.value });
         save(); nav('sec-home');
         sNome.value=''; sPlaca.value=''; sMao.value=''; sPec.value=''; sObs.value='';
     }
 
     function gerarPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const m = sMao.value || 0;
-        const p = sPec.value || 0;
-        const total = parseFloat(m) + parseFloat(p);
-
-        doc.setFontSize(20); doc.text("RECIBO OFICINA LISBOA", 20, 20);
-        doc.setFontSize(12);
-        doc.text(`Cliente: ${sNome.value}`, 20, 40);
-        doc.text(`Moto/Placa: ${sPlaca.value.toUpperCase()}`, 20, 50);
-        doc.text(`Data: ${new Date().toLocaleDateString()}`, 20, 60);
-        doc.line(20, 65, 190, 65);
-        doc.text(`Mão de Obra: R$ ${parseFloat(m).toFixed(2)}`, 20, 80);
-        doc.text(`Peças: R$ ${parseFloat(p).toFixed(2)}`, 20, 90);
-        doc.setFontSize(16);
-        doc.text(`TOTAL A PAGAR: R$ ${total.toFixed(2)}`, 20, 110);
-        doc.setFontSize(10);
-        doc.text(`Descrição: ${sObs.value}`, 20, 130);
-        doc.save(`Recibo_${sPlaca.value}.pdf`);
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.text("RECIBO OFICINA LISBOA", 20, 20);
+        doc.text("Cliente: " + sNome.value, 20, 40);
+        doc.text("Moto: " + sPlaca.value.toUpperCase(), 20, 50);
+        doc.text("Valor Total: R$ " + (parseFloat(sMao.value||0)+parseFloat(sPec.value||0)).toFixed(2), 20, 60);
+        doc.text("Desc: " + sObs.value, 20, 70);
+        doc.save("Recibo.pdf");
     }
 
     function salvarConta() {
-        let v = parseFloat(cVal.value) || 0;
-        if(!v) return;
-        db.contas += v;
-        db.despesas.unshift({ n: cDesc.value, v: v, d: new Date().toLocaleDateString() });
+        let v = parseFloat(cVal.value) || 0; if(!v) return;
+        db.contas += v; db.despesas.unshift({ n:cDesc.value, v, d:new Date().toLocaleDateString() });
         cVal.value=''; cDesc.value=''; save();
+    }
+
+    function addObj(t, i1, i2) {
+        db[t].push({ n: document.getElementById(i1).value, v: i2 ? document.getElementById(i2).value : null });
+        save(); alert("Adicionado!");
     }
 
     function render() {
@@ -214,17 +207,20 @@
         document.getElementById('res-contas').innerText = "R$ " + db.contas.toFixed(2);
 
         document.getElementById('render-hist').innerHTML = db.servicos.filter(s => s.p.includes(query.value.toUpperCase())).map(s => `
-            <div class="item-row"><div><b>${s.p}</b><br><small>${s.n}</small></div><b>R$ ${s.v.toFixed(2)}</b></div>
+            <div class="list-item"><div><b>${s.p}</b><br><small>${s.n}</small></div><b>R$ ${s.v.toFixed(2)}</b></div>
         `).join('');
 
+        document.getElementById('render-contas').innerHTML = db.despesas.map(d => `<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
+        
+        // Chart
         const ctx = document.getElementById('chartFin').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type: 'line', data: { labels: ['','','','',''], datasets: [{ label: 'Lucro', data: [0, lucro*0.3, lucro*0.7, lucro], borderColor: '#8b5cf6', fill: true, backgroundColor: 'rgba(139, 92, 246, 0.1)', tension: 0.4 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { display: false } } } });
+        chart = new Chart(ctx, { type:'line', data:{ labels:['','','','',''], datasets:[{label:'Lucro', data:[0,lucro], borderColor:'#0052ff', tension:0.4, fill:true, backgroundColor:'rgba(0,82,255,0.1)'}]}, options:{plugins:{legend:{display:false}}, scales:{y:{display:false},x:{display:false}}}});
     }
 
     function analisarIA() {
         let l = db.mao - db.contas;
-        document.getElementById('ia-box').innerText = l > 0 ? "Você está com lucro de R$ "+l.toFixed(2)+". Bom trabalho!" : "Atenção às despesas fixas!";
+        document.getElementById('ia-box').innerText = l > 0 ? "Lucro de R$ "+l.toFixed(2)+". Excelente!" : "Cuidado com os gastos!";
     }
 
     render();
