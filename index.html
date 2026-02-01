@@ -2,42 +2,40 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LISBOA PRO MAX - ELITE V20</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LISBOA PRO ULTRA - FINAL REVISADA</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #1b4a9c; --accent: #00b4ff; --success: #00ff9d; --danger: #ff4b2b; --warning: #f39c12; --dark: #0a192f; --card: #112240; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 60px; }
-        .header-logo { text-align: center; padding: 20px; background: #112240; border-bottom: 4px solid var(--primary); }
-        .main-logo { max-width: 160px; filter: drop-shadow(0 0 10px var(--accent)); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; padding-bottom: 70px; overflow-x: hidden; }
+        .header-logo { text-align: center; padding: 15px; background: #112240; border-bottom: 3px solid var(--primary); }
+        .main-logo { max-width: 140px; }
         .container { padding: 12px; max-width: 850px; margin: auto; }
         
-        /* Grid de 12 Opções - Botões Grandes */
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .menu-item { background: var(--card); padding: 18px 5px; border-radius: 18px; text-align: center; border: 2px solid var(--primary); cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .menu-item i { font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; display: block; }
-        .menu-item span { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; display: block; }
-        .menu-item:active { transform: scale(0.9); background: var(--primary); }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .menu-item { background: var(--card); padding: 15px 5px; border-radius: 15px; text-align: center; border: 1px solid var(--primary); cursor: pointer; position: relative; transition: 0.2s; }
+        .menu-item:active { transform: scale(0.95); background: var(--primary); }
+        .menu-item i { font-size: 1.5rem; color: var(--accent); margin-bottom: 5px; display: block; }
+        .menu-item span { font-size: 0.65rem; font-weight: bold; text-transform: uppercase; display: block; }
+        .badge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: bold; border: 2px solid var(--dark); }
 
-        .card { background: var(--card); padding: 25px; border-radius: 25px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); display: none; }
-        .active-section { display: block !important; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); display: none; }
+        .active-section { display: block !important; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .box-destaque { background: linear-gradient(135deg, #1b4a9c, #00ff9d); color: #000; padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 15px; }
+        .box-destaque { background: linear-gradient(135deg, #1b4a9c, #00ff9d); color: #000; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: bold; }
         
-        input, select, textarea { background: #0d1f33; border: 2px solid #1e3a5a; color: white; padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; margin: 8px 0; font-size: 16px; font-weight: bold; }
-        button { padding: 16px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; width: 100%; margin: 8px 0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; text-transform: uppercase; }
+        input, select, textarea { background: #0d1f33; border: 1px solid #1e3a5a; color: white; padding: 14px; border-radius: 10px; width: 100%; box-sizing: border-box; margin: 6px 0; font-size: 16px; }
+        button { padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin: 6px 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
         .btn-add { background: var(--success); color: #000; }
         .btn-blue { background: var(--primary); color: white; }
         .btn-del { background: var(--danger); color: white; }
         .btn-wpp { background: #25d366; color: white; }
-
-        .item-lista { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid #ccc; }
-        .status-pendente { border-left-color: var(--danger) !important; }
-        .status-fazendo { border-left-color: var(--warning) !important; }
-        .status-pronto { border-left-color: var(--success) !important; }
+        
+        .item-lista { background: rgba(0,0,0,0.4); padding: 14px; border-radius: 12px; margin-top: 10px; border-left: 5px solid var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .vencido { border-left-color: var(--danger); background: rgba(255, 75, 43, 0.1); }
     </style>
 </head>
 <body>
@@ -48,165 +46,155 @@
 
 <div id="loginBox" class="container">
     <div class="card active-section" style="text-align: center;">
-        <i class="fas fa-motorcycle" style="font-size: 3rem; color: var(--accent);"></i>
-        <h2>LISBOA SISTEMA V20</h2>
-        <input id="pass" type="password" placeholder="Senha do Dono">
-        <button class="btn-blue" onclick="login()">ENTRAR AGORA</button>
+        <i class="fas fa-user-check" style="font-size: 2rem; color: var(--accent); margin-bottom: 10px;"></i>
+        <h3>ACESSO LISBOA PRO</h3>
+        <input id="pass" type="password" placeholder="Senha Administrativa">
+        <button class="btn-blue" onclick="login()">ENTRAR NO SISTEMA</button>
     </div>
 </div>
 
 <div id="dashboard" class="container" style="display:none">
     
     <div class="menu-grid">
-        <div class="menu-item" onclick="show('sec-dash')"><i class="fas fa-chart-pie"></i><span>Lucro</span></div>
-        <div class="menu-item" onclick="show('sec-serv')"><i class="fas fa-plus-circle"></i><span>Serviço</span></div>
-        <div class="menu-item" onclick="show('sec-contas')"><i class="fas fa-file-invoice"></i><span>Contas</span></div>
-        <div class="menu-item" onclick="show('sec-hist')"><i class="fas fa-list-ul"></i><span>Histórico</span></div>
-        <div class="menu-item" onclick="show('sec-estoque')"><i class="fas fa-box-open"></i><span>Estoque</span></div>
-        <div class="menu-item" onclick="show('sec-precos')"><i class="fas fa-tag"></i><span>Tabela</span></div>
-        <div class="menu-item" onclick="show('sec-forn')"><i class="fas fa-truck"></i><span>Forn.</span></div>
-        <div class="menu-item" onclick="show('sec-calc')"><i class="fas fa-percent"></i><span>Taxas</span></div>
+        <div class="menu-item" onclick="show('sec-dash')"><i class="fas fa-wallet"></i><span>Lucro</span></div>
+        <div class="menu-item" onclick="show('sec-serv')"><i class="fas fa-motorcycle"></i><span>Serviço</span></div>
+        <div class="menu-item" onclick="show('sec-contas')"><i class="fas fa-money-bill-wave"></i><span>Contas</span></div>
+        <div class="menu-item" onclick="show('sec-hist')"><i class="fas fa-history"></i><span>Busca</span></div>
+        <div class="menu-item" onclick="show('sec-oleo')">
+            <i class="fas fa-oil-can"></i><span>Óleo</span>
+            <span id="notif-oleo" class="badge" style="display:none">0</span>
+        </div>
+        <div class="menu-item" onclick="show('sec-estoque')"><i class="fas fa-box"></i><span>Estoque</span></div>
+        <div class="menu-item" onclick="show('sec-precos')"><i class="fas fa-tags"></i><span>Tabela</span></div>
+        <div class="menu-item" onclick="show('sec-calc')"><i class="fas fa-calculator"></i><span>Taxas</span></div>
         <div class="menu-item" onclick="show('sec-agenda')"><i class="fas fa-calendar-alt"></i><span>Agenda</span></div>
         <div class="menu-item" onclick="show('sec-compras')"><i class="fas fa-shopping-cart"></i><span>Compras</span></div>
-        <div class="menu-item" onclick="show('sec-check')"><i class="fas fa-clipboard"></i><span>Check-list</span></div>
-        <div class="menu-item" onclick="show('sec-ia')"><i class="fas fa-robot"></i><span>IA/Backup</span></div>
+        <div class="menu-item" onclick="show('sec-check')"><i class="fas fa-clipboard-list"></i><span>Avarias</span></div>
+        <div class="menu-item" onclick="show('sec-ia')"><i class="fas fa-robot"></i><span>Gestão</span></div>
     </div>
 
     <div id="sec-dash" class="card">
-        <div class="box-destaque">
-            <small>DINHEIRO NO BOLSO (LUCRO LIMPO)</small><br>
-            <span id="d-lucro" style="font-size: 2.2rem;">R$ 0</span>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <div style="background:#0d1f33; padding:15px; border-radius:15px; text-align:center">
-                <small>Mão de Obra</small><br><b id="d-bruto" style="color:var(--success)">0</b>
-            </div>
-            <div style="background:#0d1f33; padding:15px; border-radius:15px; text-align:center">
-                <small>Gasto Peças</small><br><b id="d-pecas" style="color:var(--warning)">0</b>
-            </div>
-        </div>
-        <canvas id="graficoFin" height="180" style="margin-top:20px"></canvas>
-        <button class="btn-del" onclick="fecharMes()">ZERAR MÊS ATUAL</button>
+        <div class="box-destaque">DINHEIRO LIMPO: <br><span id="d-lucro" style="font-size: 2rem;">R$ 0</span></div>
+        <canvas id="graficoFin" height="150"></canvas>
+        <button class="btn-blue" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> RELATÓRIO PDF</button>
+        <button class="btn-del" onclick="fecharMes()" style="opacity: 0.5;">ZERAR MÊS</button>
     </div>
 
     <div id="sec-serv" class="card">
-        <h3>🔧 Novo Atendimento</h3>
-        <input id="sNome" placeholder="Nome do Cliente">
-        <input id="sPlaca" placeholder="Placa da Moto">
-        <input id="sCel" placeholder="Zap (Ex: 5511...)">
-        <input id="sServ" placeholder="O que vai fazer?">
+        <h3>🔧 Novo Serviço</h3>
+        <input id="sNome" placeholder="Cliente">
+        <input id="sPlaca" placeholder="Placa">
+        <input id="sCel" placeholder="Zap (5511...)">
         <input id="sMao" type="number" placeholder="Sua Mão de Obra R$">
         <input id="sPec" type="number" placeholder="Custo das Peças R$">
-        <select id="sStatus">
-            <option value="Pendente">🔴 Pendente (Fila)</option>
-            <option value="Fazendo">🟡 Fazendo (Na Mesa)</option>
-            <option value="Pronto">🟢 Pronto (Entrega)</option>
+        <select id="sOleo">
+            <option value="não">Trocou óleo? Não</option>
+            <option value="sim">Trocou óleo? Sim (Avisar em 90 dias)</option>
         </select>
-        <select id="sPag">
-            <option value="Dinheiro">💵 Dinheiro</option>
-            <option value="Pix">📱 Pix</option>
-            <option value="Cartão">💳 Cartão</option>
-        </select>
-        <button class="btn-add" onclick="addServico()">SALVAR E SOMAR LUCRO</button>
-        <div style="display:flex; gap:10px">
-            <button class="btn-wpp" onclick="zapOrcamento()"><i class="fab fa-whatsapp"></i> ORÇAMENTO</button>
-            <button class="btn-blue" onclick="zapPronto()"><i class="fab fa-whatsapp"></i> AVISAR PRONTO</button>
+        <button class="btn-add" onclick="addServico()">SALVAR SERVIÇO</button>
+        <div style="display:flex; gap:5px">
+            <button class="btn-blue" onclick="zapOrcamento()">ORÇAMENTO</button>
+            <button class="btn-wpp" onclick="zapPronto()">AVISAR PRONTO</button>
         </div>
     </div>
 
     <div id="sec-contas" class="card">
-        <h3>💸 Pagamentos da Oficina</h3>
-        <input id="ctN" placeholder="Ex: Aluguel, Peças, Almoço">
+        <h3>💸 Pagar Contas / Gastos</h3>
+        <input id="ctN" placeholder="Ex: Luz, Aluguel, Almoço">
         <input id="ctV" type="number" placeholder="Valor R$">
-        <button class="btn-del" onclick="addConta()">PAGAR E DESCONTAR DO LUCRO</button>
+        <button class="btn-del" onclick="addConta()">PAGAR E DESCONTAR</button>
         <div id="list-contas"></div>
     </div>
 
-    <div id="sec-hist" class="card">
-        <h3>📂 Busca e Status</h3>
-        <input id="busca" placeholder="Filtrar por placa..." onkeyup="render()">
-        <div id="list-hist"></div>
+    <div id="sec-oleo" class="card">
+        <h3>🛢️ Retornos de Troca de Óleo</h3>
+        <div id="list-oleo"></div>
     </div>
 
-    <div id="sec-estoque" class="card"><h3>📦 Estoque</h3><input id="eN" placeholder="Peça"><input id="eQ" type="number"><button class="btn-add" onclick="addObj('estoque')">ADD</button><div id="list-estoque"></div></div>
-    <div id="sec-precos" class="card"><h3>📋 Tabela</h3><input id="pN" placeholder="Serviço"><input id="pV"><button class="btn-blue" onclick="addObj('precos')">ADD</button><div id="list-precos"></div></div>
-    <div id="sec-forn" class="card"><h3>🚛 Fornecedores</h3><input id="fN" placeholder="Nome"><input id="fC" placeholder="Zap"><button class="btn-blue" onclick="addObj('forn')">ADD</button><div id="list-forn"></div></div>
-    <div id="sec-calc" class="card"><h3>💳 Taxas</h3><input id="calcV" placeholder="Valor"><button class="btn-blue" onclick="alert('Cobrar: R$ '+(calcV.value*1.12).toFixed(2))">CRÉDITO (+12%)</button></div>
-    <div id="sec-agenda" class="card"><h3>📅 Agenda</h3><input id="agN"><input id="agD" type="date"><button class="btn-add" onclick="addObj('agenda')">ADD</button><div id="list-agenda"></div></div>
-    <div id="sec-compras" class="card"><h3>🛒 Compras</h3><input id="cpI"><button class="btn-add" onclick="addObj('compras')">ADD</button><div id="list-compras"></div></div>
-    <div id="sec-check" class="card"><h3>📋 Check-list</h3><input id="avP" placeholder="Placa"><textarea id="avD" placeholder="Riscos..."></textarea><button class="btn-add" onclick="addObj('avarias')">SALVAR</button><div id="list-avarias"></div></div>
-    <div id="sec-ia" class="card">
-        <h3>🤖 Analista IA</h3><div id="chatIA" class="box-destaque" style="background:black; color:lime; text-align:left; font-size:12px"></div>
-        <button class="btn-blue" onclick="analisarIA()">ANALISAR FINANCEIRO</button>
-        <hr style="opacity:0.2; margin:20px 0">
-        <h3>💾 Segurança</h3>
-        <button onclick="gerarBack()">CRIAR CÓDIGO BACKUP</button>
-        <textarea id="txtBack" style="font-size:8px" placeholder="Seu código aparecerá aqui"></textarea>
-    </div>
+    <div id="sec-hist" class="card"><h3>📂 Busca</h3><input id="busca" onkeyup="render()"><div id="list-hist"></div></div>
+    <div id="sec-estoque" class="card"><h3>📦 Estoque</h3><input id="eN"><input id="eQ" type="number"><button onclick="addObj('estoque')">ADD</button><div id="list-estoque"></div></div>
+    <div id="sec-precos" class="card"><h3>📋 Tabela</h3><input id="pN"><input id="pV"><button onclick="addObj('precos')">ADD</button><div id="list-precos"></div></div>
+    <div id="sec-calc" class="card"><h3>💳 Taxas</h3><input id="calcV" type="number"><button onclick="alert('Cobrar: '+(calcV.value*1.12).toFixed(2))">CRÉDITO +12%</button></div>
+    <div id="sec-agenda" class="card"><h3>📅 Agenda</h3><input id="agN"><input id="agD" type="date"><button onclick="addObj('agenda')">ADD</button><div id="list-agenda"></div></div>
+    <div id="sec-compras" class="card"><h3>🛒 Compras</h3><input id="cpI"><button onclick="addObj('compras')">ADD</button><div id="list-compras"></div></div>
+    <div id="sec-check" class="card"><h3>📋 Check-list</h3><input id="avP" placeholder="Placa"><textarea id="avD"></textarea><button onclick="addObj('avarias')">SALVAR</button><div id="list-avarias"></div></div>
+    <div id="sec-ia" class="card"><h3>🤖 Backup</h3><button onclick="gerarBack()">GERAR CÓDIGO</button><textarea id="txtBack" style="font-size:8px"></textarea></div>
 
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('lisboa_v20_final')) || { mao: 0, pecas_total: 0, contas_total: 0, hist: [], estoque: [], precos: [], forn: [], agenda: [], compras: [], avarias: [], contas: [] };
+    let db = JSON.parse(localStorage.getItem('lisboa_ultra_v30_rev')) || { mao: 0, pecas_total: 0, contas_total: 0, hist: [], estoque: [], precos: [], agenda: [], compras: [], avarias: [], contas: [] };
     let chart;
 
-    function save() { localStorage.setItem('lisboa_v20_final', JSON.stringify(db)); render(); }
-
+    function save() { localStorage.setItem('lisboa_ultra_v30_rev', JSON.stringify(db)); render(); }
     function login() { if(pass.value === "1234") { loginBox.style.display='none'; dashboard.style.display='block'; show('sec-dash'); render(); } }
-
     function show(id) { document.querySelectorAll('.card').forEach(c => c.classList.remove('active-section')); document.getElementById(id).classList.add('active-section'); window.scrollTo(0,0); }
 
     function addServico() {
         let m = parseFloat(sMao.value) || 0; let p = parseFloat(sPec.value) || 0;
         if(m+p > 0) {
             db.mao += m; db.pecas_total += p;
-            db.hist.unshift({n: sNome.value, p: sPlaca.value.toUpperCase(), s: sServ.value, v: (m+p), st: sStatus.value, pag: sPag.value, z: sCel.value, mao: m, pec: p});
+            db.hist.unshift({n: sNome.value, p: sPlaca.value.toUpperCase(), v: (m+p), z: sCel.value, mao: m, pec: p, oleo: sOleo.value, data: new Date().getTime()});
             sMao.value=""; sPec.value=""; sNome.value=""; save(); alert("Serviço Salvo!");
         }
     }
 
     function addConta() {
         let v = parseFloat(ctV.value) || 0;
-        if(v > 0) { db.contas_total += v; db.contas.unshift({n: ctN.value, v: v}); save(); }
+        if(v > 0) { db.contas_total += v; db.contas.unshift({n: ctN.value, v: v}); ctN.value=""; ctV.value=""; save(); }
     }
 
     function addObj(t) {
         if(t==='estoque') db.estoque.push({n: eN.value, v: eQ.value});
         if(t==='precos') db.precos.push({n: pN.value, v: pV.value});
-        if(t==='forn') db.forn.push({n: fN.value, v: fC.value});
         if(t==='agenda') db.agenda.push({n: agN.value, d: agD.value});
         if(t==='compras') db.compras.push({n: cpI.value});
         if(t==='avarias') db.avarias.push({p: avP.value, d: avD.value});
         save();
     }
 
-    function excluir(t, i) { if(confirm("Apagar registro?")) { db[t].splice(i, 1); save(); } }
-    function fecharMes() { if(confirm("Isso zerará os ganhos do gráfico. O histórico continua salvo. Ok?")) { db.mao=0; db.pecas_total=0; db.contas_total=0; save(); } }
-
     function render() {
         let lucro = db.mao - db.contas_total;
         document.getElementById("d-lucro").innerText = "R$ " + lucro.toFixed(2);
-        document.getElementById("d-bruto").innerText = "R$ " + db.mao.toFixed(2);
-        document.getElementById("d-pecas").innerText = "R$ " + db.pecas_total.toFixed(2);
+        
+        // Alerta Óleo
+        let venci = 0; let htmlOleo = "";
+        db.hist.forEach(h => {
+            if(h.oleo === "sim") {
+                let dias = Math.floor((new Date().getTime() - h.data) / (1000*60*60*24));
+                if(dias >= 90) {
+                    venci++;
+                    htmlOleo += `<div class="item-lista vencido"><span><b>${h.p}</b> - ${h.n}<br>(${dias} dias)</span><button class="btn-wpp" style="width:auto" onclick="window.open('https://api.whatsapp.com/send?phone=${h.z}&text=Olá! Já faz ${dias} dias da sua troca de óleo. Vamos agendar?')">ZAP</button></div>`;
+                }
+            }
+        });
+        document.getElementById("notif-oleo").innerText = venci;
+        document.getElementById("notif-oleo").style.display = venci > 0 ? "block" : "none";
+        document.getElementById("list-oleo").innerHTML = htmlOleo || "Nenhum retorno hoje.";
 
-        document.getElementById("list-hist").innerHTML = db.hist.filter(h => h.p.includes(busca.value.toUpperCase())).map((h, i) => `
-            <div class="item-lista status-${h.st.toLowerCase()}">
-                <span><b>${h.p}</b> - ${h.n}<br><small>${h.s} (${h.pag})</small></span>
-                <div style="text-align:right"><b>R$ ${h.v}</b><br><i class="fas fa-trash" style="color:red" onclick="excluir('hist',${i})"></i></div>
-            </div>`).join('');
-
-        document.getElementById("list-contas").innerHTML = db.contas.map((c,i) => `<div class="item-lista"><span>${c.n}</span><b>R$ ${c.v}</b> <i class="fas fa-times" onclick="excluir('contas',${i})"></i></div>`).join('');
-        document.getElementById("list-estoque").innerHTML = db.estoque.map((e,i) => `<div class="item-lista"><span>${e.n}</span><b>${e.v} un</b> <i class="fas fa-times" onclick="excluir('estoque',${i})"></i></div>`).join('');
+        document.getElementById("list-contas").innerHTML = db.contas.map(c => `<div class="item-lista"><span>${c.n}</span><b style="color:red">- R$ ${c.v}</b></div>`).join('');
+        document.getElementById("list-hist").innerHTML = db.hist.filter(h => h.p.includes(busca.value.toUpperCase())).map(h => `<div class="item-lista"><span><b>${h.p}</b> - ${h.n}</span><b>R$ ${h.v}</b></div>`).join('');
 
         const ctx = document.getElementById('graficoFin').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type: 'bar', data: { labels: ['LUCRO', 'PEÇAS', 'CONTAS'], datasets: [{ data: [lucro, db.pecas_total, db.contas_total], backgroundColor: ['#00ff9d', '#f39c12', '#ff4b2b'] }] } });
+        chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Meu Lucro', 'Peças', 'Contas'], datasets: [{ data: [lucro, db.pecas_total, db.contas_total], backgroundColor: ['#00ff9d', '#f39c12', '#ff4b2b'] }] } });
     }
 
-    function zapOrcamento() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento da Oficina Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}. Podemos seguir?`); }
-    function zapPronto() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Sua moto está PRONTA. Valor total: R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}. Aguardamos você!`); }
-    function analisarIA() { let l = db.mao - db.contas_total; document.getElementById("chatIA").innerText = "> " + (l < 0 ? "ALERTA: Você está no prejuízo! Pare de gastar e revise seus preços." : "BOAS NOTÍCIAS: Seu lucro limpo é de R$ "+l.toFixed(2)+"."); }
-    function gerarBack() { txtBack.value = btoa(JSON.stringify(db)); alert("Backup Criado!"); }
+    function gerarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("FECHAMENTO OFICINA LISBOA", 10, 10);
+        doc.text("Mão de Obra: R$ " + db.mao.toFixed(2), 10, 30);
+        doc.text("Peças: R$ " + db.pecas_total.toFixed(2), 10, 40);
+        doc.text("Contas: R$ " + db.contas_total.toFixed(2), 10, 50);
+        doc.text("LUCRO REAL: R$ " + (db.mao - db.contas_total).toFixed(2), 10, 70);
+        doc.save("financeiro_lisboa.pdf");
+    }
+
+    function zapOrcamento() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Orçamento: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`); }
+    function zapPronto() { window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Sua moto está pronta! Valor: R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`); }
+    function fecharMes() { if(confirm("Zerar gráfico?")) { db.mao=0; db.pecas_total=0; db.contas_total=0; save(); } }
+    function gerarBack() { txtBack.value = btoa(JSON.stringify(db)); }
 </script>
 </body>
 </html>
