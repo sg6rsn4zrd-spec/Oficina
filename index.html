@@ -355,3 +355,105 @@ nav button:hover{
   width:0%;
   transition:0.5s;
 }
+// ===== LOGIN =====
+const SENHA = "2026";
+
+function login(){
+  const senha = document.getElementById("senhaLogin").value;
+  if(senha === SENHA){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("sistema").style.display="block";
+    carregarDados();
+    atualizarDashboard();
+  } else {
+    alert("Senha errada!");
+  }
+}
+
+// ===== MENU =====
+function abrir(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// ===== STORAGE =====
+function salvar(chave, dados){
+  localStorage.setItem(chave, JSON.stringify(dados));
+}
+
+function carregar(chave){
+  return JSON.parse(localStorage.getItem(chave)) || [];
+}
+
+// ===== ALERTA POPUP =====
+function popup(msg){
+  const p = document.createElement("div");
+  p.className="alertPopup";
+  p.innerText=msg;
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(), 3000);
+}
+
+// ===== DASHBOARD =====
+function atualizarDashboard(){
+  const servicos = carregar("servicos");
+  const estoque = carregar("estoque");
+
+  let lucro = 0;
+  servicos.forEach(s=> lucro += Number(s.valor));
+
+  document.getElementById("lucroTotal").innerText = lucro.toFixed(2);
+  document.getElementById("qtdEstoque").innerText = estoque.length;
+  document.getElementById("servicosHoje").innerText = servicos.length;
+
+  atualizarMeta(lucro);
+  graficoLucro(servicos);
+}
+
+// ===== META =====
+function salvarMeta(){
+  const meta = Number(document.getElementById("metaLucro").value);
+  localStorage.setItem("metaLucro", meta);
+  popup("Meta salva!");
+}
+
+function atualizarMeta(lucro){
+  const meta = Number(localStorage.getItem("metaLucro")) || 0;
+  let porcent = meta ? (lucro/meta*100) : 0;
+  if(porcent > 100) porcent = 100;
+  document.getElementById("progressoMeta").innerText = porcent.toFixed(1)+"%";
+}
+
+// ===== GRÁFICO PRINCIPAL =====
+let grafico1;
+function graficoLucro(servicos){
+  const ctx = document.getElementById("graficoLucro");
+  const labels = servicos.map((s,i)=>"S"+(i+1));
+  const data = servicos.map(s=>s.valor);
+
+  if(grafico1) grafico1.destroy();
+
+  grafico1 = new Chart(ctx, {
+    type:"line",
+    data:{
+      labels:labels,
+      datasets:[{
+        label:"Lucro",
+        data:data,
+        borderWidth:2
+      }]
+    }
+  });
+}
+
+// ===== CARREGAR TUDO AO INICIAR =====
+function carregarDados(){
+  listarServicos();
+  listarEstoque();
+  listarContas();
+  listarOleo();
+  listarAgenda();
+}
+
+// Atualiza tudo automático
+setInterval(atualizarDashboard, 3000);
