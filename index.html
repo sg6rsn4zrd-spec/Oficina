@@ -1,155 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Oficina Wesley Lisboa</title>
 
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+<style>
 
-<body>
-
-<!-- LOGIN -->
-<div id="loginBox" class="loginBox">
-  <h2>🔐 Oficina Wesley Lisboa</h2>
-  <input id="senhaLogin" type="password" placeholder="Senha">
-  <button onclick="login()">Entrar</button>
-</div>
-
-<!-- SISTEMA -->
-<div id="sistema" style="display:none;">
-
-<header>
-<img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
-<span>Oficina Wesley Lisboa</span>
-</header>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="section active">
-<h2>📊 Painel Geral</h2>
-
-<div class="cards">
-  <div class="card green">💰 Lucro Total<br><b>R$ <span id="lucroTotal">0</span></b></div>
-  <div class="card blue">📦 Estoque<br><b><span id="qtdEstoque">0</span></b></div>
-  <div class="card orange">🔧 Serviços Hoje<br><b><span id="servicosHoje">0</span></b></div>
-</div>
-
-<div class="card">
-  <canvas id="graficoLucro"></canvas>
-</div>
-
-<div id="alertas"></div>
-</div>
-
-<!-- SERVIÇOS -->
-<div id="servicos" class="section">
-<h2>🔧 Serviços</h2>
-<input id="sCliente" placeholder="Cliente">
-<input id="sPlaca" placeholder="Placa">
-<input id="sDescricao" placeholder="Serviço">
-<input id="sValor" type="number" placeholder="Valor">
-<select id="sPagamento">
-<option>PIX</option>
-<option>Cartão Crédito</option>
-<option>Cartão Débito</option>
-<option>Dinheiro</option>
-</select>
-<button onclick="addServico()">Salvar Serviço</button>
-<div id="listaServicos"></div>
-</div>
-
-<!-- TROCA DE ÓLEO -->
-<div id="oleo" class="section">
-<h2>🛢️ Troca de Óleo</h2>
-<input id="oCliente" placeholder="Cliente">
-<input id="oPlaca" placeholder="Placa">
-<input id="oKm" type="number" placeholder="KM atual">
-<input id="oProx" type="number" placeholder="Próxima troca KM">
-<button onclick="addOleo()">Salvar</button>
-<div id="listaOleo"></div>
-</div>
-
-<!-- ESTOQUE -->
-<div id="estoque" class="section">
-<h2>📦 Estoque Inteligente</h2>
-<input id="ePeca" placeholder="Peça">
-<input id="eQtd" type="number" placeholder="Quantidade">
-<button onclick="addEstoque()">Adicionar</button>
-<div id="listaEstoque"></div>
-</div>
-
-<!-- CONTAS -->
-<div id="contas" class="section">
-<h2>💰 Contas</h2>
-<input id="cNome" placeholder="Conta">
-<input id="cValor" type="number" placeholder="Valor">
-<input id="cData" type="date">
-<button onclick="addConta()">Adicionar</button>
-<div id="listaContas"></div>
-</div>
-
-<!-- AGENDA -->
-<div id="agenda" class="section">
-<h2>📅 Agenda</h2>
-<input id="aCliente" placeholder="Cliente">
-<input id="aData" type="date">
-<input id="aHora" type="time">
-<button onclick="addAgenda()">Agendar</button>
-<div id="listaAgenda"></div>
-</div>
-
-<!-- METAS -->
-<div id="metas" class="section">
-<h2>🎯 Metas</h2>
-<input id="metaLucro" type="number" placeholder="Meta de lucro mensal">
-<button onclick="salvarMeta()">Salvar Meta</button>
-<div class="card">Progresso: <b><span id="progressoMeta">0%</span></b></div>
-</div>
-
-<!-- RELATÓRIOS -->
-<div id="relatorios" class="section">
-<h2>📈 Relatórios Avançados</h2>
-<div class="card"><canvas id="graficoMensal"></canvas></div>
-</div>
-
-<!-- MENU -->
-<nav>
-<button onclick="abrir('dashboard')">🏠</button>
-<button onclick="abrir('servicos')">🔧</button>
-<button onclick="abrir('oleo')">🛢️</button>
-<button onclick="abrir('estoque')">📦</button>
-<button onclick="abrir('contas')">💰</button>
-<button onclick="abrir('agenda')">📅</button>
-<button onclick="abrir('metas')">🎯</button>
-<button onclick="abrir('relatorios')">📊</button>
-</nav>
-
-</div>
-
-<!-- SCRIPTS -->
-<script src="app.js"></script>
-<script src="servicos.js"></script>
-<script src="estoque.js"></script>
-<script src="contas.js"></script>
-<script src="oleo.js"></script>
-<script src="agenda.js"></script>
-<script src="metas.js"></script>
-<script src="relatorios.js"></script>
-<script src="backup.js"></script>
-
-</body>
-</html>
 /* RESET */
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+* { box-sizing:border-box; margin:0; padding:0; }
 
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:#f5f7fb;
   color:#111;
 }
@@ -158,7 +21,8 @@ body{
 .loginBox{
   position:fixed;
   top:0; left:0;
-  width:100%; height:100%;
+  width:100%;
+  height:100%;
   background:#007aff;
   display:flex;
   flex-direction:column;
@@ -214,246 +78,52 @@ header{
 }
 
 /* SECTIONS */
-.section{
-  display:none;
-  padding:12px;
-  padding-bottom:90px;
-}
+.section{ display:none; padding:12px; }
+.section.active{ display:block; }
 
-.section.active{
-  display:block;
-}
+</style>
 
-h2{
-  margin-bottom:10px;
-  font-size:18px;
-}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script defer src="app.js"></script>
 
-/* CARDS */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
+</head>
+<body>
 
-.card{
-  background:white;
-  padding:12px;
-  border-radius:14px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-  font-size:13px;
-  font-weight:500;
-}
+<div class="loginBox" id="loginBox">
+  <h2>🔒 Oficina Wesley Lisboa</h2>
 
-/* CORES DE STATUS */
-.green{background:#e6f8ed;}
-.blue{background:#e8f1ff;}
-.orange{background:#fff3e0;}
-.red{background:#fdeaea;}
-.gray{background:#f0f0f0;}
+  <input type="password" id="senhaLogin" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+</div>
 
-/* INPUTS */
-input,select{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:14px;
-  margin-top:6px;
-  background:white;
-}
+<div id="sistema" style="display:none;">
 
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:#007aff;
-  color:white;
-  font-size:15px;
-  font-weight:600;
-  margin-top:8px;
-  transition:0.2s;
-}
+<header>
+  <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo">
+  Oficina Wesley Lisboa
+</header>
 
-button:hover{
-  background:#005ecb;
-}
+<div id="menu">
+  <button onclick="abrir('dashboard')">📊 Dashboard</button>
+  <button onclick="abrir('servicos')">🔧 Serviços</button>
+  <button onclick="abrir('estoque')">📦 Estoque</button>
+</div>
 
-/* LISTAS */
-#listaServicos div,
-#listaOleo div,
-#listaEstoque div,
-#listaContas div,
-#listaAgenda div{
-  background:white;
-  padding:10px;
-  margin-top:6px;
-  border-radius:10px;
-  font-size:13px;
-  box-shadow:0 1px 5px rgba(0,0,0,0.05);
-}
+<div id="dashboard" class="section active">
+  <h2>Dashboard</h2>
+  Lucro: R$ <span id="lucroTotal">0</span>
+  <canvas id="graficoLucro"></canvas>
+</div>
 
-/* MENU APP */
-nav{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:white;
-  border-top:1px solid #ddd;
-  display:flex;
-  justify-content:space-around;
-  padding:6px 0;
-  z-index:100;
-}
+<div id="servicos" class="section">
+  <h2>Serviços</h2>
+</div>
 
-nav button{
-  background:none;
-  border:none;
-  font-size:18px;
-  padding:6px;
-  color:#555;
-}
+<div id="estoque" class="section">
+  <h2>Estoque</h2>
+</div>
 
-nav button:hover{
-  color:#007aff;
-}
+</div>
 
-/* ALERTAS POPUP */
-.alertPopup{
-  position:fixed;
-  top:10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#ff3b30;
-  color:white;
-  padding:10px 18px;
-  border-radius:20px;
-  font-size:14px;
-  font-weight:bold;
-  z-index:999;
-  animation:fadeIn 0.5s;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; top:0;}
-  to{opacity:1; top:10px;}
-}
-
-/* BARRA DE META */
-.metaBar{
-  width:100%;
-  background:#eee;
-  border-radius:10px;
-  overflow:hidden;
-  margin-top:8px;
-}
-
-.metaFill{
-  height:12px;
-  background:#34c759;
-  width:0%;
-  transition:0.5s;
-}
-// ===== LOGIN =====
-const SENHA = "2026";
-
-function login(){
-  const senha = document.getElementById("senhaLogin").value;
-  if(senha === SENHA){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("sistema").style.display="block";
-    carregarDados();
-    atualizarDashboard();
-  } else {
-    alert("Senha errada!");
-  }
-}
-
-// ===== MENU =====
-function abrir(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// ===== STORAGE =====
-function salvar(chave, dados){
-  localStorage.setItem(chave, JSON.stringify(dados));
-}
-
-function carregar(chave){
-  return JSON.parse(localStorage.getItem(chave)) || [];
-}
-
-// ===== ALERTA POPUP =====
-function popup(msg){
-  const p = document.createElement("div");
-  p.className="alertPopup";
-  p.innerText=msg;
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(), 3000);
-}
-
-// ===== DASHBOARD =====
-function atualizarDashboard(){
-  const servicos = carregar("servicos");
-  const estoque = carregar("estoque");
-
-  let lucro = 0;
-  servicos.forEach(s=> lucro += Number(s.valor));
-
-  document.getElementById("lucroTotal").innerText = lucro.toFixed(2);
-  document.getElementById("qtdEstoque").innerText = estoque.length;
-  document.getElementById("servicosHoje").innerText = servicos.length;
-
-  atualizarMeta(lucro);
-  graficoLucro(servicos);
-}
-
-// ===== META =====
-function salvarMeta(){
-  const meta = Number(document.getElementById("metaLucro").value);
-  localStorage.setItem("metaLucro", meta);
-  popup("Meta salva!");
-}
-
-function atualizarMeta(lucro){
-  const meta = Number(localStorage.getItem("metaLucro")) || 0;
-  let porcent = meta ? (lucro/meta*100) : 0;
-  if(porcent > 100) porcent = 100;
-  document.getElementById("progressoMeta").innerText = porcent.toFixed(1)+"%";
-}
-
-// ===== GRÁFICO PRINCIPAL =====
-let grafico1;
-function graficoLucro(servicos){
-  const ctx = document.getElementById("graficoLucro");
-  const labels = servicos.map((s,i)=>"S"+(i+1));
-  const data = servicos.map(s=>s.valor);
-
-  if(grafico1) grafico1.destroy();
-
-  grafico1 = new Chart(ctx, {
-    type:"line",
-    data:{
-      labels:labels,
-      datasets:[{
-        label:"Lucro",
-        data:data,
-        borderWidth:2
-      }]
-    }
-  });
-}
-
-// ===== CARREGAR TUDO AO INICIAR =====
-function carregarDados(){
-  listarServicos();
-  listarEstoque();
-  listarContas();
-  listarOleo();
-  listarAgenda();
-}
-
-// Atualiza tudo automático
-setInterval(atualizarDashboard, 3000);
+</body>
+</html>
