@@ -1,167 +1,168 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LISBOA PRO - PERFORMANCE</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-    :root {
-        --bg: #0a0e17;
-        --card: #161b28;
-        --primary: #2a5ee8;
-        --accent: #00d2ff;
-        --success: #00f298;
-        --danger: #ff4b5c;
-        --text: #e1e8f0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LISBOA PRO - PERFORMANCE</title>
 
-    body {
-        margin:0;
-        font-family:'Inter',sans-serif;
-        background:var(--bg);
-        color:var(--text);
-        padding-bottom:80px;
-    }
+<!-- Bibliotecas externas -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    .header{
-        background:var(--card);
-        padding:20px;
-        text-align:center;
-        border-bottom:1px solid rgba(255,255,255,0.1);
-    }
-    .header img{max-width:130px;}
+<!-- Estilos -->
+<style>
+:root {
+    --bg: #0a0e17;
+    --card: #161b28;
+    --primary: #2a5ee8;
+    --accent: #00d2ff;
+    --success: #00f298;
+    --danger: #ff4b5c;
+    --text: #e1e8f0;
+}
 
-    .container{
-        padding:15px;
-        max-width:600px;
-        margin:auto;
-    }
+body {
+    margin:0;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom:80px;
+}
 
-    .balance-card{
-        background:linear-gradient(135deg,#1e2a4a,#161b28);
-        padding:25px;
-        border-radius:24px;
-        text-align:center;
-        margin-bottom:20px;
-        border:1px solid rgba(255,255,255,0.1);
-        box-shadow:0 10px 30px rgba(0,0,0,0.3);
-    }
-    .balance-card h2{margin:0;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;}
-    .balance-val{font-size:2.5rem;font-weight:800;color:var(--success);margin:10px 0;}
+/* Header */
+.header {
+    background: var(--card);
+    padding:20px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.header img { max-width:130px; }
 
-    .menu-grid{
-        display:grid;
-        grid-template-columns:repeat(4,1fr);
-        gap:10px;
-        margin-bottom:25px;
-    }
-    .menu-item{
-        background:var(--card);
-        padding:12px 5px;
-        border-radius:16px;
-        text-align:center;
-        border:1px solid rgba(255,255,255,0.05);
-        cursor:pointer;
-        transition:0.2s;
-    }
-    .menu-item i{
-        font-size:1.2rem;
-        color:var(--accent);
-        margin-bottom:6px;
-        display:block;
-    }
-    .menu-item span{
-        font-size:0.55rem;
-        font-weight:700;
-        text-transform:uppercase;
-    }
-    .menu-item:active{transform:scale(0.9);background:var(--primary);}
+/* Container geral */
+.container { padding:15px; max-width:600px; margin:auto; }
 
-    .section{
-        background:var(--card);
-        padding:20px;
-        border-radius:24px;
-        display:none;
-        border:1px solid rgba(255,255,255,0.05);
-    }
-    .active{display:block;animation:slideIn 0.3s ease-out;}
-    @keyframes slideIn{
-        from{opacity:0;transform:translateY(10px);}
-        to{opacity:1;transform:translateY(0);}
-    }
+/* Cards de saldo */
+.balance-card {
+    background: linear-gradient(135deg,#1e2a4a,#161b28);
+    padding:25px;
+    border-radius:24px;
+    text-align:center;
+    margin-bottom:20px;
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+.balance-card h2 { margin:0; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.7; }
+.balance-val { font-size:2.5rem; font-weight:800; color:var(--success); margin:10px 0; }
 
-    input, select, textarea{
-        background:#0f141e;
-        border:1px solid #2d364a;
-        color:white;
-        padding:14px;
-        border-radius:12px;
-        width:100%;
-        box-sizing:border-box;
-        margin:8px 0;
-        font-size:15px;
-    }
-    button{
-        background:var(--primary);
-        color:white;
-        padding:16px;
-        border-radius:14px;
-        border:none;
-        font-weight:700;
-        width:100%;
-        cursor:pointer;
-        margin-top:10px;
-        font-size:14px;
-        transition:0.2s;
-    }
-    button:active{opacity:0.8;}
-    .btn-success{background:var(--success);color:#0a0e17;}
-    .btn-danger{background:var(--danger);}
+/* Menu Grid */
+.menu-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:25px;
+}
+.menu-item {
+    background:var(--card);
+    padding:12px 5px;
+    border-radius:16px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.05);
+    cursor:pointer;
+    transition:0.2s;
+}
+.menu-item i {
+    font-size:1.2rem;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+}
+.menu-item span {
+    font-size:0.55rem;
+    font-weight:700;
+    text-transform:uppercase;
+}
+.menu-item:active { transform:scale(0.9); background:var(--primary); }
 
-    .list-item{
-        background:rgba(255,255,255,0.03);
-        padding:15px;
-        border-radius:16px;
-        margin-bottom:10px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        border-left:4px solid var(--primary);
-    }
-    .badge{
-        background:var(--danger);
-        color:white;
-        border-radius:50px;
-        padding:2px 8px;
-        font-size:10px;
-        position:absolute;
-        top:-5px;
-        right:-5px;
-    }
+/* Seções */
+.section {
+    background:var(--card);
+    padding:20px;
+    border-radius:24px;
+    display:none;
+    border:1px solid rgba(255,255,255,0.05);
+}
+.active { display:block; animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
 
-    .ia-box{
-        background:#000;
-        border:1px solid var(--success);
-        padding:15px;
-        border-radius:12px;
-        font-family:'Courier New',monospace;
-        color:var(--success);
-        font-size:13px;
-        line-height:1.4;
-    }
+/* Inputs e botões */
+input, select, textarea {
+    background:#0f141e;
+    border:1px solid #2d364a;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    width:100%;
+    box-sizing:border-box;
+    margin:8px 0;
+    font-size:15px;
+}
+button {
+    background:var(--primary);
+    color:white;
+    padding:16px;
+    border-radius:14px;
+    border:none;
+    font-weight:700;
+    width:100%;
+    cursor:pointer;
+    margin-top:10px;
+    font-size:14px;
+    transition:0.2s;
+}
+button:active { opacity:0.8; }
+.btn-success { background:var(--success); color:#0a0e17; }
+.btn-danger { background:var(--danger); }
 
-    @media(max-width:480px){
-        .menu-grid{grid-template-columns:repeat(3,1fr);}
-        .balance-val{font-size:2rem;}
-        button{padding:12px;font-size:13px;}
-    }
-    </style>
+/* Listas */
+.list-item {
+    background: rgba(255,255,255,0.03);
+    padding: 15px;
+    border-radius:16px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-left:4px solid var(--primary);
+    position: relative;
+}
+.badge {
+    background: var(--danger);
+    color:white;
+    border-radius:50px;
+    padding:2px 8px;
+    font-size:10px;
+    position:absolute;
+    top:-5px;
+    right:-5px;
+}
+
+/* IA Box */
+.ia-box {
+    background:#000;
+    border:1px solid var(--success);
+    padding:15px;
+    border-radius:12px;
+    font-family:'Courier New', monospace;
+    color:var(--success);
+    font-size:13px;
+    line-height:1.4;
+}
+</style>
 </head>
 <body>
+
 <!-- HEADER -->
 <div class="header">
     <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" alt="Lisboa Pro">
@@ -177,20 +178,21 @@
     </div>
 </div>
 
-<!-- MAIN PAGE -->
+<!-- PÁGINA PRINCIPAL -->
 <div id="mainPage" class="container" style="display:none">
 
-    <!-- DASHBOARD -->
+    <!-- SALDO / DASHBOARD -->
     <div class="balance-card">
         <h2>Saldo Real (LUCRO LIMPO)</h2>
         <div class="balance-val" id="val-lucro">R$ 0,00</div>
-        <div style="display:flex;justify-content:space-around;opacity:0.8;font-size:12px;">
+        <div style="display: flex; justify-content: space-around; opacity: 0.8; font-size: 12px;">
             <span>Mão de Obra: <b id="val-mao" style="color:var(--accent)">R$ 0</b></span>
             <span>Contas: <b id="val-contas" style="color:var(--danger)">R$ 0</b></span>
+            <span>Peças: <b id="val-pecas" style="color:var(--accent)">R$ 0</b></span>
         </div>
     </div>
 
-    <!-- MENU GRID -->
+    <!-- MENU PRINCIPAL -->
     <div class="menu-grid">
         <div class="menu-item" onclick="nav('sec-dash')"><i class="fas fa-chart-line"></i><span>Dash</span></div>
         <div class="menu-item" onclick="nav('sec-serv')"><i class="fas fa-plus"></i><span>Novo</span></div>
@@ -208,262 +210,284 @@
         <div class="menu-item" onclick="nav('sec-check')"><i class="fas fa-clipboard-list"></i><span>Check</span></div>
         <div class="menu-item" onclick="nav('sec-ia')"><i class="fas fa-brain"></i><span>I.A</span></div>
     </div>
-<!-- SEÇÕES -->
-<div id="sec-dash" class="section active">
-    <h3>📊 Resumo Financeiro</h3>
-    <canvas id="chartFin" height="200"></canvas>
-    <button class="btn-success" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> GERAR RELATÓRIO DO MÊS</button>
-    <button class="btn-danger" onclick="resetMes()" style="opacity: 0.4;">ZERAR DADOS DO MÊS</button>
+
+    <!-- SEÇÕES -->
+    <!-- DASHBOARD -->
+    <div id="sec-dash" class="section active">
+        <h3>📊 Resumo Financeiro</h3>
+        <canvas id="chartFin" height="200"></canvas>
+        <button class="btn-success" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> GERAR RELATÓRIO DO MÊS</button>
+        <button class="btn-danger" onclick="resetMes()" style="opacity:0.4;">ZERAR DADOS DO MÊS</button>
+    </div>
+
+    <!-- NOVO SERVIÇO -->
+    <div id="sec-serv" class="section">
+        <h3>🔧 Novo Serviço</h3>
+        <input id="sNome" placeholder="Nome do Cliente">
+        <input id="sPlaca" placeholder="Placa">
+        <input id="sCel" placeholder="Celular (WhatsApp)">
+        <input id="sMao" type="number" placeholder="Mão de Obra (Seu Ganho)">
+        <input id="sPec" type="number" placeholder="Peças (Custo Reposição)">
+        <select id="sOleo">
+            <option value="nao">Troca de Óleo? Não</option>
+            <option value="sim">Troca de Óleo? Sim (Lembrar em 90 dias)</option>
+        </select>
+        <button class="btn-success" onclick="salvarServico()">SALVAR SERVIÇO</button>
+        <button onclick="zapOrcamento()">ENVIAR ORÇAMENTO (ZAP)</button>
+    </div>
+
+    <!-- CONTAS E DESPESAS -->
+    <div id="sec-contas" class="section">
+        <h3>💸 Contas e Despesas</h3>
+        <input id="cDesc" placeholder="Ex: Luz, Aluguel, Almoço">
+        <input id="cVal" type="number" placeholder="Valor R$">
+        <select id="cTipo">
+            <option value="fixa">Fixa</option>
+            <option value="variavel">Variável</option>
+        </select>
+        <button class="btn-danger" onclick="salvarConta()">PAGAR CONTA</button>
+        <div id="lista-contas"></div>
+    </div>
+
+    <!-- LEMBRETE DE ÓLEO -->
+    <div id="sec-oleo" class="section">
+        <h3>🛢️ Lembrete de Óleo</h3>
+        <div id="lista-oleo"></div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div id="sec-hist" class="section">
+        <h3>📂 Histórico</h3>
+        <input id="busca" placeholder="Buscar por placa, cliente ou serviço..." onkeyup="render()">
+        <div id="lista-hist"></div>
+    </div>
+    <!-- ESTOQUE -->
+    <div id="sec-estoque" class="section">
+        <h3>📦 Estoque</h3>
+        <input id="eN" placeholder="Peça">
+        <input id="eQ" type="number" placeholder="Quantidade">
+        <button onclick="addObj('estoque','eN','eQ')">ADD</button>
+        <div id="l-estoque"></div>
+    </div>
+
+    <!-- TABELA DE PREÇOS -->
+    <div id="sec-tabela" class="section">
+        <h3>📋 Tabela de Preços</h3>
+        <input id="tN" placeholder="Serviço">
+        <input id="tV" placeholder="Valor">
+        <button onclick="addObj('tabela','tN','tV')">ADD</button>
+        <div id="l-tabela"></div>
+    </div>
+
+    <!-- TAXAS -->
+    <div id="sec-taxa" class="section">
+        <h3>💳 Calculadora de Taxas</h3>
+        <input id="taxV" type="number" placeholder="Valor do Serviço">
+        <select id="taxForma">
+            <option value="dinheiro">Dinheiro</option>
+            <option value="pix">PIX</option>
+            <option value="cartao">Cartão de Crédito</option>
+        </select>
+        <button onclick="calcTaxa()">CALCULAR</button>
+        <div id="taxResultado" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="sec-agenda" class="section">
+        <h3>📅 Agenda de Retorno</h3>
+        <input id="aN" placeholder="Cliente">
+        <input id="aD" type="date">
+        <button onclick="addObj('agenda','aN','aD')">AGENDAR</button>
+        <div id="l-agenda"></div>
+    </div>
+
+    <!-- COMPRAS -->
+    <div id="sec-compras" class="section">
+        <h3>🛒 Lista de Compras</h3>
+        <input id="cpN" placeholder="Item faltando">
+        <button onclick="addObj('compras','cpN')">ADD</button>
+        <div id="l-compras"></div>
+    </div>
+
+    <!-- CHECK-LIST -->
+    <div id="sec-check" class="section">
+        <h3>📋 Check-list Entrada</h3>
+        <input id="chP" placeholder="Placa">
+        <textarea id="chD" placeholder="Observações/Avarias"></textarea>
+        <button onclick="addObj('check','chP','chD')">SALVAR</button>
+        <div id="l-check"></div>
+    </div>
+
+    <!-- I.A. -->
+    <div id="sec-ia" class="section">
+        <h3>🤖 Analista Inteligente</h3>
+        <div id="ia-res" class="ia-box">Aguardando dados...</div>
+        <button onclick="analisarIA()">GERAR DIAGNÓSTICO</button>
+        <hr style="opacity:0.1; margin:20px 0">
+        <button onclick="gerarBackup()" style="background:#333">GERAR CÓDIGO BACKUP</button>
+        <textarea id="txtBack" style="font-size:8px; width:100%; height:50px;"></textarea>
+    </div>
 </div>
 
-<div id="sec-serv" class="section">
-    <h3>🔧 Novo Serviço</h3>
-    <input id="sNome" placeholder="Nome do Cliente">
-    <input id="sPlaca" placeholder="Placa">
-    <input id="sCel" placeholder="Celular (WhatsApp)">
-    <input id="sMao" type="number" placeholder="Mão de Obra (Seu Ganho)">
-    <input id="sPec" type="number" placeholder="Peças (Custo Reposição)">
-    <select id="sOleo">
-        <option value="nao">Troca de Óleo? Não</option>
-        <option value="sim">Troca de Óleo? Sim (Lembrar em 90 dias)</option>
-    </select>
-    <button class="btn-success" onclick="salvarServico()">SALVAR SERVIÇO</button>
-    <button onclick="zapOrcamento()">ENVIAR ORÇAMENTO (ZAP)</button>
-</div>
-
-<div id="sec-contas" class="section">
-    <h3>💸 Contas e Despesas</h3>
-    <input id="cDesc" placeholder="Ex: Luz, Aluguel, Almoço">
-    <input id="cVal" type="number" placeholder="Valor R$">
-    <button class="btn-danger" onclick="salvarConta()">PAGAR CONTA</button>
-    <div id="lista-contas"></div>
-</div>
-
-<div id="sec-oleo" class="section">
-    <h3>🛢️ Lembrete de Óleo</h3>
-    <div id="lista-oleo"></div>
-</div>
-
-<div id="sec-hist" class="section">
-    <h3>📂 Histórico</h3>
-    <input id="busca" placeholder="Buscar por placa..." onkeyup="render()">
-    <div id="lista-hist"></div>
-</div>
-
-<div id="sec-estoque" class="section">
-    <h3>📦 Estoque</h3>
-    <input id="eN" placeholder="Peça">
-    <input id="eQ" type="number" placeholder="Quantidade">
-    <button onclick="addObj('estoque','eN','eQ')">ADD</button>
-    <div id="l-estoque"></div>
-</div>
-
-<div id="sec-tabela" class="section">
-    <h3>📋 Tabela de Preços</h3>
-    <input id="tN" placeholder="Serviço">
-    <input id="tV" placeholder="Valor">
-    <button onclick="addObj('tabela','tN','tV')">ADD</button>
-    <div id="l-tabela"></div>
-</div>
-
-<div id="sec-taxa" class="section">
-    <h3>💳 Calculadora de Taxas</h3>
-    <input id="taxV" type="number" placeholder="Valor do Serviço">
-    <select id="taxTipo">
-        <option value="cartao">Cartão de Crédito (+12%)</option>
-        <option value="pix">PIX (sem taxa)</option>
-        <option value="dinheiro">Dinheiro (sem taxa)</option>
-    </select>
-    <button onclick="calcTaxa()">CALCULAR</button>
-</div>
-
-<div id="sec-agenda" class="section">
-    <h3>📅 Agenda de Retorno</h3>
-    <input id="aN" placeholder="Cliente">
-    <input id="aD" type="date">
-    <button onclick="addObj('agenda','aN','aD')">AGENDAR</button>
-    <div id="l-agenda"></div>
-</div>
-
-<div id="sec-compras" class="section">
-    <h3>🛒 Lista de Compras</h3>
-    <input id="cpN" placeholder="Item faltando">
-    <button onclick="addObj('compras','cpN')">ADD</button>
-    <div id="l-compras"></div>
-</div>
-
-<div id="sec-check" class="section">
-    <h3>📋 Check-list Entrada</h3>
-    <input id="chP" placeholder="Placa">
-    <textarea id="chD" placeholder="Observações/Avarias"></textarea>
-    <button onclick="addObj('check','chP','chD')">SALVAR</button>
-    <div id="l-check"></div>
-</div>
-
-<div id="sec-ia" class="section">
-    <h3>🤖 Analista Inteligente</h3>
-    <div id="ia-res" class="ia-box">Aguardando dados...</div>
-    <button onclick="analisarIA()">GERAR DIAGNÓSTICO</button>
-    <hr style="opacity:0.1; margin:20px 0">
-    <button onclick="gerarBackup()" style="background:#333">GERAR CÓDIGO BACKUP</button>
-    <textarea id="txtBack" style="font-size:8px"></textarea>
-</div>
-
-<!-- SCRIPT JS -->
+<!-- JAVASCRIPT -->
 <script>
-let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || { 
-    mao:0, contas:0, pecas:0, servicos:[], despesas:[], estoque:[], tabela:[], agenda:[], compras:[], check:[] 
-};
-let chart;
+    // Banco de Dados Centralizado
+    let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || {
+        mao:0,
+        contas:0,
+        pecas:0,
+        servicos:[],
+        despesas:[],
+        estoque:[],
+        tabela:[],
+        agenda:[],
+        compras:[],
+        check:[]
+    };
+    let chart;
 
-// LOGIN
-function login() {
-    const pass = document.getElementById('pass').value;
-    if(pass === '1234'){
-        document.getElementById('loginPage').style.display='none';
-        document.getElementById('mainPage').style.display='block';
-        render();
-    } else alert("Senha incorreta!");
-}
+    // FUNÇÕES PRINCIPAIS
+    function save() { localStorage.setItem('lisboa_vfinal', JSON.stringify(db)); render(); }
 
-// NAVEGAÇÃO
-function nav(id){
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-// SALVAR SERVIÇO
-function salvarServico(){
-    let m = parseFloat(document.getElementById('sMao').value) || 0;
-    let p = parseFloat(document.getElementById('sPec').value) || 0;
-    if(m+p>0){
-        db.mao+=m; db.pecas+=p;
-        db.servicos.unshift({
-            n:document.getElementById('sNome').value,
-            p:document.getElementById('sPlaca').value.toUpperCase(),
-            v:(m+p), m:m, pe:p,
-            z:document.getElementById('sCel').value,
-            ol:document.getElementById('sOleo').value,
-            d: new Date().getTime()
-        });
-        document.getElementById('sNome').value='';
-        document.getElementById('sPlaca').value='';
-        document.getElementById('sMao').value='';
-        document.getElementById('sPec').value='';
-        document.getElementById('sCel').value='';
-        save();
-        alert("✅ Serviço salvo com sucesso!");
-    }
-}
-
-// SALVAR CONTA
-function salvarConta(){
-    let v=parseFloat(document.getElementById('cVal').value) || 0;
-    if(v>0){
-        db.contas+=v;
-        db.despesas.unshift({
-            n:document.getElementById('cDesc').value,
-            v:v,
-            d:new Date().toLocaleDateString()
-        });
-        document.getElementById('cDesc').value='';
-        document.getElementById('cVal').value='';
-        save();
-    }
-}
-
-// ADICIONAR OBJETOS
-function addObj(t,id1,id2){
-    let obj={ n:document.getElementById(id1).value, v:id2?document.getElementById(id2).value:null };
-    db[t].push(obj); save();
-}
-
-// SALVAR LOCAL
-function save(){ localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render(); }
-
-// RENDERIZAÇÃO
-function render(){
-    let lucro = db.mao - db.contas;
-    document.getElementById('val-lucro').innerText = "R$ "+lucro.toFixed(2);
-    document.getElementById('val-mao').innerText = "R$ "+db.mao.toFixed(2);
-    document.getElementById('val-contas').innerText = "R$ "+db.contas.toFixed(2);
-
-    document.getElementById('lista-hist').innerHTML = db.servicos.filter(s => s.p.includes((document.getElementById('busca')?.value||'').toUpperCase())).map(s => `<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
-    document.getElementById('lista-contas').innerHTML = db.despesas.map(d => `<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
-
-    // ÓLEO
-    let hoje = new Date().getTime();
-    let vencidos=0, htmlOleo='';
-    db.servicos.forEach(s=>{
-        if(s.ol==='sim'){
-            let dias=Math.floor((hoje-s.d)/(1000*60*60*24));
-            if(dias>=90){
-                vencidos++;
-                htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
-            }
+    function login() {
+        const senha = document.getElementById('pass').value;
+        if(senha==='1234') {
+            document.getElementById('loginPage').style.display='none';
+            document.getElementById('mainPage').style.display='block';
+            render();
+        } else {
+            alert("Senha incorreta!");
         }
-    });
-    document.getElementById('notif-oleo').innerText=vencidos;
-    document.getElementById('notif-oleo').style.display=vencidos>0?'block':'none';
-    document.getElementById('lista-oleo').innerHTML = htmlOleo || "Sem trocas pendentes.";
-
-    // GRÁFICO
-    const ctx=document.getElementById('chartFin').getContext('2d');
-    if(chart) chart.destroy();
-    chart=new Chart(ctx,{
-        type:'doughnut',
-        data:{
-            labels:['Lucro Limpo','Contas Fixas','Custo Peças'],
-            datasets:[{data:[lucro>0?lucro:0,db.contas,db.pecas],backgroundColor:['#00f298','#ff4b5c','#00d2ff'],borderWidth:0}]
-        },
-        options:{plugins:{legend:{labels:{color:'white'}}}}
-    });
-}
-
-// ANÁLISE IA
-function analisarIA(){
-    let lucro=db.mao-db.contas;
-    let analise="";
-    if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar. Suas contas fixas superaram o ganho de mão de obra.";
-    else if(db.contas>db.mao*0.5) analise="> CUIDADO: Suas despesas fixas estão consumindo mais de 50% do seu lucro. Tente reduzir gastos.";
-    else analise="> SAÚDE ÓTIMA: Seu lucro está saudável. Você tem R$ "+lucro.toFixed(2)+" limpos no bolso.";
-    document.getElementById('ia-res').innerText=analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para uma análise precisa.":"Aproveite a lista de óleo para atrair clientes antigos.");
-}
-
-// WHATSAPP ORÇAMENTO
-function zapOrcamento(){
-    window.open(`https://api.whatsapp.com/send?phone=${document.getElementById('sCel').value}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${document.getElementById('sMao').value}, Peças R$ ${document.getElementById('sPec').value}. Total R$ ${parseFloat(document.getElementById('sMao').value)+parseFloat(document.getElementById('sPec').value)}`);
-}
-
-// GERAR PDF
-function gerarPDF(){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.text("Relatório Lisboa Pro",10,10);
-    doc.text(`Lucro: R$ ${db.mao-db.contas}`,10,20);
-    doc.save("mes.pdf");
-}
-
-// CALCULAR TAXA
-function calcTaxa(){
-    const val=parseFloat(document.getElementById('taxV').value) || 0;
-    const tipo=document.getElementById('taxTipo').value;
-    let total=val;
-    if(tipo==='cartao') total*=1.12;
-    alert(`Para receber R$ ${val}, cobre do cliente: R$ ${total.toFixed(2)} (${tipo})`);
-}
-
-// RESET MÊS
-function resetMes(){
-    if(confirm("Deseja zerar os ganhos? O histórico não será apagado.")){
-        db.mao=0; db.contas=0; db.pecas=0;
-        save();
     }
-}
 
-// GERAR BACKUP
-function gerarBackup(){ document.getElementById('txtBack').value=btoa(JSON.stringify(db)); }
+    function nav(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
 
+    function salvarServico() {
+        let m = parseFloat(sMao.value) || 0;
+        let p = parseFloat(sPec.value) || 0;
+        if(m+p > 0){
+            db.mao += m; db.pecas += p;
+            db.servicos.unshift({
+                n: sNome.value,
+                p: sPlaca.value.toUpperCase(),
+                v: m+p,
+                m: m,
+                pe: p,
+                z: sCel.value,
+                ol: sOleo.value,
+                d: new Date().getTime()
+            });
+            sMao.value=''; sPec.value=''; sNome.value=''; save();
+            alert("✅ Serviço salvo com sucesso!");
+        }
+    }
+
+    function salvarConta() {
+        let v = parseFloat(cVal.value) || 0;
+        if(v>0){
+            db.contas += v;
+            db.despesas.unshift({ n:cDesc.value, v:v, tipo:cTipo.value, d:new Date().toLocaleDateString() });
+            cVal.value=''; cDesc.value=''; save();
+        }
+    }
+
+    function addObj(t, id1, id2){
+        let obj = { n: document.getElementById(id1).value, v: id2 ? document.getElementById(id2).value : null };
+        db[t].push(obj); save();
+        document.getElementById(id1).value=''; if(id2) document.getElementById(id2).value='';
+    }
+
+    // RENDERIZAÇÃO
+    function render(){
+        // Lucro
+        let lucro = db.mao - db.contas;
+        document.getElementById('val-lucro').innerText = "R$ " + lucro.toFixed(2);
+        document.getElementById('val-mao').innerText = "R$ " + db.mao.toFixed(2);
+        document.getElementById('val-contas').innerText = "R$ " + db.contas.toFixed(2);
+        document.getElementById('val-pecas').innerText = "R$ " + db.pecas.toFixed(2);
+
+        // Histórico
+        let filtro = busca.value.toUpperCase();
+        document.getElementById('lista-hist').innerHTML = db.servicos.filter(s => s.p.includes(filtro) || s.n.toUpperCase().includes(filtro)).map(s => `<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
+
+        // Contas
+        document.getElementById('lista-contas').innerHTML = db.despesas.map(d=>`<div class="list-item"><span>${d.n} (${d.tipo})</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
+
+        // Óleo
+        let hoje = new Date().getTime();
+        let vencidos = 0;
+        let htmlOleo = "";
+        db.servicos.forEach(s=>{
+            if(s.ol==='sim'){
+                let dias = Math.floor((hoje - s.d)/(1000*60*60*24));
+                if(dias>=90){
+                    vencidos++;
+                    htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
+                }
+            }
+        });
+        document.getElementById('notif-oleo').innerText=vencidos;
+        document.getElementById('notif-oleo').style.display=vencidos>0?'block':'none';
+        document.getElementById('lista-oleo').innerHTML = htmlOleo || "Sem trocas pendentes.";
+
+        // Gráfico
+        const ctx = document.getElementById('chartFin').getContext('2d');
+        if(chart) chart.destroy();
+        chart = new Chart(ctx,{
+            type:'doughnut',
+            data:{
+                labels:['Lucro Limpo','Contas Fixas','Custo Peças'],
+                datasets:[{ data:[lucro>0?lucro:0,db.contas,db.pecas], backgroundColor:['#00f298','#ff4b5c','#00d2ff'], borderWidth:0 }]
+            },
+            options:{ plugins:{ legend:{ labels:{ color:'white' } } } }
+        });
+    }
+
+    // FUNÇÕES AVANÇADAS
+    function analisarIA(){
+        let lucro = db.mao - db.contas;
+        let analise="";
+        if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar. Suas contas superam o ganho.";
+        else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas consomem mais de 50% do lucro.";
+        else analise="> SAÚDE ÓTIMA: Lucro saudável. R$ "+lucro.toFixed(2)+" limpos no bolso.";
+        document.getElementById('ia-res').innerText = analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use a lista de óleo para atrair clientes antigos.");
+    }
+
+    function zapOrcamento(){
+        window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`);
+    }
+
+    function gerarPDF(){
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text("Relatório Lisboa Pro",10,10);
+        doc.text(`Lucro: R$ ${db.mao - db.contas}`,10,20);
+        doc.autoTable({ head:[['Serviço','Placa','Cliente','Valor']], body: db.servicos.map(s=>[s.n,s.p,s.z,s.v]) });
+        doc.save("mes.pdf");
+    }
+
+    function calcTaxa(){
+        let val = parseFloat(taxV.value)||0;
+        let forma = taxForma.value;
+        let final=0;
+        if(forma==='dinheiro'||forma==='pix') final=val;
+        else if(forma==='cartao') final=(val*1.12).toFixed(2);
+        document.getElementById('taxResultado').innerText = `Valor a cobrar: R$ ${final}`;
+    }
+
+    function resetMes(){
+        if(confirm("Deseja zerar os ganhos? O histórico não será apagado.")){
+            db.mao=0; db.contas=0; db.pecas=0; save();
+        }
+    }
+
+    function gerarBackup(){ txtBack.value=btoa(JSON.stringify(db)); }
+
+    // Inicial
+    render();
 </script>
 </body>
 </html>
