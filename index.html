@@ -15,47 +15,25 @@
         <div style="display:flex;justify-content:space-around;opacity:0.8;font-size:12px;">
             <span>Mão de Obra: <b id="val-mao" style="color:var(--accent)">R$ 0</b></span>
             <span>Contas: <b id="val-contas" style="color:var(--danger)">R$ 0</b></span>
-            <span>Peças: <b id="val-pecas" style="color:var(--primary)">R$ 0</b></span>
+            <span>Peças: <b id="val-pecas" style="color:var(--accent)">R$ 0</b></span>
         </div>
-    </div>
-
-    <div class="menu-grid">
-        <!-- Menu será completado na Parte B -->
-    </div>
-
-    <div id="sec-dash" class="section active">
-        <h3>📊 Resumo Financeiro Master</h3>
-        <canvas id="chartFin" height="200"></canvas>
-        <button class="btn-success" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> GERAR RELATÓRIO DO MÊS</button>
-        <button class="btn-danger" onclick="resetMes()" style="opacity:0.4;">ZERAR DADOS DO MÊS</button>
     </div>
 </div>
 
 <script>
-/* ===== LOGIN ===== */
+/* ===== LOGIN FUNCIONAL ===== */
 function login(){
-    if(document.getElementById('pass').value==='1234'){
+    let senha = document.getElementById('pass').value;
+    if(senha==='1234'){
         document.getElementById('loginPage').style.display='none';
         document.getElementById('mainPage').style.display='block';
-        render();
+        render(); // Renderiza tudo ao entrar
     } else {
-        alert("❌ Senha incorreta!");
+        alert("Senha incorreta!");
     }
 }
-
-/* ===== DADOS ===== */
-let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || {
-    mao:0, contas:0, pecas:0,
-    servicos:[], despesas:[],
-    estoque:[], tabela:[], agenda:[], compras:[], check:[]
-};
-
-let chart;
-
-/* ===== FUNÇÕES GERAIS ===== */
-function save(){localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render();}
 </script>
-<!-- PARTE B: MENU E SEÇÕES COMPLETAS -->
+<!-- PARTE B: MENU E SEÇÕES -->
 <div class="menu-grid">
     <div class="menu-item" onclick="nav('sec-dash')"><i class="fas fa-chart-line"></i><span>Dash</span></div>
     <div class="menu-item" onclick="nav('sec-serv')"><i class="fas fa-plus"></i><span>Novo</span></div>
@@ -74,7 +52,14 @@ function save(){localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render
     <div class="menu-item" onclick="nav('sec-ia')"><i class="fas fa-brain"></i><span>I.A</span></div>
 </div>
 
-<!-- ===== SEÇÕES ===== -->
+<!-- SEÇÕES RESTAURADAS -->
+<div id="sec-dash" class="section active">
+    <h3>📊 Resumo Financeiro</h3>
+    <canvas id="chartFin" height="200"></canvas>
+    <button class="btn-success" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> GERAR RELATÓRIO DO MÊS</button>
+    <button class="btn-danger" onclick="resetMes()" style="opacity: 0.4;">ZERAR DADOS DO MÊS</button>
+</div>
+
 <div id="sec-serv" class="section">
     <h3>🔧 Novo Serviço</h3>
     <input id="sNome" placeholder="Nome do Cliente">
@@ -129,10 +114,10 @@ function save(){localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render
     <h3>💳 Calculadora de Taxas</h3>
     <input id="taxV" type="number" placeholder="Valor do Serviço">
     <select id="taxM">
-        <option value="pix">PIX</option>
-        <option value="dinheiro">Dinheiro</option>
-        <option value="cartao">Cartão Crédito</option>
-        <option value="debito">Cartão Débito</option>
+        <option value="credito">Cartão de Crédito (+12%)</option>
+        <option value="debito">Cartão de Débito (+4%)</option>
+        <option value="pix">PIX (0%)</option>
+        <option value="dinheiro">Dinheiro (0%)</option>
     </select>
     <button onclick="calcTaxa()">CALCULAR</button>
 </div>
@@ -170,72 +155,67 @@ function save(){localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render
 </div>
 
 <script>
-/* ===== FUNÇÕES MENU E SEÇÕES ===== */
+/* ===== NAVEGAÇÃO ===== */
 function nav(id){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 
-/* ===== SALVAR SERVIÇO ===== */
+/* ===== FUNÇÕES BASE ===== */
+let db = JSON.parse(localStorage.getItem('lisboa_vfinal')) || {
+    mao:0, contas:0, pecas:0, servicos:[], despesas:[], estoque:[], tabela:[], agenda:[], compras:[], check:[]
+};
+
+function save(){ localStorage.setItem('lisboa_vfinal',JSON.stringify(db)); render(); }
+
 function salvarServico(){
-    let m=parseFloat(sMao.value)||0;
-    let p=parseFloat(sPec.value)||0;
+    let m = parseFloat(sMao.value)||0;
+    let p = parseFloat(sPec.value)||0;
     if(m+p>0){
         db.mao+=m; db.pecas+=p;
-        db.servicos.unshift({
-            n:sNome.value,
-            p:sPlaca.value.toUpperCase(),
-            v:(m+p),
-            m:m,
-            pe:p,
-            z:sCel.value,
-            ol:sOleo.value,
-            d:new Date().getTime()
-        });
+        db.servicos.unshift({n:sNome.value, p:sPlaca.value.toUpperCase(), v:(m+p), m:m, pe:p, z:sCel.value, ol:sOleo.value, d:new Date().getTime()});
         sMao.value=''; sPec.value=''; sNome.value=''; sPlaca.value=''; sCel.value='';
         save();
         alert("✅ Serviço salvo com sucesso!");
     }
 }
 
-/* ===== SALVAR CONTA ===== */
 function salvarConta(){
-    let v=parseFloat(cVal.value)||0;
-    if(v>0){ db.contas+=v;
+    let v = parseFloat(cVal.value)||0;
+    if(v>0){
+        db.contas+=v;
         db.despesas.unshift({n:cDesc.value,v:v,d:new Date().toLocaleDateString()});
-        cVal.value=''; cDesc.value=''; save();
+        cVal.value=''; cDesc.value='';
+        save();
     }
 }
 
-/* ===== ADICIONAR OBJETOS ===== */
 function addObj(t,id1,id2){
-    let obj={n:document.getElementById(id1).value,v:id2?document.getElementById(id2).value:null};
+    let obj={n:document.getElementById(id1).value};
+    if(id2) obj.v=document.getElementById(id2).value;
     db[t].push(obj); save();
 }
 
-/* ===== RENDERIZAÇÃO ===== */
+/* ===== RENDERIZAÇÃO COMPLETA ===== */
+let chart;
 function render(){
-    let lucro=db.mao-db.contas;
+    let lucro = db.mao-db.contas;
     document.getElementById('val-lucro').innerText="R$ "+lucro.toFixed(2);
     document.getElementById('val-mao').innerText="R$ "+db.mao.toFixed(2);
     document.getElementById('val-contas').innerText="R$ "+db.contas.toFixed(2);
     document.getElementById('val-pecas').innerText="R$ "+db.pecas.toFixed(2);
 
-    document.getElementById('lista-hist').innerHTML=db.servicos.filter(s=>s.p.includes(busca.value.toUpperCase()))
-        .map(s=>`<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
-
+    document.getElementById('lista-hist').innerHTML=db.servicos.filter(s=>s.p.includes(busca.value.toUpperCase())).map(s=>`<div class="list-item"><span><b>${s.p}</b> - ${s.n}</span><b>R$ ${s.v}</b></div>`).join('');
     document.getElementById('lista-contas').innerHTML=db.despesas.map(d=>`<div class="list-item"><span>${d.n}</span><b style="color:red">- R$ ${d.v}</b></div>`).join('');
 
     let hoje=new Date().getTime();
-    let vencidos=0;
-    let htmlOleo="";
+    let vencidos=0, htmlOleo="";
     db.servicos.forEach(s=>{
         if(s.ol==='sim'){
             let dias=Math.floor((hoje-s.d)/(1000*60*60*24));
             if(dias>=90){
                 vencidos++;
-                htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span>
-                <i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
+                htmlOleo+=`<div class="list-item" style="border-left-color:red"><span>${s.p} - ${s.n} (${dias} dias)</span><i class="fab fa-whatsapp" onclick="window.open('https://api.whatsapp.com/send?phone=${s.z}&text=Olá! Já faz 3 meses da última troca de óleo. Vamos agendar?')"></i></div>`;
             }
         }
     });
@@ -243,54 +223,52 @@ function render(){
     document.getElementById('notif-oleo').style.display=vencidos>0?'block':'none';
     document.getElementById('lista-oleo').innerHTML=htmlOleo||"Sem trocas pendentes.";
 
-    /* GRÁFICO */
+    /* ===== GRÁFICO ===== */
     const ctx=document.getElementById('chartFin').getContext('2d');
     if(chart) chart.destroy();
-    chart=new Chart(ctx,{
-        type:'doughnut',
-        data:{labels:['Lucro Limpo','Contas Fixas','Custo Peças'],datasets:[{data:[lucro>0?lucro:0,db.contas,db.pecas],backgroundColor:['#00f298','#ff4b5c','#00d2ff'],borderWidth:0}]},
-        options:{plugins:{legend:{labels:{color:'white'}}}}
-    });
+    chart=new Chart(ctx,{type:'doughnut',data:{labels:['Lucro Limpo','Contas Fixas','Custo Peças'],datasets:[{data:[lucro>0?lucro:0,db.contas,db.pecas],backgroundColor:['#00f298','#ff4b5c','#00d2ff'],borderWidth:0}]},options:{plugins:{legend:{labels:{color:'white'}}}}});
 }
 
-/* ===== I.A, PDF, TAXA, BACKUP ===== */
+/* ===== FUNÇÕES MASTER ===== */
 function analisarIA(){
     let lucro=db.mao-db.contas;
     let analise="";
-    if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar. Suas contas superam a mão de obra.";
-    else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas fixas >50% do lucro. Reduza gastos.";
-    else analise="> SAÚDE ÓTIMA: Lucro saudável. R$ "+lucro.toFixed(2)+" limpos.";
+    if(lucro<=0) analise="> ALERTA CRÍTICO: Você está pagando para trabalhar.";
+    else if(db.contas>db.mao*0.5) analise="> CUIDADO: Despesas fixas >50% do lucro.";
+    else analise="> SAÚDE ÓTIMA: Lucro limpo R$ "+lucro.toFixed(2);
 
-    document.getElementById('ia-res').innerText=analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use lista de óleo para reativar clientes antigos.");
+    document.getElementById('ia-res').innerText=analise+"\n\n> DICA: "+(db.servicos.length<5?"Cadastre mais serviços para análise precisa.":"Use a lista de óleo para fidelizar clientes.");
 }
 
 function zapOrcamento(){
-    window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento Lisboa: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`);
+    window.open(`https://api.whatsapp.com/send?phone=${sCel.value}&text=Olá! Orçamento: Mão de Obra R$ ${sMao.value}, Peças R$ ${sPec.value}. Total R$ ${parseFloat(sMao.value)+parseFloat(sPec.value)}`);
 }
 
 function gerarPDF(){
-    const { jsPDF } = window.jspdf;
+    const {jsPDF}=window.jspdf;
     const doc=new jsPDF();
     doc.text("Relatório Lisboa Pro",10,10);
-    doc.text(`Lucro: ${db.mao-db.contas}`,10,20);
+    doc.text(`Lucro: R$ ${db.mao-db.contas}`,10,20);
     doc.save("mes.pdf");
 }
 
 function calcTaxa(){
-    let valor=parseFloat(taxV.value)||0;
-    let metodo=taxM.value;
-    let cobrado;
-    if(metodo==='pix'||metodo==='dinheiro') cobrado=valor;
-    else if(metodo==='cartao') cobrado=valor*1.12;
-    else if(metodo==='debito') cobrado=valor*1.04;
-    alert(`Para receber R$ ${valor.toFixed(2)} via ${metodo}, cobre do cliente: R$ ${cobrado.toFixed(2)}`);
+    let v=parseFloat(taxV.value)||0;
+    let metodo=document.getElementById('taxM').value;
+    let total=v;
+    if(metodo==='credito') total=v*1.12;
+    else if(metodo==='debito') total=v*1.04;
+    alert(`Para receber R$ ${v}, cobre do cliente: R$ ${total.toFixed(2)}`);
 }
 
-function resetMes(){if(confirm("Deseja zerar ganhos? Histórico não será apagado.")){db.mao=0;db.contas=0;db.pecas=0;save();}}
+function resetMes(){
+    if(confirm("Deseja zerar os ganhos? Histórico não será apagado.")){
+        db.mao=0; db.contas=0; db.pecas=0;
+        save();
+    }
+}
 
-function gerarBackup(){txtBack.value=btoa(JSON.stringify(db));}
-</script>
-<!-- PARTE C: VISUAL RESPONSIVO E EXTRAS MASTER -->
+function gerarBackup(){ txtBack.value=btoa(JSON.stringify(db)); }
 <style>
 :root {
     --bg: #0a0e17;
@@ -302,7 +280,6 @@ function gerarBackup(){txtBack.value=btoa(JSON.stringify(db));}
     --text: #e1e8f0;
 }
 
-/* ===== BODY ===== */
 body {
     margin:0;
     font-family:'Inter',sans-serif;
@@ -311,28 +288,25 @@ body {
     padding-bottom:80px;
 }
 
-/* ===== HEADER ===== */
-.header {
-    background: var(--card);
+/* ===== CABEÇALHO ===== */
+.header{
+    background:var(--card);
     padding:20px;
     text-align:center;
     border-bottom:1px solid rgba(255,255,255,0.1);
-    position: sticky;
-    top:0;
-    z-index:1000;
 }
-.header img { max-width:130px; }
+.header img{max-width:130px;}
 
 /* ===== CONTAINER ===== */
-.container {
+.container{
     padding:15px;
     max-width:600px;
     margin:auto;
 }
 
-/* ===== BALANCE CARD ===== */
-.balance-card {
-    background: linear-gradient(135deg,#1e2a4a,#161b28);
+/* ===== CARTÕES ===== */
+.balance-card{
+    background:linear-gradient(135deg,#1e2a4a,#161b28);
     padding:25px;
     border-radius:24px;
     text-align:center;
@@ -340,12 +314,17 @@ body {
     border:1px solid rgba(255,255,255,0.1);
     box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
-.balance-card h2,h3 { margin:0; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; }
-.balance-val { font-size:2.5rem; font-weight:800; color:var(--success); margin:10px 0; }
+.balance-card h2{margin:0;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;}
+.balance-val{font-size:2.5rem;font-weight:800;color:var(--success);margin:10px 0;}
 
 /* ===== MENU GRID ===== */
-.menu-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:25px; }
-.menu-item {
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:25px;
+}
+.menu-item{
     background:var(--card);
     padding:12px 5px;
     border-radius:16px;
@@ -354,23 +333,35 @@ body {
     cursor:pointer;
     transition:0.2s;
 }
-.menu-item i { font-size:1.2rem; color:var(--accent); margin-bottom:6px; display:block; }
-.menu-item span { font-size:0.55rem; font-weight:700; text-transform:uppercase; }
-.menu-item:active { transform:scale(0.95); background:var(--primary); }
+.menu-item i{
+    font-size:1.2rem;
+    color:var(--accent);
+    margin-bottom:6px;
+    display:block;
+}
+.menu-item span{
+    font-size:0.55rem;
+    font-weight:700;
+    text-transform:uppercase;
+}
+.menu-item:active{transform:scale(0.9);background:var(--primary);}
 
-/* ===== SECTIONS ===== */
-.section {
+/* ===== SEÇÕES ===== */
+.section{
     background:var(--card);
     padding:20px;
     border-radius:24px;
     display:none;
     border:1px solid rgba(255,255,255,0.05);
 }
-.active { display:block; animation:slideIn 0.3s ease-out; }
-@keyframes slideIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+.active{display:block;animation:slideIn 0.3s ease-out;}
+@keyframes slideIn{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+}
 
-/* ===== INPUTS E BOTÕES ===== */
-input, select, textarea {
+/* ===== INPUTS & BOTÕES ===== */
+input, select, textarea{
     background:#0f141e;
     border:1px solid #2d364a;
     color:white;
@@ -381,7 +372,7 @@ input, select, textarea {
     margin:8px 0;
     font-size:15px;
 }
-button {
+button{
     background:var(--primary);
     color:white;
     padding:16px;
@@ -395,12 +386,12 @@ button {
     transition:0.2s;
 }
 button:active{opacity:0.8;}
-.btn-success { background:var(--success); color:#0a0e17; }
-.btn-danger { background:var(--danger); }
+.btn-success{background:var(--success);color:#0a0e17;}
+.btn-danger{background:var(--danger);}
 
-/* ===== LIST ITEM ===== */
-.list-item {
-    background: rgba(255,255,255,0.03);
+/* ===== LISTAS ===== */
+.list-item{
+    background:rgba(255,255,255,0.03);
     padding:15px;
     border-radius:16px;
     margin-bottom:10px;
@@ -409,7 +400,7 @@ button:active{opacity:0.8;}
     align-items:center;
     border-left:4px solid var(--primary);
 }
-.badge {
+.badge{
     background:var(--danger);
     color:white;
     border-radius:50px;
@@ -421,7 +412,7 @@ button:active{opacity:0.8;}
 }
 
 /* ===== IA BOX ===== */
-.ia-box {
+.ia-box{
     background:#000;
     border:1px solid var(--success);
     padding:15px;
@@ -433,43 +424,9 @@ button:active{opacity:0.8;}
 }
 
 /* ===== RESPONSIVIDADE ===== */
-@media (max-width:480px){
-    .menu-grid { grid-template-columns:repeat(3,1fr); gap:8px; }
-    .balance-card { padding:20px; }
-    input, select, textarea { padding:12px; font-size:14px; }
-    button { padding:14px; font-size:13px; }
-    .balance-val { font-size:2rem; }
-    h3,h2 { font-size:0.8rem; }
+@media(max-width:480px){
+    .menu-grid{grid-template-columns:repeat(3,1fr);}
+    .balance-val{font-size:2rem;}
+    button{padding:12px;font-size:13px;}
 }
 </style>
-
-<script>
-/* ===== AJUSTE TOUCH/SCROLL PARA MOBILE ===== */
-document.querySelectorAll('.menu-item').forEach(btn=>{
-    btn.addEventListener('touchstart',()=>btn.classList.add('active'));
-    btn.addEventListener('touchend',()=>btn.classList.remove('active'));
-});
-
-/* ===== ALERTAS AUTOMÁTICOS MASTER ===== */
-function checkAlerts(){
-    let hoje=new Date().getTime();
-    let alertaOleo=0, alertaEstoque=0;
-    db.servicos.forEach(s=>{
-        if(s.ol==='sim'){
-            let dias=Math.floor((hoje-s.d)/(1000*60*60*24));
-            if(dias>=90) alertaOleo++;
-        }
-    });
-    db.estoque.forEach(i=>{
-        if(parseInt(i.v)<=2) alertaEstoque++;
-    });
-    if(alertaOleo>0) alert(`⚠️ Existem ${alertaOleo} clientes com troca de óleo atrasada!`);
-    if(alertaEstoque>0) alert(`⚠️ Existem ${alertaEstoque} itens no estoque abaixo do limite!`);
-}
-
-/* ===== EXECUTA ALERTAS AO ABRIR ===== */
-window.addEventListener('load',()=>{ checkAlerts(); render(); });
-
-/* ===== FUTURO: Tema Claro/Escuro ===== */
-// Pode adicionar toggle com localStorage, por enquanto default dark
-</script>
