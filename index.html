@@ -9,7 +9,94 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+body{
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#0d6efd,#00c6ff);
+  margin:0;
+  color:#fff;
+}
 
+header{
+  background:#000000aa;
+  backdrop-filter: blur(10px);
+  padding:10px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
+
+nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#000;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  border-top:2px solid #0d6efd;
+}
+
+nav button{
+  background:none;
+  border:none;
+  color:white;
+  font-size:12px;
+}
+
+.section{
+  display:none;
+  padding:15px;
+  padding-bottom:80px;
+}
+
+.section.active{
+  display:block;
+}
+
+.card{
+  background:#ffffff15;
+  padding:15px;
+  border-radius:15px;
+  margin:10px 0;
+  box-shadow:0 5px 15px #00000050;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:5px 0;
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+button{
+  background:#0d6efd;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  font-weight:bold;
+  width:100%;
+  margin-top:5px;
+}
+
+button:hover{
+  background:#00c6ff;
+}
+
+.alert{
+  padding:10px;
+  border-radius:10px;
+  margin:5px 0;
+  font-size:14px;
+}
+
+.green{background:#198754;}
+.red{background:#dc3545;}
+.blue{background:#0dcaf0;}
+.orange{background:#fd7e14;}
+.gray{background:#6c757d;}
 /* ======= BASE BONITA ANTIGA ======= */
 body{
  font-family:Arial, sans-serif;
