@@ -3,683 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Oficina Wesley Lisboa</title>
+<title>Oficina Wesley Lisboa</title>
 
-<!-- Chart.js -->
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
-<style>
-body{
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg,#0d6efd,#00c6ff);
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox" class="loginBox">
+  <h2>🔐 Oficina Wesley Lisboa</h2>
+  <input id="senhaLogin" type="password" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema" style="display:none;">
+
+<header>
+<img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png" class="logo">
+<span>Oficina Wesley Lisboa</span>
+</header>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section active">
+<h2>📊 Painel Geral</h2>
+
+<div class="cards">
+  <div class="card green">💰 Lucro Total<br><b>R$ <span id="lucroTotal">0</span></b></div>
+  <div class="card blue">📦 Estoque<br><b><span id="qtdEstoque">0</span></b></div>
+  <div class="card orange">🔧 Serviços Hoje<br><b><span id="servicosHoje">0</span></b></div>
+</div>
+
+<div class="card">
+  <canvas id="graficoLucro"></canvas>
+</div>
+
+<div id="alertas"></div>
+</div>
+
+<!-- SERVIÇOS -->
+<div id="servicos" class="section">
+<h2>🔧 Serviços</h2>
+<input id="sCliente" placeholder="Cliente">
+<input id="sPlaca" placeholder="Placa">
+<input id="sDescricao" placeholder="Serviço">
+<input id="sValor" type="number" placeholder="Valor">
+<select id="sPagamento">
+<option>PIX</option>
+<option>Cartão Crédito</option>
+<option>Cartão Débito</option>
+<option>Dinheiro</option>
+</select>
+<button onclick="addServico()">Salvar Serviço</button>
+<div id="listaServicos"></div>
+</div>
+
+<!-- TROCA DE ÓLEO -->
+<div id="oleo" class="section">
+<h2>🛢️ Troca de Óleo</h2>
+<input id="oCliente" placeholder="Cliente">
+<input id="oPlaca" placeholder="Placa">
+<input id="oKm" type="number" placeholder="KM atual">
+<input id="oProx" type="number" placeholder="Próxima troca KM">
+<button onclick="addOleo()">Salvar</button>
+<div id="listaOleo"></div>
+</div>
+
+<!-- ESTOQUE -->
+<div id="estoque" class="section">
+<h2>📦 Estoque Inteligente</h2>
+<input id="ePeca" placeholder="Peça">
+<input id="eQtd" type="number" placeholder="Quantidade">
+<button onclick="addEstoque()">Adicionar</button>
+<div id="listaEstoque"></div>
+</div>
+
+<!-- CONTAS -->
+<div id="contas" class="section">
+<h2>💰 Contas</h2>
+<input id="cNome" placeholder="Conta">
+<input id="cValor" type="number" placeholder="Valor">
+<input id="cData" type="date">
+<button onclick="addConta()">Adicionar</button>
+<div id="listaContas"></div>
+</div>
+
+<!-- AGENDA -->
+<div id="agenda" class="section">
+<h2>📅 Agenda</h2>
+<input id="aCliente" placeholder="Cliente">
+<input id="aData" type="date">
+<input id="aHora" type="time">
+<button onclick="addAgenda()">Agendar</button>
+<div id="listaAgenda"></div>
+</div>
+
+<!-- METAS -->
+<div id="metas" class="section">
+<h2>🎯 Metas</h2>
+<input id="metaLucro" type="number" placeholder="Meta de lucro mensal">
+<button onclick="salvarMeta()">Salvar Meta</button>
+<div class="card">Progresso: <b><span id="progressoMeta">0%</span></b></div>
+</div>
+
+<!-- RELATÓRIOS -->
+<div id="relatorios" class="section">
+<h2>📈 Relatórios Avançados</h2>
+<div class="card"><canvas id="graficoMensal"></canvas></div>
+</div>
+
+<!-- MENU -->
+<nav>
+<button onclick="abrir('dashboard')">🏠</button>
+<button onclick="abrir('servicos')">🔧</button>
+<button onclick="abrir('oleo')">🛢️</button>
+<button onclick="abrir('estoque')">📦</button>
+<button onclick="abrir('contas')">💰</button>
+<button onclick="abrir('agenda')">📅</button>
+<button onclick="abrir('metas')">🎯</button>
+<button onclick="abrir('relatorios')">📊</button>
+</nav>
+
+</div>
+
+<!-- SCRIPTS -->
+<script src="app.js"></script>
+<script src="servicos.js"></script>
+<script src="estoque.js"></script>
+<script src="contas.js"></script>
+<script src="oleo.js"></script>
+<script src="agenda.js"></script>
+<script src="metas.js"></script>
+<script src="relatorios.js"></script>
+<script src="backup.js"></script>
+
+</body>
+</html>
+/* RESET */
+*{
+  box-sizing:border-box;
   margin:0;
-  color:#fff;
+  padding:0;
 }
 
-header{
-  background:#000000aa;
-  backdrop-filter: blur(10px);
-  padding:10px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f5f7fb;
+  color:#111;
 }
 
-nav{
+/* LOGIN */
+.loginBox{
   position:fixed;
-  bottom:0;
-  width:100%;
-  background:#000;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:#007aff;
   display:flex;
-  justify-content:space-around;
-  padding:10px 0;
-  border-top:2px solid #0d6efd;
-}
-
-nav button{
-  background:none;
-  border:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
   color:white;
-  font-size:12px;
 }
 
+.loginBox input{
+  width:100%;
+  max-width:280px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  margin-top:10px;
+}
+
+.loginBox button{
+  width:100%;
+  max-width:280px;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:white;
+  color:#007aff;
+  font-weight:bold;
+  font-size:16px;
+}
+
+/* HEADER */
+header{
+  background:white;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+  border-bottom:1px solid #ddd;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.logo{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+/* SECTIONS */
 .section{
   display:none;
-  padding:15px;
-  padding-bottom:80px;
+  padding:12px;
+  padding-bottom:90px;
 }
 
 .section.active{
   display:block;
 }
 
+h2{
+  margin-bottom:10px;
+  font-size:18px;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
 .card{
-  background:#ffffff15;
-  padding:15px;
-  border-radius:15px;
-  margin:10px 0;
-  box-shadow:0 5px 15px #00000050;
-}
-
-input,select,textarea{
-  width:100%;
+  background:white;
   padding:12px;
-  margin:5px 0;
-  border-radius:10px;
-  border:none;
-  outline:none;
+  border-radius:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+  font-size:13px;
+  font-weight:500;
 }
 
-button{
-  background:#0d6efd;
-  color:white;
-  border:none;
-  padding:12px;
-  border-radius:10px;
-  font-weight:bold;
+/* CORES DE STATUS */
+.green{background:#e6f8ed;}
+.blue{background:#e8f1ff;}
+.orange{background:#fff3e0;}
+.red{background:#fdeaea;}
+.gray{background:#f0f0f0;}
+
+/* INPUTS */
+input,select{
   width:100%;
-  margin-top:5px;
-}
-
-button:hover{
-  background:#00c6ff;
-}
-
-.alert{
   padding:10px;
   border-radius:10px;
-  margin:5px 0;
+  border:1px solid #ddd;
   font-size:14px;
-}
-
-.green{background:#198754;}
-.red{background:#dc3545;}
-.blue{background:#0dcaf0;}
-.orange{background:#fd7e14;}
-.gray{background:#6c757d;}
-/* ======= BASE BONITA ANTIGA ======= */
-body{
- font-family:Arial, sans-serif;
- background:#f2f2f2;
- margin:0;
-}
-
-header{
- background:#0d6efd;
- color:white;
- padding:15px;
- text-align:center;
-}
-
-header img{
- width:130px;
- border-radius:12px;
- box-shadow:0 0 10px rgba(0,0,0,0.3);
-}
-
-h2,h3{
- margin:5px 0;
-}
-
-.menu{
- background:#0d6efd;
- padding:10px;
- display:flex;
- flex-wrap:wrap;
- gap:6px;
- justify-content:center;
-}
-
-.menu button{
- background:white;
- color:#0d6efd;
- border:none;
- padding:8px 10px;
- border-radius:8px;
- font-weight:bold;
- font-size:13px;
-}
-
-.menu button:hover{
- background:#cfe2ff;
-}
-
-.section{
- background:white;
- margin:10px;
- padding:15px;
- border-radius:14px;
- box-shadow:0 4px 12px rgba(0,0,0,0.15);
- display:none;
- animation:fade 0.3s;
-}
-
-@keyframes fade{
- from{opacity:0;transform:translateY(10px);}
- to{opacity:1;transform:translateY(0);}
+  margin-top:6px;
+  background:white;
 }
 
 button{
- background:#0d6efd;
- color:white;
- border:none;
- padding:10px;
- border-radius:8px;
- font-weight:bold;
- margin-top:5px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#007aff;
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  margin-top:8px;
+  transition:0.2s;
 }
 
 button:hover{
- background:#084298;
+  background:#005ecb;
 }
 
-input,select,textarea{
- width:100%;
- padding:8px;
- margin:5px 0;
- border-radius:6px;
- border:1px solid #ccc;
- font-size:14px;
+/* LISTAS */
+#listaServicos div,
+#listaOleo div,
+#listaEstoque div,
+#listaContas div,
+#listaAgenda div{
+  background:white;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  font-size:13px;
+  box-shadow:0 1px 5px rgba(0,0,0,0.05);
 }
 
-.alert{
- padding:10px;
- border-radius:8px;
- margin:6px 0;
- color:white;
- font-weight:bold;
+/* MENU APP */
+nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:white;
+  border-top:1px solid #ddd;
+  display:flex;
+  justify-content:space-around;
+  padding:6px 0;
+  z-index:100;
 }
 
-.red{background:#dc3545;}
-.orange{background:#fd7e14;}
-.green{background:#198754;}
-
-.badge{
- padding:4px 8px;
- border-radius:20px;
- font-size:12px;
- color:white;
- font-weight:bold;
+nav button{
+  background:none;
+  border:none;
+  font-size:18px;
+  padding:6px;
+  color:#555;
 }
 
-.badge.red{background:red;}
-.badge.green{background:green;}
-.badge.blue{background:#0d6efd;}
-
-.login-box{
- text-align:center;
- padding:50px;
+nav button:hover{
+  color:#007aff;
 }
 
-/* iPhone otimização */
-@media(max-width:600px){
- .menu button{font-size:11px;padding:6px;}
+/* ALERTAS POPUP */
+.alertPopup{
+  position:fixed;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ff3b30;
+  color:white;
+  padding:10px 18px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:bold;
+  z-index:999;
+  animation:fadeIn 0.5s;
 }
 
-</style>
-</head>
-
-<body>
-
-<!-- 🔒 LOGIN -->
-<div id="login" class="login-box">
-<h2>🔒 Sistema Oficina Wesley Lisboa</h2>
-<p>Digite a senha para acessar</p>
-<input id="senha" type="password" placeholder="Senha">
-<button onclick="entrar()">Entrar</button>
-<p id="msgLogin"></p>
-</div>
-
-<!-- ===== APP PRINCIPAL ===== -->
-<div id="app" style="display:none;">
-
-<header>
-<!-- SUA LOGO (NOME REAL) -->
-<img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61%202.png">
-<h2>Oficina Wesley Lisboa</h2>
-<p>Sistema Profissional de Gestão</p>
-</header>
-
-<!-- MENU MASTER -->
-<div class="menu">
-<button onclick="show('dashboard')">📊 Dashboard</button>
-<button onclick="show('servicos')">🔧 Serviços</button>
-<button onclick="show('historico')">📜 Histórico</button>
-<button onclick="show('oleo')">🛢️ Troca de Óleo</button>
-<button onclick="show('pagamentos')">💳 Pagamentos</button>
-<button onclick="show('estoque')">📦 Estoque</button>
-<button onclick="show('contas')">📑 Contas</button>
-<button onclick="show('agenda')">📅 Agenda</button>
-<button onclick="show('metas')">🎯 Metas</button>
-<button onclick="show('whatsapp')">💬 WhatsApp</button>
-<button onclick="show('backup')">💾 Backup</button>
-</div>
-
-<!-- ===== SEÇÕES (VAZIAS AINDA, VEM NA PARTE B) ===== -->
-
-<div id="dashboard" class="section">
-<h3>📊 Dashboard Geral</h3>
-<canvas id="graficoLucro"></canvas>
-<div id="alertasSistema"></div>
-</div>
-
-<div id="servicos" class="section"></div>
-<div id="historico" class="section"></div>
-<div id="oleo" class="section"></div>
-<div id="pagamentos" class="section"></div>
-<div id="estoque" class="section"></div>
-<div id="contas" class="section"></div>
-<div id="agenda" class="section"></div>
-<div id="metas" class="section"></div>
-<div id="whatsapp" class="section"></div>
-<div id="backup" class="section"></div>
-
-<script>
-/* ===== LOGIN ===== */
-function entrar(){
- let s=document.getElementById("senha").value;
- if(s=="2026"){
-  document.getElementById("login").style.display="none";
-  document.getElementById("app").style.display="block";
-  show("dashboard");
- }else{
-  document.getElementById("msgLogin").innerHTML="❌ Senha errada";
- }
+@keyframes fadeIn{
+  from{opacity:0; top:0;}
+  to{opacity:1; top:10px;}
 }
 
-/* ===== MENU ===== */
-function show(id){
- document.querySelectorAll(".section").forEach(s=>s.style.display="none");
- document.getElementById(id).style.display="block";
-}
-</script>
-
-</div>
-</body>
-</html>
-<!-- DASHBOARD -->
-<div id="dashboard" class="section active">
-  <h2>📊 Painel da Oficina</h2>
-  <div class="cards">
-    <div class="card">💰 Lucro: R$ <span id="lucroTotal">0</span></div>
-    <div class="card">📦 Peças em estoque: <span id="qtdEstoque">0</span></div>
-    <div class="card">📅 Serviços Hoje: <span id="servicosHoje">0</span></div>
-  </div>
-  <canvas id="graficoLucro"></canvas>
-</div>
-
-<!-- SERVIÇOS -->
-<div id="servicos" class="section">
-  <h2>🔧 Registrar Serviço</h2>
-  <input id="sCliente" placeholder="Cliente">
-  <input id="sPlaca" placeholder="Placa">
-  <input id="sDescricao" placeholder="Serviço realizado">
-  <input id="sValor" type="number" placeholder="Valor R$">
-
-  <select id="sPagamento">
-    <option>PIX</option>
-    <option>Cartão Crédito</option>
-    <option>Cartão Débito</option>
-    <option>Dinheiro</option>
-  </select>
-
-  <button onclick="addServico()">Salvar Serviço</button>
-  <div id="listaServicos"></div>
-</div>
-
-<!-- HISTÓRICO -->
-<div id="historico" class="section">
-  <h2>📜 Histórico de Serviços</h2>
-  <input id="filtroCliente" placeholder="Buscar cliente">
-  <input id="filtroPlaca" placeholder="Buscar placa">
-  <button onclick="filtrarHistorico()">Filtrar</button>
-  <div id="listaHistorico"></div>
-</div>
-
-<!-- TROCA DE ÓLEO -->
-<div id="oleo" class="section">
-  <h2>🛢️ Controle de Troca de Óleo</h2>
-  <input id="oCliente" placeholder="Cliente">
-  <input id="oPlaca" placeholder="Placa">
-  <input id="oData" type="date">
-  <input id="oKm" type="number" placeholder="KM atual">
-  <button onclick="addOleo()">Registrar</button>
-  <div id="listaOleo"></div>
-</div>
-
-<!-- CONTAS -->
-<div id="contas" class="section">
-  <h2>📑 Contas a Pagar</h2>
-  <input id="cNome" placeholder="Nome da conta">
-  <input id="cValor" type="number" placeholder="Valor">
-  <input id="cData" type="date">
-  <button onclick="addConta()">Adicionar</button>
-  <div id="listaContas"></div>
-</div>
-
-<!-- ESTOQUE -->
-<div id="estoque" class="section">
-  <h2>📦 Controle de Estoque</h2>
-  <input id="ePeca" placeholder="Nome da peça">
-  <input id="eQtd" type="number" placeholder="Quantidade">
-  <button onclick="addEstoque()">Adicionar</button>
-  <div id="listaEstoque"></div>
-</div>
-
-<!-- AGENDA -->
-<div id="agenda" class="section">
-  <h2>📅 Agenda da Oficina</h2>
-  <input id="aCliente" placeholder="Cliente">
-  <input id="aData" type="date">
-  <button onclick="addAgenda()">Agendar</button>
-  <div id="listaAgenda"></div>
-</div>
-
-<!-- METAS -->
-<div id="metas" class="section">
-  <h2>🎯 Metas Mensais</h2>
-  <input id="metaLucroInput" type="number" placeholder="Meta de lucro R$">
-  <button onclick="salvarMeta()">Salvar Meta</button>
-  <div id="barraMeta"></div>
-</div>
-
-<!-- TAXAS -->
-<div id="taxas" class="section">
-  <h2>💳 Taxas de Pagamento</h2>
-  <ul>
-    <li>PIX: 0%</li>
-    <li>Dinheiro: 0%</li>
-    <li>Cartão Débito: 2%</li>
-    <li>Cartão Crédito: 12%</li>
-  </ul>
-</div>
-
-<!-- WHATSAPP -->
-<div id="whatsapp" class="section">
-  <h2>💬 Mensagens WhatsApp</h2>
-  <textarea id="wppMsg" rows="4">Olá, sua revisão está agendada na Oficina Wesley Lisboa!</textarea>
-  <button onclick="copiarWpp()">Copiar Mensagem</button>
-</div>
-
-<!-- BACKUP -->
-<div id="backup" class="section">
-  <h2>💾 Backup e Restauração</h2>
-  <button onclick="exportarDados()">Exportar Backup</button>
-  <input type="file" onchange="importarDados(event)">
-</div>
-
-<!-- CHECKLIST -->
-<div id="checklist" class="section">
-  <h2>✅ Check-list de Veículo</h2>
-  <textarea id="checkText" placeholder="Freios OK, óleo trocado, bateria..."></textarea>
-  <button onclick="salvarCheck()">Salvar Check</button>
-  <div id="listaCheck"></div>
-</div>
-
-<!-- IA -->
-<div id="ia" class="section">
-  <h2>🤖 IA da Oficina</h2>
-  <input id="iaPergunta" placeholder="Pergunte algo...">
-  <button onclick="responderIA()">Perguntar</button>
-  <div id="iaResposta"></div>
-</div>
-<script>
-/* ================= BANCO LOCAL ================= */
-let servicos = JSON.parse(localStorage.getItem("servicos")) || [];
-let oleos = JSON.parse(localStorage.getItem("oleos")) || [];
-let estoque = JSON.parse(localStorage.getItem("estoque")) || [];
-let contas = JSON.parse(localStorage.getItem("contas")) || [];
-let agenda = JSON.parse(localStorage.getItem("agenda")) || [];
-let checks = JSON.parse(localStorage.getItem("checks")) || [];
-let metaLucro = localStorage.getItem("metaLucro") || 0;
-
-/* ================= SALVAR ================= */
-function salvarTudo() {
-  localStorage.setItem("servicos", JSON.stringify(servicos));
-  localStorage.setItem("oleos", JSON.stringify(oleos));
-  localStorage.setItem("estoque", JSON.stringify(estoque));
-  localStorage.setItem("contas", JSON.stringify(contas));
-  localStorage.setItem("agenda", JSON.stringify(agenda));
-  localStorage.setItem("checks", JSON.stringify(checks));
-  localStorage.setItem("metaLucro", metaLucro);
+/* BARRA DE META */
+.metaBar{
+  width:100%;
+  background:#eee;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:8px;
 }
 
-/* ================= SERVIÇOS ================= */
-function addServico() {
-  let c = sCliente.value;
-  let p = sPlaca.value;
-  let d = sDescricao.value;
-  let v = parseFloat(sValor.value || 0);
-  let pag = sPagamento.value;
-
-  if (!c || !p) return alert("Preencha cliente e placa");
-
-  servicos.push({ c, p, d, v, pag, data: new Date().toLocaleDateString() });
-  salvarTudo();
-  listarServicos();
-  atualizarDashboard();
+.metaFill{
+  height:12px;
+  background:#34c759;
+  width:0%;
+  transition:0.5s;
 }
-
-function listarServicos() {
-  listaServicos.innerHTML = "";
-  servicos.forEach(s => {
-    listaServicos.innerHTML += `<div class="alert green">${s.data} | ${s.c} | ${s.p} | R$ ${s.v} (${s.pag})</div>`;
-  });
-}
-
-/* ================= HISTÓRICO ================= */
-function filtrarHistorico() {
-  let fc = filtroCliente.value.toLowerCase();
-  let fp = filtroPlaca.value.toLowerCase();
-  listaHistorico.innerHTML = "";
-
-  servicos.filter(s =>
-    s.c.toLowerCase().includes(fc) &&
-    s.p.toLowerCase().includes(fp)
-  ).forEach(s => {
-    listaHistorico.innerHTML += `<div class="alert blue">${s.data} - ${s.c} - ${s.p} - R$${s.v}</div>`;
-  });
-}
-
-/* ================= ÓLEO ================= */
-function addOleo() {
-  oleos.push({ c: oCliente.value, p: oPlaca.value, d: oData.value, km: oKm.value });
-  salvarTudo();
-  listarOleo();
-}
-
-function listarOleo() {
-  listaOleo.innerHTML = "";
-  oleos.forEach(o => {
-    listaOleo.innerHTML += `<div class="alert orange">${o.c} | ${o.p} | Próx: ${o.d}</div>`;
-  });
-}
-
-/* ================= ESTOQUE ================= */
-function addEstoque() {
-  estoque.push({ p: ePeca.value, q: parseInt(eQtd.value) });
-  salvarTudo();
-  listarEstoque();
-}
-
-function listarEstoque() {
-  listaEstoque.innerHTML = "";
-  estoque.forEach(e => {
-    let cor = e.q < 3 ? "red" : "green";
-    listaEstoque.innerHTML += `<div class="alert ${cor}">${e.p} - QTD: ${e.q}</div>`;
-  });
-}
-
-/* ================= CONTAS ================= */
-function addConta() {
-  contas.push({ n: cNome.value, v: cValor.value, d: cData.value });
-  salvarTudo();
-  listarContas();
-}
-
-function listarContas() {
-  listaContas.innerHTML = "";
-  let hoje = new Date().toISOString().split("T")[0];
-
-  contas.forEach(c => {
-    let cor = c.d < hoje ? "red" : "green";
-    listaContas.innerHTML += `<div class="alert ${cor}">${c.n} - R$${c.v} - ${c.d}</div>`;
-  });
-}
-
-/* ================= AGENDA ================= */
-function addAgenda() {
-  agenda.push({ c: aCliente.value, d: aData.value });
-  salvarTudo();
-  listarAgenda();
-}
-
-function listarAgenda() {
-  listaAgenda.innerHTML = "";
-  agenda.forEach(a => {
-    listaAgenda.innerHTML += `<div class="alert blue">${a.c} - ${a.d}</div>`;
-  });
-}
-
-/* ================= METAS ================= */
-function salvarMeta() {
-  metaLucro = metaLucroInput.value;
-  salvarTudo();
-  atualizarDashboard();
-}
-
-function atualizarMetaBarra(lucro) {
-  if (!metaLucro) return;
-  let perc = Math.min((lucro / metaLucro) * 100, 100);
-  barraMeta.innerHTML = `<div style="background:#0d6efd;height:20px;width:${perc}%;border-radius:10px;color:white;text-align:center;">${Math.round(perc)}%</div>`;
-}
-
-/* ================= CHECKLIST ================= */
-function salvarCheck() {
-  checks.push(checkText.value);
-  salvarTudo();
-  listarCheck();
-}
-
-function listarCheck() {
-  listaCheck.innerHTML = "";
-  checks.forEach(c => listaCheck.innerHTML += `<div class="alert gray">${c}</div>`);
-}
-
-/* ================= WHATSAPP ================= */
-function copiarWpp() {
-  navigator.clipboard.writeText(wppMsg.value);
-  alert("Mensagem copiada!");
-}
-
-/* ================= BACKUP ================= */
-function exportarDados() {
-  let dados = { servicos, oleos, estoque, contas, agenda, checks, metaLucro };
-  let blob = new Blob([JSON.stringify(dados)], { type: "application/json" });
-  let a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "backup_oficina.json";
-  a.click();
-}
-
-function importarDados(e) {
-  let file = e.target.files[0];
-  let reader = new FileReader();
-  reader.onload = () => {
-    let d = JSON.parse(reader.result);
-    servicos = d.servicos || [];
-    oleos = d.oleos || [];
-    estoque = d.estoque || [];
-    contas = d.contas || [];
-    agenda = d.agenda || [];
-    checks = d.checks || [];
-    metaLucro = d.metaLucro || 0;
-    salvarTudo();
-    alert("Backup restaurado!");
-    location.reload();
-  };
-  reader.readAsText(file);
-}
-
-/* ================= DASHBOARD ================= */
-function atualizarDashboard() {
-  let lucro = servicos.reduce((t, s) => t + s.v, 0);
-  lucroTotal.innerText = lucro;
-  qtdEstoque.innerText = estoque.length;
-  servicosHoje.innerText = servicos.filter(s => s.data == new Date().toLocaleDateString()).length;
-  atualizarMetaBarra(lucro);
-  atualizarGrafico();
-}
-
-/* ================= ALERTAS POP-UP ================= */
-function verificarAlertas() {
-  let hoje = new Date().toISOString().split("T")[0];
-
-  contas.forEach(c => {
-    if (c.d < hoje) alert("⚠️ Conta vencida: " + c.n);
-  });
-
-  estoque.forEach(e => {
-    if (e.q < 3) alert("⚠️ Estoque baixo: " + e.p);
-  });
-
-  oleos.forEach(o => {
-    if (o.d < hoje) alert("⚠️ Troca de óleo vencida: " + o.p);
-  });
-}
-
-/* ================= GRÁFICO PROFISSIONAL ================= */
-let grafico;
-function atualizarGrafico() {
-  let ctx = document.getElementById("graficoLucro").getContext("2d");
-  let labels = servicos.map(s => s.data);
-  let data = servicos.map(s => s.v);
-
-  if (grafico) grafico.destroy();
-
-  grafico = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Lucro",
-        data: data,
-        borderColor: "#0d6efd",
-        backgroundColor: "rgba(13,110,253,0.2)",
-        fill: true
-      }]
-    }
-  });
-}
-
-/* ================= IA SIMPLES ================= */
-function responderIA() {
-  let q = iaPergunta.value.toLowerCase();
-  let r = "Pergunta interessante.";
-
-  if (q.includes("lucro")) r = "Seu lucro atual é R$ " + lucroTotal.innerText;
-  if (q.includes("estoque")) r = "Você tem " + estoque.length + " peças cadastradas.";
-  if (q.includes("contas")) r = "Você tem " + contas.length + " contas registradas.";
-
-  iaResposta.innerText = r;
-}
-
-/* ================= MENU ================= */
-function abrir(sec) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.getElementById(sec).classList.add("active");
-}
-
-/* ================= INICIAR ================= */
-listarServicos();
-listarOleo();
-listarEstoque();
-listarContas();
-listarAgenda();
-listarCheck();
-atualizarDashboard();
-verificarAlertas();
-</script>
-
-<!-- CHART.JS (GRÁFICO) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
