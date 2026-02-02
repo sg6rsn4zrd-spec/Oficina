@@ -6,124 +6,161 @@
 
 <title>Oficina Wesley Lisboa</title>
 
-<style>
-
-/* RESET */
-* { box-sizing:border-box; margin:0; padding:0; }
-
-body{
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background:#f5f7fb;
-  color:#111;
-}
-
-/* LOGIN */
-.loginBox{
-  position:fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-  background:#007aff;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:20px;
-  color:white;
-}
-
-.loginBox input{
-  width:100%;
-  max-width:280px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  margin-top:10px;
-}
-
-.loginBox button{
-  width:100%;
-  max-width:280px;
-  margin-top:12px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:white;
-  color:#007aff;
-  font-weight:bold;
-  font-size:16px;
-}
-
-/* HEADER */
-header{
-  background:white;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:600;
-  border-bottom:1px solid #ddd;
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-
-.logo{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  object-fit:cover;
-}
-
-/* SECTIONS */
-.section{ display:none; padding:12px; }
-.section.active{ display:block; }
-
-</style>
-
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script defer src="app.js"></script>
 
 </head>
 <body>
 
-<div class="loginBox" id="loginBox">
+<!-- LOGIN -->
+<div id="loginBox" class="login">
   <h2>🔒 Oficina Wesley Lisboa</h2>
-
   <input type="password" id="senhaLogin" placeholder="Senha">
   <button onclick="login()">Entrar</button>
 </div>
 
+<!-- SISTEMA -->
 <div id="sistema" style="display:none;">
 
 <header>
-  <img src="B1BCC237-7C89-4142-8131-6DA05C2A2C61 2.png" class="logo">
-  Oficina Wesley Lisboa
+  <img src="logo.png" class="logo">
 </header>
 
-<div id="menu">
-  <button onclick="abrir('dashboard')">📊 Dashboard</button>
-  <button onclick="abrir('servicos')">🔧 Serviços</button>
-  <button onclick="abrir('estoque')">📦 Estoque</button>
+<div class="saldoBox">
+  <p>SALDO REAL (LUCRO LÍQUIDO)</p>
+  <h1 id="lucroTotal">R$ 0.00</h1>
+  <div class="linhaInfo">
+    <span>Mão de Obra: <b id="maoObra">R$ 0</b></span>
+    <span>Contas: <b id="contasTotal">R$ 0</b></span>
+    <span>Meta: <b id="metaValor">R$ 5.000</b></span>
+  </div>
 </div>
 
-<div id="dashboard" class="section active">
-  <h2>Dashboard</h2>
-  Lucro: R$ <span id="lucroTotal">0</span>
-  <canvas id="graficoLucro"></canvas>
+<!-- BOTÕES -->
+<div class="menuGrid">
+  <button onclick="abrir('dash')">📊 DASH</button>
+  <button onclick="abrir('novo')">➕ NOVO</button>
+  <button onclick="abrir('contas')">🧾 CONTAS</button>
+  <button onclick="abrir('historico')">🔎 HISTÓRICO</button>
+  <button onclick="abrir('oleo')">🛢 ÓLEO</button>
 </div>
 
-<div id="servicos" class="section">
-  <h2>Serviços</h2>
+<!-- SEÇÕES -->
+<div id="dash" class="section active">
+  <h2>📊 Resumo Financeiro</h2>
+  <canvas id="graficoResumo"></canvas>
 </div>
 
-<div id="estoque" class="section">
-  <h2>Estoque</h2>
+<div id="novo" class="section">
+  <h2>Novo Serviço</h2>
+  <input id="cliente" placeholder="Cliente">
+  <input id="valorServico" placeholder="Valor">
+  <button onclick="salvarServico()">Salvar</button>
+</div>
+
+<div id="contas" class="section">
+  <h2>Contas Fixas</h2>
+  <input id="nomeConta" placeholder="Conta">
+  <input id="valorConta" placeholder="Valor">
+  <button onclick="salvarConta()">Adicionar</button>
+  <div id="listaContas"></div>
+</div>
+
+<div id="historico" class="section">
+  <h2>Histórico</h2>
+  <div id="listaServicos"></div>
+</div>
+
+<div id="oleo" class="section">
+  <h2>Troca de Óleo</h2>
+  <input id="placaOleo" placeholder="Placa">
+  <input id="kmAtual" placeholder="KM atual">
+  <input id="kmTroca" placeholder="Trocar com KM">
+  <button onclick="salvarOleo()">Salvar</button>
+  <div id="listaOleo"></div>
 </div>
 
 </div>
-
 </body>
 </html>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0b0f1a;
+  color:white;
+}
+
+/* LOGIN */
+.login{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:#0b0f1a;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:10px;
+}
+.login input, .login button{
+  padding:12px;border-radius:10px;border:none;width:200px;
+}
+.login button{background:#00ffa6;font-weight:bold}
+
+/* HEADER */
+header{
+  text-align:center;padding:15px;
+}
+.logo{
+  width:140px;
+}
+
+/* SALDO */
+.saldoBox{
+  padding:15px;
+}
+.saldoBox h1{
+  color:#00ffa6;
+  font-size:32px;
+}
+.linhaInfo{
+  display:flex;
+  gap:15px;
+  font-size:12px;
+  opacity:0.8;
+}
+
+/* MENU */
+.menuGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:15px;
+}
+.menuGrid button{
+  background:#111827;
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:12px;
+}
+
+/* SECTIONS */
+.section{display:none;padding:15px}
+.section.active{display:block}
+
+input, button{
+  padding:10px;border-radius:10px;border:none;
+  width:100%;margin-top:8px;
+}
+button{background:#00ffa6;font-weight:bold}
+const SENHA="2026";
+
+function login(){
+  if(document.getElementById("senhaLogin").value==SENHA){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("sistema").style.display="block";
+    carregarDados();
+  } else alert("Senha errada");
+}
+
+function abrir(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
